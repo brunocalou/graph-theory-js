@@ -7,6 +7,15 @@ var AdjacencyVectorGraph = function () {
 
 utils.inherit(GraphBase, AdjacencyVectorGraph);
 
+AdjacencyVectorGraph.prototype.createDataStructure = function (number_of_vertices) {
+	//var array = new Array(size_of_array) is almost 5 times faster to insert elements than
+	//var array = [], according to local benchmark using nodejs
+	//the +1 is used because, on the test files, there were no vertices with index 0, but
+	//there were indexes equal to the total number of vertices. The first element will be undefined
+	//on the case (index = 0)
+	this.data = new Array(number_of_vertices + 1);
+};
+
 AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
 	if (!this.data[vertex]) {
 		this.data[vertex] = [];
@@ -28,8 +37,7 @@ AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
 	//Clear the variables
 	this.medium_degree = 0;
 	this.degree_distribution = {};
-	console.log(this.data);
-
+	
 	//Fill the degree distribution with the degree as the key and the number of vertices with the degree as the value
 	for (vertice in this.data) {
 		if (this.data.hasOwnProperty(vertice)) {
@@ -57,11 +65,5 @@ AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
 	console.log("Degree distribution = ");
 	console.log(this.degree_distribution);
 };
-
-// var a = new GraphBase(3);
-// a.loadFromGraph();
-
-// var t = new AdjacencyVectorGraph(3);
-// t.loadFromGraph();
 
 module.exports = AdjacencyVectorGraph;
