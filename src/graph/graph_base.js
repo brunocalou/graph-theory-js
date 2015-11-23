@@ -75,4 +75,7 @@ GraphBase.prototype.loadFromGraph = function (data) {
 	console.log("Loading graph from graph");
 };
 
+GraphBase.prototype.print = function () {
+};
+
 module.exports = GraphBase;

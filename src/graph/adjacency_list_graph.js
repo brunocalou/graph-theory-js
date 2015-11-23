@@ -1,13 +1,14 @@
 var GraphBase = require("./graph_base");
 var utils = require('../utils/utils');
+var linkedList = require('datastructures-js').linkedList;
 
-var AdjacencyVectorGraph = function () {
+var AdjacencyListGraph = function () {
 	GraphBase.call(this);
 };
 
-utils.inherit(GraphBase, AdjacencyVectorGraph);
+utils.inherit(GraphBase, AdjacencyListGraph);
 
-AdjacencyVectorGraph.prototype.createDataStructure = function (number_of_vertices) {
+AdjacencyListGraph.prototype.createDataStructure = function (number_of_vertices) {
 	//var array = new Array(size_of_array) is almost 5 times faster to insert elements than
 	//var array = [], according to local benchmark using nodejs
 	//the +1 is used because, on the test files, there were no vertices with index 0, but
@@ -16,20 +17,20 @@ AdjacencyVectorGraph.prototype.createDataStructure = function (number_of_vertice
 	this.data = new Array(number_of_vertices + 1);
 };
 
-AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
+AdjacencyListGraph.prototype.addVertex = function (vertex) {
 	if (!this.data[vertex]) {
-		this.data[vertex] = [];
+		this.data[vertex] = linkedList();
 	}
 };
 
-AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2) {
+AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2) {
 	this.addVertex(vertex_1);
 	this.addVertex(vertex_2);
-	this.data[vertex_1].push(vertex_2);
-	this.data[vertex_2].push(vertex_1);
+	this.data[vertex_1].addLast(vertex_2);
+	this.data[vertex_2].addLast(vertex_1);
 };
 
-AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
+AdjacencyListGraph.prototype.calculateDegreeStatistics = function () {
 	var
 		vertice,
 		degree = 0;
@@ -41,7 +42,7 @@ AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
 	//Fill the degree distribution with the degree as the key and the number of vertices with the degree as the value
 	for (vertice in this.data) {
 		if (this.data.hasOwnProperty(vertice)) {
-			degree = this.data[vertice].length;
+			degree = this.data[vertice].count();
 			if (this.degree_distribution[degree]) {
 				this.degree_distribution[degree] += 1;
 			} else {
@@ -66,24 +67,23 @@ AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
 	console.log(this.degree_distribution);
 };
 
-AdjacencyVectorGraph.prototype.print = function () {
+AdjacencyListGraph.prototype.print = function () {
 	var line = '';
 	var data_length = this.data.length;
 
 	for (var i = 0; i < data_length; i += 1) {
-		line += '| ' + i + ' | ' + "-->";
+		line += '| ' + i + ' |';
 		if (this.data[i] != undefined) {
-			var neighbor_length = this.data[i].length;
-			
-			for (var j = 0; j < neighbor_length; j++) {
-				line += ' | ';
-				line += this.data[i][j];
+			var node = this.data[i].findFirst();
+			while (node) {
+				line += ' --> ';
+				line += node.getValue();
+				node = node.getNext();
 			}
 		}
-		line += ' |';
 		console.log(line);
 		line = '';
 	}
 };
 
-module.exports = AdjacencyVectorGraph;
+module.exports = AdjacencyListGraph;
