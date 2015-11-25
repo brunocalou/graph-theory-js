@@ -1,11 +1,11 @@
 var GraphBase = require("./graph_base");
-var utils = require('../utils/utils');
+var util = require('../util/util');
 
 var AdjacencyVectorGraph = function () {
 	GraphBase.call(this);
 };
 
-utils.inherit(GraphBase, AdjacencyVectorGraph);
+util.inherit(GraphBase, AdjacencyVectorGraph);
 
 AdjacencyVectorGraph.prototype.createDataStructure = function (number_of_vertices) {
 	//var array = new Array(size_of_array) is almost 5 times faster to insert elements than
@@ -88,11 +88,7 @@ AdjacencyVectorGraph.prototype.print = function () {
 };
 
 AdjacencyVectorGraph.prototype.neighbors = function (vertex) {
-	var neighbors = this.data[vertex];
-	if (neighbors === undefined) {
-		neighbors = [];
-	}
-	return neighbors;
+	return this.data[vertex];
 };
 
 AdjacencyVectorGraph.prototype.forEachNeighbor = function (vertex, fn) {

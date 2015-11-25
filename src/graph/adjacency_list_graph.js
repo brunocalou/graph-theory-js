@@ -1,12 +1,12 @@
 var GraphBase = require("./graph_base");
-var utils = require('../utils/utils');
+var util = require('../util/util');
 var linkedList = require('datastructures-js').linkedList;
 
 var AdjacencyListGraph = function () {
 	GraphBase.call(this);
 };
 
-utils.inherit(GraphBase, AdjacencyListGraph);
+util.inherit(GraphBase, AdjacencyListGraph);
 
 AdjacencyListGraph.prototype.createDataStructure = function (number_of_vertices) {
 	//var array = new Array(size_of_array) is almost 5 times faster to insert elements than
