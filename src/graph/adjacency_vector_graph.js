@@ -71,15 +71,16 @@ AdjacencyVectorGraph.prototype.print = function () {
 	var data_length = this.data.length;
 
 	for (var i = 0; i < data_length; i += 1) {
-		if (this.data[i] != undefined) {
-			line += '| ' + i + ' | ' + "-->";
-			var neighbor_length = this.data[i].length;
 
-			for (var j = 0; j < neighbor_length; j++) {
-				line += ' | ';
-				line += this.data[i][j];
+		if (this.data[i] != undefined) {
+			line += '| ' + i + ' |' + " --> ";
+
+			this.forEachNeighbor(i, function (neighbor) {
+				line += '| ';
+				line += neighbor;
 				line += ' ';
-			}
+			});
+
 			line += '|';
 			console.log(line);
 			line = '';

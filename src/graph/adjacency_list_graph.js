@@ -72,17 +72,18 @@ AdjacencyListGraph.prototype.print = function () {
 	var data_length = this.data.length;
 
 	for (var i = 0; i < data_length; i += 1) {
-		line += '| ' + i + ' |';
+		
 		if (this.data[i] != undefined) {
-			var node = this.data[i].findFirst();
-			while (node) {
+			line += '| ' + i + ' |';
+			
+			this.forEachNeighbor(i, function (neighbor) {
 				line += ' --> ';
-				line += node.getValue();
-				node = node.getNext();
-			}
+				line += neighbor;
+			});
+			
+			console.log(line);
+			line = '';
 		}
-		console.log(line);
-		line = '';
 	}
 };
 
