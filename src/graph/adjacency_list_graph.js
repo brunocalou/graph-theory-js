@@ -103,6 +103,14 @@ AdjacencyListGraph.prototype.neighbors = function (vertex) {
 	return neighbors;
 };
 
+AdjacencyListGraph.prototype.hasNeighbors = function (vertex) {
+	var has_neighbors = false;
+	if (this.data[vertex] !== undefined) {
+		has_neighbors = !!this.data[vertex].count();
+	}
+	return has_neighbors;
+};
+
 AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
 	if (this.data[vertex] !== undefined) {
 		var node = this.data[vertex].findFirst();

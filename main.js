@@ -11,10 +11,9 @@ my_graph.print();
 console.log("Neighbors of vertex 1 = ");
 console.log(my_graph.neighbors(1));
 console.log("Iterate over all the vertices");
-my_graph.forEach(function (vertex, neighbors) {
-	console.log(vertex, neighbors);
-});
-console.log("Iterate over all the neighbors of vertex 5");
-my_graph.forEachNeighbor(5, function (neighbor) {
-	console.log(neighbor);
+my_graph.forEach(function (vertex) {
+	console.log("Iterate over all the neighbors of vertex " + vertex);
+	my_graph.forEachNeighbor(vertex, function (neighbor) {
+		console.log(neighbor);
+	});
 });

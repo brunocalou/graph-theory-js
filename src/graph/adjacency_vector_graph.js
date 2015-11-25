@@ -92,6 +92,10 @@ AdjacencyVectorGraph.prototype.neighbors = function (vertex) {
 	return this.data[vertex];
 };
 
+AdjacencyVectorGraph.prototype.hasNeighbors = function (vertex) {
+	return !!this.data[vertex];
+};
+
 AdjacencyVectorGraph.prototype.forEachNeighbor = function (vertex, fn) {
 	if (this.data[vertex] !== undefined) {
 		for (var i = 0, neighbors_length = this.data[vertex].length; i < neighbors_length; i += 1) {
