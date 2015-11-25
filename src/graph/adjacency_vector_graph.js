@@ -31,7 +31,7 @@ AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2) {
 
 AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
 	var
-		vertice,
+		vertex,
 		degree = 0;
 			
 	//Clear the variables
@@ -39,9 +39,9 @@ AdjacencyVectorGraph.prototype.calculateDegreeStatistics = function () {
 	this.degree_distribution = {};
 	
 	//Fill the degree distribution with the degree as the key and the number of vertices with the degree as the value
-	for (vertice in this.data) {
-		if (this.data.hasOwnProperty(vertice)) {
-			degree = this.data[vertice].length;
+	for (vertex in this.data) {
+		if (this.data.hasOwnProperty(vertex)) {
+			degree = this.data[vertex].length;
 			if (this.degree_distribution[degree]) {
 				this.degree_distribution[degree] += 1;
 			} else {
@@ -71,19 +71,40 @@ AdjacencyVectorGraph.prototype.print = function () {
 	var data_length = this.data.length;
 
 	for (var i = 0; i < data_length; i += 1) {
-		line += '| ' + i + ' | ' + "-->";
 		if (this.data[i] != undefined) {
+			line += '| ' + i + ' | ' + "-->";
 			var neighbor_length = this.data[i].length;
-			
+
 			for (var j = 0; j < neighbor_length; j++) {
 				line += ' | ';
 				line += this.data[i][j];
+				line += ' ';
 			}
+			line += '|';
+			console.log(line);
+			line = '';
 		}
-		line += ' |';
-		console.log(line);
-		line = '';
 	}
 };
+
+AdjacencyVectorGraph.prototype.neighbors = function (vertex) {
+	var neighbors = this.data[vertex];
+	if (neighbors === undefined) {
+		neighbors = [];
+	}
+	return neighbors;
+};
+
+AdjacencyVectorGraph.prototype.forEachNeighbor = function (vertex, fn) {
+	if (this.data[vertex] !== undefined) {
+		for (var i = 0, neighbors_length = this.data[vertex].length; i < neighbors_length; i += 1) {
+			fn(this.data[vertex][i]);
+		}
+	}
+};
+
+// AdjacencyVectorGraph.prototype.forEach = function (fn) {
+// 	this.data.forEach(fn);
+// };
 
 module.exports = AdjacencyVectorGraph;

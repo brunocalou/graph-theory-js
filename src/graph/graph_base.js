@@ -78,4 +78,28 @@ GraphBase.prototype.loadFromGraph = function (data) {
 GraphBase.prototype.print = function () {
 };
 
+GraphBase.prototype.neighbors = function (vertex) {
+	//Returns an array of vertices
+};
+
+GraphBase.prototype.forEachNeighbor = function (vertex, fn) {
+	//Calls the callback for each neighbor of the chosen vertex.
+	//The callback expects a neighbor as parameter:
+	//fn(neighbor)
+};
+
+GraphBase.prototype.forEach = function (fn) {
+	//The callback arguments are:
+	//fn(vertex, neighbors)
+	
+	for (var vertex = 0, neighbors_length = this.data.length; vertex < neighbors_length; vertex += 1) {
+		//If the vertex neighbors is undefined, it means the vertex doesn't exist. If it
+		//existed but had no neighbors, there would be anything but undefined
+		var neighbors = this.neighbors(vertex);
+		if (neighbors !== undefined) {
+			fn(vertex, neighbors);
+		}
+	}
+};
+
 module.exports = GraphBase;

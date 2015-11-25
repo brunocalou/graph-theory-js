@@ -32,7 +32,7 @@ AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2) {
 
 AdjacencyListGraph.prototype.calculateDegreeStatistics = function () {
 	var
-		vertice,
+		vertex,
 		degree = 0;
 			
 	//Clear the variables
@@ -40,9 +40,9 @@ AdjacencyListGraph.prototype.calculateDegreeStatistics = function () {
 	this.degree_distribution = {};
 	
 	//Fill the degree distribution with the degree as the key and the number of vertices with the degree as the value
-	for (vertice in this.data) {
-		if (this.data.hasOwnProperty(vertice)) {
-			degree = this.data[vertice].count();
+	for (vertex in this.data) {
+		if (this.data.hasOwnProperty(vertex)) {
+			degree = this.data[vertex].count();
 			if (this.degree_distribution[degree]) {
 				this.degree_distribution[degree] += 1;
 			} else {
@@ -86,4 +86,33 @@ AdjacencyListGraph.prototype.print = function () {
 	}
 };
 
+AdjacencyListGraph.prototype.neighbors = function (vertex) {
+	var neighbors;
+
+	if (this.data[vertex] != undefined) {
+		neighbors = [];
+
+		var node = this.data[vertex].findFirst();
+		while (node) {
+			neighbors.push(node.getValue());
+			node = node.getNext();
+		}
+	}
+
+	return neighbors;
+};
+
+AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
+	if (this.data[vertex] !== undefined) {
+		var node = this.data[vertex].findFirst();
+		while (node) {
+			fn(node.getValue());
+			node = node.getNext();
+		}
+	}
+}
+
+// AdjacencyListGraph.prototype.forEach = function (fn) {
+// 	this.data.forEach(fn);
+// };
 module.exports = AdjacencyListGraph;
