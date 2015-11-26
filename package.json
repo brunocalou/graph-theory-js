@@ -1,0 +1,26 @@
+{
+  "name": "graph-theory-js",
+  "version": "1.0.0",
+  "description": "Graph library to the Graph Theory class at UFRJ",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "datastructures-js": "^3.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunocalou/graph-theory-js.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brunocalou/graph-theory-js/issues"
+  },
+  "homepage": "https://github.com/brunocalou/graph-theory-js#readme"
+}
