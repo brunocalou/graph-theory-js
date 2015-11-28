@@ -9,7 +9,7 @@ function GraphBase() {
 	this.number_of_vertices = 0;
 	this.number_of_edges = 0;
 	this.medium_degree = 0;
-	this.degree_distribution = {}; // {degree_1: number_of_vertices_with_degree_1 / number_of_vertices, ...}
+	this.degree_distribution = []; // holds the number of vertices with the degree equals to the index
 
 }
 
@@ -29,7 +29,7 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 			
 	//Clear the variables
 	this.medium_degree = 0;
-	this.degree_distribution = {};
+	this.degree_distribution = [];
 	
 	//Fill the degree distribution with the degree as the key and the number of vertices with the degree as the value
 	for (vertex in this.data) {
@@ -45,10 +45,12 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 		
 	//Divides all the previous values by the number of vertices
 	//Calculate the medium degree on the process
-	for (var degree_key in this.degree_distribution) {
-		if (this.degree_distribution.hasOwnProperty(degree_key)) {
-			this.medium_degree += parseFloat(degree_key) * this.degree_distribution[degree_key];
-			this.degree_distribution[degree_key] /= this.number_of_vertices;
+	for (var i = 0, degree_length = this.degree_distribution.length; i < degree_length; i += 1) {
+		if (this.degree_distribution[i] !== undefined) {
+			this.medium_degree += i * this.degree_distribution[i];
+			this.degree_distribution[i] /= this.number_of_vertices;
+		} else {
+			this.degree_distribution[i] = 0;
 		}
 	}
 
@@ -61,11 +63,48 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 
 GraphBase.prototype.saveGraphStatisticsToFile = function (path) {
 	this.calculateDegreeStatistics();
+	
+	//Create an output folder. The name of the folder is the name of the file plus '_output'
+	var folder = this.path.substr(0, this.path.lastIndexOf('.')) + '_output';
+	var filename = 'statistics.txt';
+	var file_content = '';
+	
+	//Creates the folder if it doesn't exist
+	try {
+		var stats = fs.accessSync(folder);
+	} catch (err) {
+		console.log("Folder " + folder + " doesn't exist. Will create it");
+		fs.mkdirSync(folder);
+	}
+	
+	//Fill the content
+	file_content += '# n = ';
+	file_content += this.number_of_vertices;
+	file_content += '\n';
+	
+	file_content += '# m = ';
+	file_content += this.number_of_edges;
+	file_content += '\n';
+	
+	file_content += '# medium_d = ';
+	file_content += this.medium_degree;
+	file_content += '\n';
+	
+	//Fill in with the degree distribution
+	for (var i = 0, degree_length = this.degree_distribution.length; i < degree_length; i += 1) {
+		file_content += i;
+		file_content += ' ';
+		file_content += this.degree_distribution[i];
+		file_content += '\n';
+	}
+	
+	fs.writeFileSync(folder + '/' + filename, file_content);
 };
 
 GraphBase.prototype.loadFromFile = function (path) {
 	//Load the data from the file
 	//Store the data according to the data structure
+	this.path = path;
 	console.log("Loading graph from file");
 	var file = fs.readFileSync(path).toString();
 
