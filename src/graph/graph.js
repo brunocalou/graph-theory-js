@@ -1,6 +1,7 @@
 var GraphBase = require("./graph_base");
 var AdjacencyVectorGraph = require("./adjacency_vector_graph");
 var AdjacencyListGraph = require("./adjacency_list_graph");
+var AdjacencyMatrixGraph = require("./adjacency_matrix_graph");
 
 var DataStructure = {
 	ADJACENCY_LIST: 0,
@@ -16,7 +17,7 @@ function Graph(data_structure) {
 		return new AdjacencyVectorGraph();
 
 	} else if (data_structure === DataStructure.ADJACENCY_MATRIX) {
-
+		return new AdjacencyMatrixGraph();
 	}
 }
 
