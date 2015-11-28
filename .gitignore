@@ -1,4 +1,2 @@
 node_modules
-src/test/graph_files/*
-!src/test/graph_files/small_graph.txt
 .vscode
