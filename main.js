@@ -1,5 +1,5 @@
 var graph = require('./src/graph/graph');
-
+var DFS = require('./src/algorithms/depth_first_search');
 //Temporary debug tests
 
 // var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_VECTOR);
@@ -17,3 +17,5 @@ my_graph.forEach(function (vertex) {
 		console.log(neighbor);
 	});
 });
+
+console.log(DFS(my_graph, 1));
