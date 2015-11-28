@@ -39,8 +39,10 @@ AdjacencyMatrixGraph.prototype.print = function () {
 	line += ' | ';
 
 	for (var k = 0; k < data_length; k += 1) {
-		line += k;
-		line += ' ';
+		if (this.data[k] !== undefined) {
+			line += k;
+			line += ' ';
+		}
 	}
 	console.log(line);
 	var line_length = line.length;
@@ -58,16 +60,17 @@ AdjacencyMatrixGraph.prototype.print = function () {
 	
 	//Print the rows. The first element is the vertex
 	for (var i = 0; i < data_length; i += 1) {
-		if (this.data[i] != undefined) {
+		if (this.data[i] !== undefined) {
 			line += i + ' | ';
 
 			for (var j = 0; j < data_length; j += 1) {
 				if (this.data[i][j]) {
-					line += '1';
+					line += '1 ';
 				} else {
-					line += '0';
+					if (this.data[j] !== undefined) {
+						line += '0 ';
+					}
 				}
-				line += ' ';
 			}
 
 			console.log(line);
