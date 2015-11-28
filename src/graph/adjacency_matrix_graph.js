@@ -35,7 +35,8 @@ AdjacencyMatrixGraph.prototype.print = function () {
 
 	//Print the colums header
 	//Get the space used by the representation of the first column header
-	line = new Array((data_length + '').length + 4).join(' ');
+	line = new Array((data_length + '').length + 1).join(' ');
+	line += ' | ';
 
 	for (var k = 0; k < data_length; k += 1) {
 		line += k;
