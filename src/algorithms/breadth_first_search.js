@@ -10,16 +10,15 @@ function BFS(graph, initial_vertex) {
 	queue.enqueue(initial_vertex);
 	spanning_tree[initial_vertex] = null;
 	degrees[initial_vertex] = 0;
+	explored_vertices[initial_vertex] = true;
 	
 	while(!queue.isEmpty()) {
 		var vertex = queue.dequeue();
 		console.log("Vertex " + vertex + " removed from the queue.");
-		
-		if (!explored_vertices[vertex]) {
-			explored_vertices[vertex] = true;
 			
 			graph.forEachNeighbor(vertex, function (neighbor) {
 				if (!explored_vertices[neighbor]) {
+					explored_vertices[neighbor] = true;
 					queue.enqueue(neighbor);
 					console.log("Vertex" + neighbor + " added to the queue.");
 					
@@ -27,7 +26,6 @@ function BFS(graph, initial_vertex) {
 					degrees[neighbor] = degrees[vertex] + 1;
 				}
 			});
-		}
 	}
 	
 	console.log("Spanning tree = ");
@@ -36,3 +34,5 @@ function BFS(graph, initial_vertex) {
 	console.log(degrees);
 	return new SpanningTree(initial_vertex, spanning_tree, degrees);
 };
+
+module.exports = BFS;
