@@ -9,7 +9,9 @@
   "dependencies": {
     "datastructures-js": "^3.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chalk": "^1.1.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

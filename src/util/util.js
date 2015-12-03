@@ -1,9 +1,46 @@
-var inherit = function(parent, child){
+var
+	chalk = require('chalk'),
+	MemorySize = Object.freeze({
+		BYTE: 1,
+		KB: 1024,
+		MB: 1024 * 2014
+	});
+
+var inherit = function (parent, child) {
     var parent_copy = Object.create(parent.prototype);
-    child.prototype = parent_copy; 
+    child.prototype = parent_copy;
     child.prototype.constructor = child;
 };
 
+var printObject = function (object) {
+	for (var property in object) {
+		if (object.hasOwnProperty(property)) {
+			console.log(property + ':' + object[property]);
+		}
+	}
+}
+
+var printMemory = function (memory_usage, size) {
+	if (!memory_usage) memory_usage = process.memoryUsage();
+	if (!size) size = MemorySize.KB;
+
+	var size_name = "Bytes";
+	if (size === MemorySize.KB) {
+		size_name = "KB";
+	} else if (size === MemorySize.MB) {
+		size_name = "MB";
+	}
+
+	console.log('');
+	console.log(' ' + chalk.yellow("RSS") + ' : ' + memory_usage.rss / size + ' ' + size_name);
+	console.log(' ' + chalk.yellow("Total Heap") + ' : ' + memory_usage.heapTotal / size + ' ' + size_name);
+	console.log(' ' + chalk.yellow("Used Heap") + ' : ' + memory_usage.heapUsed / size + ' ' + size_name);
+	console.log('');
+}
+
 module.exports = {
-	inherit: inherit
+	inherit: inherit,
+	printObject: printObject,
+	printMemory: printMemory,
+	MemorySize: MemorySize
 };

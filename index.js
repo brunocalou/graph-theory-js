@@ -5,6 +5,7 @@ function getResource(name) {
 var
 	algorithms = {},
 	benchmark = {},
+	memory = {},
 	graph = {},
 	timer = {},
 	trees = {},
@@ -14,6 +15,8 @@ algorithms.BFS = require(getResource('algorithms/breadth_first_search'));
 algorithms.DFS = require(getResource('algorithms/depth_first_search'));
 
 benchmark.Benchmark = require(getResource('benchmark/benchmark'));
+
+memory.Memory = require(getResource('memory/memory'));
 
 graph.AdjacencyListGraph = require(getResource('graph/adjacency_list_graph'));
 graph.AdjacencyVectorGraph = require(getResource('graph/adjacency_vector_graph'));
@@ -26,11 +29,12 @@ timer.Timer = require(getResource('timer/timer'));
 
 trees.SpanningTree = require(getResource('trees/spanning_tree'));
 
-util.Util = require(getResource('util/util'));
+util = require(getResource('util/util'));
 
 module.exports = {
 	algorithms,
 	benchmark,
+	memory,
 	graph,
 	timer,
 	trees,
