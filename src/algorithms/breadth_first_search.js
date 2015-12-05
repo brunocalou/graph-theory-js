@@ -1,11 +1,18 @@
 var Queue = require('datastructures-js').queue;
 var SpanningTree = require('../trees/spanning_tree.js');
 
-function BFS(graph, initial_vertex) {
+function BFS(graph, initial_vertex, callbacks) {
 	var queue = new Queue();
 	var explored_vertices = new Array(graph.number_of_vertices);
 	var spanning_tree = new Array(graph.number_of_vertices);
 	var degrees = new Array(graph.number_of_vertices);
+	
+	if (!callbacks) {
+		callbacks = {};
+	}
+	
+	callbacks.onVertexFound = callbacks.onVertexFound || function(){};
+	callbacks.onVertexVisited = callbacks.onVertexVisited || function(){};
 	
 	queue.enqueue(initial_vertex);
 	spanning_tree[initial_vertex] = null;
@@ -14,25 +21,21 @@ function BFS(graph, initial_vertex) {
 	
 	while(!queue.isEmpty()) {
 		var vertex = queue.dequeue();
-		console.log("Vertex " + vertex + " removed from the queue.");
+		callbacks.onVertexVisited(vertex);
 			
 			graph.forEachNeighbor(vertex, function (neighbor) {
 				if (!explored_vertices[neighbor]) {
 					explored_vertices[neighbor] = true;
 					queue.enqueue(neighbor);
-					console.log("Vertex" + neighbor + " added to the queue.");
+					callbacks.onVertexFound(neighbor);
 					
 					spanning_tree[neighbor] = vertex;
 					degrees[neighbor] = degrees[vertex] + 1;
 				}
 			});
 	}
-	
-	console.log("Spanning tree = ");
-	console.log(spanning_tree);
-	console.log("Degrees = ");
-	console.log(degrees);
-	return new SpanningTree(initial_vertex, spanning_tree, degrees);
+
+	return new SpanningTree(initial_vertex, spanning_tree, degrees, graph);
 };
 
 module.exports = BFS;

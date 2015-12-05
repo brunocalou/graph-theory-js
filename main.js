@@ -20,5 +20,23 @@ my_graph.forEach(function (vertex) {
 	});
 });
 
-console.log(DFS(my_graph, 1));
-console.log(BFS(my_graph, 1));
+function foundVertex(vertex) {
+	console.log("Found vertex " + vertex);
+}
+
+function visitedVertex(vertex) {
+	console.log("Visited vertex " + vertex);
+}
+
+var callbacks = {
+	onVertexFound: foundVertex,
+	onVertexVisited: visitedVertex 
+};
+
+console.log("DFS");
+var dfs_spanning_tree = DFS(my_graph, 1, callbacks);
+console.log(dfs_spanning_tree);
+
+console.log("\nBFS");
+var bfs_spanning_tree = BFS(my_graph, 1, callbacks);
+console.log(bfs_spanning_tree);
