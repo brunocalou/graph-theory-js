@@ -56,9 +56,9 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 
 	this.medium_degree /= this.number_of_vertices;
 
-	console.log("Medium degree = " + this.medium_degree);
-	console.log("Degree distribution = ");
-	console.log(this.degree_distribution);
+	// console.log("Medium degree = " + this.medium_degree);
+	// console.log("Degree distribution = ");
+	// console.log(this.degree_distribution);
 };
 
 GraphBase.prototype.saveGraphStatisticsToFile = function (path) {
