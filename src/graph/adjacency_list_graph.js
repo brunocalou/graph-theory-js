@@ -87,4 +87,5 @@ AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
 AdjacencyListGraph.prototype.degree = function (vertex) {
 	return this.data[vertex].count();
 };
+
 module.exports = AdjacencyListGraph;

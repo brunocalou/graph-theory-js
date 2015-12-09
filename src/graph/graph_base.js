@@ -171,4 +171,22 @@ GraphBase.prototype.degree = function (vertex) {
 	//Returns the degree of the vertex
 };
 
+GraphBase.prototype.getRandomVertex = function() {
+	//Returns a random valid vertex
+	var
+		data_length = this.data.length,
+		found_vertex = false,
+		vertex = 0;
+		
+	if (data_length > 0 && this.number_of_vertices > 0) {
+		while (!found_vertex) {
+			vertex = parseInt(Math.random() * (data_length));
+			if (this.data[vertex] !== undefined) {
+				found_vertex = true;
+			}
+		}
+	}
+	return vertex;
+};
+
 module.exports = GraphBase;

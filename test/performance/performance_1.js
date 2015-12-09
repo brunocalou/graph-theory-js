@@ -5,6 +5,8 @@ var
 	Memory = graphtheoryjs.memory.Memory,
 	Timer = graphtheoryjs.timer.Timer,
 	chalk = require('chalk'),
+	BFS = graphtheoryjs.algorithms.BFS,
+	DFS = graphtheoryjs.algorithms.DFS,
 	argv = require('yargs').usage('Usage: $0 <command> [options]')
 		.example('$0 -f foo.txt --vector --list', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
 		.example('$0 -f foo.txt -vl', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
@@ -54,11 +56,11 @@ function init() {
 	
 	// Compare the memory used by the data structures
 	var memory_diff = memory.getDiff();
-	
+
 	console.log(chalk.yellow("\n==== CURRENT MEMORY USAGE ===="));
 	graphtheoryjs.util.printMemory();
 	printSeparator();
-	
+
 	if (argv.list) {
 		graph_list.push(
 			{
@@ -66,7 +68,7 @@ function init() {
 				name: 'list'
 			});
 	}
-	
+
 	if (argv.vector) {
 		graph_list.push(
 			{
@@ -74,7 +76,7 @@ function init() {
 				name: 'vector'
 			});
 	}
-	
+
 	if (argv.matrix) {
 		graph_list.push(
 			{
@@ -88,10 +90,19 @@ function run() {
 	//Run the performance test
 	var
 		time_to_load = 0,
-		current_graph;
+		current_graph,
+		benchmark_options = {
+			cycles: 10,
+			onFinishedFunctionTest: function (fn_item) {
+				console.log(chalk.yellow("FINISHED " + fn_item.name + "\n"));
+				console.log(chalk.yellow(' Cycles : ') + benchmark_options.cycles);
+				console.log(chalk.yellow(' Time : ') + fn_item.time + ' ms\n');
+			}
+		};
 
 	for (var i = 0, graph_list_length = graph_list.length; i < graph_list_length; i += 1) {
 		current_graph = graph_list[i];
+		benchmark.clear();
 		
 		//Load the graphs and measure time and memory
 		timer.start();
@@ -102,8 +113,19 @@ function run() {
 
 		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
 		graphtheoryjs.util.printMemory(memory_diff);
-		console.log(chalk.yellow("LOAD TIME: ") + time_to_load + " s\n");
+		console.log(chalk.yellow("LOAD TIME : ") + time_to_load + " s\n");
 		
+		//Performs DFS test and BFS tests
+		benchmark.add("BFS", function () {
+			BFS(current_graph.graph, current_graph.graph.getRandomVertex());
+		});
+
+		benchmark.add("DFS", function () {
+			DFS(current_graph.graph, current_graph.graph.getRandomVertex());
+		});
+		
+		benchmark.run(benchmark_options);
+
 		printSeparator();
 	}
 }
