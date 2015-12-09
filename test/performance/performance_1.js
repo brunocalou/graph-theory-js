@@ -3,6 +3,7 @@ var
 	graphtheoryjs = require('../../index'),
 	Benchmark = graphtheoryjs.benchmark.Benchmark,
 	Memory = graphtheoryjs.memory.Memory,
+	Timer = graphtheoryjs.timer.Timer,
 	chalk = require('chalk'),
 	argv = require('yargs').usage('Usage: $0 <command> [options]')
 		.example('$0 -f foo.txt --vector --list', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
@@ -34,55 +35,79 @@ var
 var
 	benchmark = new Benchmark(),
 	memory = new Memory(),
+	timer = new Timer(),
 	list_graph = new graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_LIST),
 	vector_graph = new graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_VECTOR),
 	matrix_graph = new graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_MATRIX),
 	graph_list = [],
 	graph_file = argv.file || '../graph_files/small_graph.txt';
 
-//If the data structure was not specified, use the vector
-if (!argv.vector && !argv.list && !argv.matrix) {
-	argv.vector = true;
+function printSeparator() {
+	console.log(chalk.yellow("==============================\n"));
 }
 
-console.log(argv);
-
-// Compare the memory used by the data structures
-var memory_diff = memory.getDiff();
-
-console.log(chalk.yellow("\n==== CURRENT MEMORY USAGE ====\n"));
-graphtheoryjs.util.printMemory();
-console.log(chalk.yellow("\n==============================\n"));
-
-if (argv.list) {
-	graph_list.push(list_graph);
-	// Load the list graph
-	memory_diff = memory.run(function () {
-		list_graph.loadFromFile(graph_file);
-	});
-
-	console.log(chalk.yellow("\nLOADED GRAPH USING LIST"));
-	graphtheoryjs.util.printMemory(memory_diff);
+function init() {
+	//If the data structure was not specified, use the vector
+	if (!argv.vector && !argv.list && !argv.matrix) {
+		argv.vector = true;
+	}
+	
+	// Compare the memory used by the data structures
+	var memory_diff = memory.getDiff();
+	
+	console.log(chalk.yellow("\n==== CURRENT MEMORY USAGE ===="));
+	graphtheoryjs.util.printMemory();
+	printSeparator();
+	
+	if (argv.list) {
+		graph_list.push(
+			{
+				graph: list_graph,
+				name: 'list'
+			});
+	}
+	
+	if (argv.vector) {
+		graph_list.push(
+			{
+				graph: vector_graph,
+				name: 'vector'
+			});
+	}
+	
+	if (argv.matrix) {
+		graph_list.push(
+			{
+				graph: matrix_graph,
+				name: 'matrix'
+			});
+	}
 }
 
-if (argv.vector) {
-	graph_list.push(vector_graph);
-	// Load the vector graph
-	memory_diff = memory.run(function () {
-		vector_graph.loadFromFile(graph_file);
-	});
+function run() {
+	//Run the performance test
+	var
+		time_to_load = 0,
+		current_graph;
 
-	console.log(chalk.yellow("\nLOADED GRAPH USING VECTOR"));
-	graphtheoryjs.util.printMemory(memory_diff);
+	for (var i = 0, graph_list_length = graph_list.length; i < graph_list_length; i += 1) {
+		current_graph = graph_list[i];
+		
+		//Load the graphs and measure time and memory
+		timer.start();
+		memory_diff = memory.run(function () {
+			current_graph.graph.loadFromFile(graph_file);
+		});
+		time_to_load = timer.getElapsedTime();
+
+		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
+		graphtheoryjs.util.printMemory(memory_diff);
+		console.log(chalk.yellow("LOAD TIME: ") + time_to_load + " s\n");
+		
+		printSeparator();
+	}
 }
 
-if (argv.matrix) {
-	graph_list.push(matrix_graph);
-	// Load the matrix graph
-	memory_diff = memory.run(function () {
-		matrix_graph.loadFromFile(graph_file);
-	});
-
-	console.log(chalk.yellow("\nLOADED GRAPH USING MATRIX"));
-	graphtheoryjs.util.printMemory(memory_diff);
-}
+//Init and run
+init();
+run();
