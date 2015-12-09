@@ -18,7 +18,7 @@ AdjacencyMatrixGraph.prototype.createDataStructure = function (number_of_vertice
 
 AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
 	if (!this.data[vertex]) {
-		this.data[vertex] = new Array(this.number_of_vertices + 1);
+		this.data[vertex] = new Uint8Array(this.number_of_vertices + 1);
 	}
 };
 
