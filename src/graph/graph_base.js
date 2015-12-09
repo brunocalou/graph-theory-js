@@ -55,10 +55,6 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 	}
 
 	this.medium_degree /= this.number_of_vertices;
-
-	// console.log("Medium degree = " + this.medium_degree);
-	// console.log("Degree distribution = ");
-	// console.log(this.degree_distribution);
 };
 
 GraphBase.prototype.saveGraphStatisticsToFile = function (path) {
@@ -105,7 +101,6 @@ GraphBase.prototype.loadFromFile = function (path) {
 	//Load the data from the file
 	//Store the data according to the data structure
 	this.path = path;
-	console.log("Loading graph from file");
 	var file = fs.readFileSync(path).toString();
 
 	//Read every character
@@ -135,17 +130,11 @@ GraphBase.prototype.loadFromFile = function (path) {
 			current_number += file[i];
 		}
 	}
-
-
-	console.log("Finished loading graph");
-	console.log("Number of vertices = " + this.number_of_vertices);
-	console.log("Number of edges = " + this.number_of_edges);
 };
 
 GraphBase.prototype.loadFromGraph = function (data) {
 	//Load the data from another graph
 	//Must find the data structure before loading it
-	console.log("Loading graph from graph");
 };
 
 GraphBase.prototype.print = function () {
