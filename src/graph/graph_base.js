@@ -4,12 +4,18 @@ function GraphBase() {
 	//Stores the graph
 	this.data = {};
 
-	this.path = '';
+	this.path = '';//The path to the graph file
+	
+	this.output = {
+		folder: '', //The destination folder
+		filename: '', //The name of the statistics file
+		destination: '' //The full path of the file
+	}
 
 	this.number_of_vertices = 0;
 	this.number_of_edges = 0;
 	this.medium_degree = 0;
-	this.degree_distribution = []; // holds the number of vertices with the degree equals to the index
+	this.degree_distribution = []; //The number of vertices with the degree equals to the index
 
 }
 
@@ -57,31 +63,30 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 	this.medium_degree /= this.number_of_vertices;
 };
 
-GraphBase.prototype.saveGraphStatisticsToFile = function (path) {
+GraphBase.prototype.saveGraphStatisticsToFile = function () {
+	// Save the statistics to file. It returns the output object
+	
 	this.calculateDegreeStatistics();
 	
-	//Create an output folder. The name of the folder is the name of the file plus '_output'
-	var folder = this.path.substr(0, this.path.lastIndexOf('.')) + '_output';
-	var filename = 'statistics.txt';
 	var file_content = '';
 	
 	//Creates the folder if it doesn't exist
 	try {
-		var stats = fs.accessSync(folder);
+		var stats = fs.accessSync(this.output.folder);
 	} catch (err) {
-		console.log("Folder " + folder + " doesn't exist. Will create it");
-		fs.mkdirSync(folder);
+		console.log("Folder " + this.output.folder + " doesn't exist. Will create it\n");
+		fs.mkdirSync(this.output.folder);
 	}
 	
 	//Fill the content
 	file_content += '# n = ';
 	file_content += this.number_of_vertices;
 	file_content += '\n';
-	
+
 	file_content += '# m = ';
 	file_content += this.number_of_edges;
 	file_content += '\n';
-	
+
 	file_content += '# medium_d = ';
 	file_content += this.medium_degree;
 	file_content += '\n';
@@ -93,18 +98,24 @@ GraphBase.prototype.saveGraphStatisticsToFile = function (path) {
 		file_content += this.degree_distribution[i];
 		file_content += '\n';
 	}
-	
-	fs.writeFileSync(folder + '/' + filename, file_content);
+
+	fs.writeFileSync(this.output.destination, file_content);
+
+	return this.output;
 };
 
 GraphBase.prototype.loadFromFile = function (path) {
 	//Load the data from the file
 	//Store the data according to the data structure
 	this.path = path;
-	var file = fs.readFileSync(path).toString();
+	
+	//Create an output folder. The name of the folder is the name of the file plus '_output'
+	this.output.folder = this.path.substr(0, this.path.lastIndexOf('.')) + '_output';
+	this.output.filename = 'statistics.txt';
+	this.output.destination = this.output.folder + '/' + this.output.filename;
 
-	//Read every character
 	var
+		file = fs.readFileSync(path).toString(),
 		current_number = '',
 		second_line_start = file.indexOf('\n'),
 		final_character = file.length,
@@ -171,13 +182,13 @@ GraphBase.prototype.degree = function (vertex) {
 	//Returns the degree of the vertex
 };
 
-GraphBase.prototype.getRandomVertex = function() {
+GraphBase.prototype.getRandomVertex = function () {
 	//Returns a random valid vertex
 	var
 		data_length = this.data.length,
 		found_vertex = false,
 		vertex = 0;
-		
+
 	if (data_length > 0 && this.number_of_vertices > 0) {
 		while (!found_vertex) {
 			vertex = parseInt(Math.random() * (data_length));

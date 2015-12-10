@@ -125,7 +125,7 @@ function runPerformanceTest() {
 	for (var i = 0, graph_list_length = graph_list.length; i < graph_list_length; i += 1) {
 		current_graph = graph_list[i];
 		benchmark.clear();
-		
+
 		console.log(chalk.yellow("==== ADJACENCY " + current_graph.name.toUpperCase() + " GRAPH ====\n"));
 		
 		//Performs DFS test and BFS tests
@@ -186,6 +186,20 @@ function runSpecificTests() {
 		}
 		console.log('');
 	}
+
+	printSeparator();
+}
+
+function saveGraphStatistics() {
+	//Save the graph statistics
+	
+	var current_graph = graph_list[0];
+	console.log(chalk.yellow('SAVING GRAPH STATISTICS TO FILE ...\n'));
+	var file = current_graph.graph.saveGraphStatisticsToFile();
+	console.log(chalk.yellow(' Filename : ') + file.filename);
+	console.log(chalk.yellow(' Destination Folder : ') + file.folder);
+	console.log(chalk.yellow(' Path : ') + file.destination);
+	console.log('');
 }
 
 //Init and run
@@ -193,3 +207,4 @@ init();
 runMemoryTest();
 runPerformanceTest();
 runSpecificTests();
+saveGraphStatistics();
