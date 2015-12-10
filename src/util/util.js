@@ -20,9 +20,10 @@ var printObject = function (object) {
 	}
 }
 
-var printMemory = function (memory_usage, size) {
+var printMemory = function (memory_usage, size, color) {
 	if (!memory_usage) memory_usage = process.memoryUsage();
 	if (!size) size = MemorySize.KB;
+	if (!color) color = 'yellow';
 
 	var size_name = "Bytes";
 	if (size === MemorySize.KB) {
@@ -32,9 +33,9 @@ var printMemory = function (memory_usage, size) {
 	}
 
 	console.log('');
-	console.log(' ' + chalk.yellow("RSS") + ' : ' + memory_usage.rss / size + ' ' + size_name);
-	console.log(' ' + chalk.yellow("Total Heap") + ' : ' + memory_usage.heapTotal / size + ' ' + size_name);
-	console.log(' ' + chalk.yellow("Used Heap") + ' : ' + memory_usage.heapUsed / size + ' ' + size_name);
+	console.log(' ' + chalk[color]("RSS") + ' : ' + memory_usage.rss / size + ' ' + size_name);
+	console.log(' ' + chalk[color]("Total Heap") + ' : ' + memory_usage.heapTotal / size + ' ' + size_name);
+	console.log(' ' + chalk[color]("Used Heap") + ' : ' + memory_usage.heapUsed / size + ' ' + size_name);
 	console.log('');
 }
 
