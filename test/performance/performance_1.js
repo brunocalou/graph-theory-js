@@ -7,6 +7,7 @@ var
 	chalk = require('chalk'),
 	BFS = graphtheoryjs.algorithms.BFS,
 	DFS = graphtheoryjs.algorithms.DFS,
+	fs = require('fs'),
 	argv = require('yargs').usage('Usage: $0 <command> [options]')
 		.example('$0 -f foo.txt --vector --list', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
 		.example('$0 -f foo.txt -vl', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
@@ -49,6 +50,16 @@ function printSeparator(color) {
 	console.log(chalk[color]("==============================\n"));
 }
 
+function saveJSON(graph_obj, data, suffix) {
+	//Save the data on the file
+	graph_obj.graph.createOutputFolder();
+
+	fs.writeFileSync(
+		graph_obj.graph.output.folder + '/' + graph_obj.name + suffix + '.json',
+		JSON.stringify(data, null, 4)
+		);
+}
+
 function init() {
 	//If the data structure was not specified, use the vector
 	if (!argv.vector && !argv.list && !argv.matrix) {
@@ -67,19 +78,19 @@ function init() {
 			});
 	}
 
-	if (argv.list) {
-		graph_list.push(
-			{
-				graph: list_graph,
-				name: 'list'
-			});
-	}
-
 	if (argv.matrix) {
 		graph_list.push(
 			{
 				graph: matrix_graph,
 				name: 'matrix'
+			});
+	}
+	
+	if (argv.list) {
+		graph_list.push(
+			{
+				graph: list_graph,
+				name: 'list'
 			});
 	}
 }
@@ -104,6 +115,9 @@ function runMemoryTest() {
 		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
 		graphtheoryjs.util.printMemory(memory_diff);
 		console.log(chalk.yellow("LOAD TIME : ") + time_to_load + " s\n");
+		
+		saveJSON(current_graph, memory_diff, '_memory_test');
+
 	}
 	printSeparator();
 }
@@ -117,7 +131,14 @@ function runPerformanceTest() {
 			onFinishedFunctionTest: function (fn_item) {
 				console.log(chalk.yellow("FINISHED " + fn_item.name + "\n"));
 				console.log(chalk.yellow(' Cycles : ') + benchmark_options.cycles);
-				console.log(chalk.yellow(' Time : ') + fn_item.time + ' ms\n');
+				console.log(chalk.yellow(' Average time : ') + fn_item.time + ' ms\n');
+				
+				saveJSON(current_graph, {
+					algorithm: fn_item.name,
+					cycles: benchmark_options.cycles,
+					'average time': fn_item.time,
+					'time unity': 'ms'
+				}, '_' + fn_item.name + '_performance_test');
 			}
 		};
 	console.log(chalk.yellow("====== PERFORMANCE TEST ======\n"));
@@ -187,6 +208,8 @@ function runSpecificTests() {
 		console.log('');
 	}
 
+	saveJSON(current_graph, parents, '_specific_parent_test');
+	
 	printSeparator();
 }
 

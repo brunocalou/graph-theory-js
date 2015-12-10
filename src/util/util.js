@@ -33,9 +33,9 @@ var printMemory = function (memory_usage, size, color) {
 	}
 
 	console.log('');
-	console.log(' ' + chalk[color]("RSS") + ' : ' + memory_usage.rss / size + ' ' + size_name);
-	console.log(' ' + chalk[color]("Total Heap") + ' : ' + memory_usage.heapTotal / size + ' ' + size_name);
-	console.log(' ' + chalk[color]("Used Heap") + ' : ' + memory_usage.heapUsed / size + ' ' + size_name);
+	console.log(' ' + chalk[color]("RSS" + ' : ') + memory_usage.rss / size + ' ' + size_name);
+	console.log(' ' + chalk[color]("Total Heap" + ' : ') + memory_usage.heapTotal / size + ' ' + size_name);
+	console.log(' ' + chalk[color]("Used Heap" + ' : ') + memory_usage.heapUsed / size + ' ' + size_name);
 	console.log('');
 }
 

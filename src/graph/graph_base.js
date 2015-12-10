@@ -63,13 +63,7 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 	this.medium_degree /= this.number_of_vertices;
 };
 
-GraphBase.prototype.saveGraphStatisticsToFile = function () {
-	// Save the statistics to file. It returns the output object
-	
-	this.calculateDegreeStatistics();
-	
-	var file_content = '';
-	
+GraphBase.prototype.createOutputFolder = function() {
 	//Creates the folder if it doesn't exist
 	try {
 		var stats = fs.accessSync(this.output.folder);
@@ -77,6 +71,16 @@ GraphBase.prototype.saveGraphStatisticsToFile = function () {
 		console.log("Folder " + this.output.folder + " doesn't exist. Will create it\n");
 		fs.mkdirSync(this.output.folder);
 	}
+};
+
+GraphBase.prototype.saveGraphStatisticsToFile = function () {
+	// Save the statistics to file. It returns the output object
+	
+	this.calculateDegreeStatistics();
+	
+	var file_content = '';
+	
+	this.createOutputFolder();
 	
 	//Fill the content
 	file_content += '# n = ';
