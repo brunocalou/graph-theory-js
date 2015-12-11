@@ -10,16 +10,16 @@ function findClusters (graph) {
 	var vertices_found;
 	var bfs_spanning_tree;
 	
-	for (var i = 1 ; i <= graph.number_of_vertices ; i += 1) {
-		if(!discovered_vertices[i]) {
+	graph.forEach(function (vertex){
+		if(!discovered_vertices[vertex]) {
 			cluster.total += 1
 			vertices_found = 1;
-			discovered_vertices[i] = true;
-			bfs_spanning_tree = BFS(graph, i);
+			discovered_vertices[vertex] = true;
+			bfs_spanning_tree = BFS(graph, vertex);
 			
-			for (var j = i + 1; j <= bfs_spanning_tree.tree[j] ; j += 1) {
-				if(bfs_spanning_tree.tree[j]) {
-					discovered_vertices[j] = true;
+			for (var i = vertex + 1; i <= bfs_spanning_tree.tree[j] ; i += 1) {
+				if(bfs_spanning_tree.tree[i]) {
+					discovered_vertices[i] = true;
 					vertices_found += 1;
 				}
 			}
@@ -32,7 +32,7 @@ function findClusters (graph) {
 				cluster.smallest = vertices_found;
 			}
 		}
-	}
+	});
 	
 	return cluster;
 };
