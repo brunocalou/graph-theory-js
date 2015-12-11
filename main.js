@@ -20,17 +20,17 @@ my_graph.loadFromFile('./test/graph_files/small_graph.txt');
 // 	});
 // });
 
-// function foundVertex(vertex) {
-// 	console.log("Found vertex " + vertex);
+// function foundVertex(vertex, degree) {
+// 	console.log("Found vertex " + vertex + " with degree " + degree);
 // }
 
-// function visitedVertex(vertex) {
-// 	console.log("Visited vertex " + vertex);
+// function visitedVertex(vertex, degree) {
+// 	console.log("Visited vertex " + vertex + " with degree " + degree);
 // }
 
 // var callbacks = {
-// 	// onVertexFound: foundVertex,
-// 	// onVertexVisited: visitedVertex 
+// 	onVertexFound: foundVertex,
+// 	onVertexVisited: visitedVertex 
 // };
 
 // console.log("DFS");
