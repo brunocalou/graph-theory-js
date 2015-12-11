@@ -63,7 +63,7 @@ GraphBase.prototype.calculateDegreeStatistics = function () {
 	this.medium_degree /= this.number_of_vertices;
 };
 
-GraphBase.prototype.createOutputFolder = function() {
+GraphBase.prototype.createOutputFolder = function () {
 	//Creates the folder if it doesn't exist
 	try {
 		var stats = fs.accessSync(this.output.folder);
@@ -77,9 +77,9 @@ GraphBase.prototype.saveGraphStatisticsToFile = function () {
 	// Save the statistics to file. It returns the output object
 	
 	this.calculateDegreeStatistics();
-	
+
 	var file_content = '';
-	
+
 	this.createOutputFolder();
 	
 	//Fill the content
@@ -135,9 +135,21 @@ GraphBase.prototype.loadFromFile = function (path) {
 			vertex_2 = parseInt(current_number);
 			current_number = '';
 			if (!isNaN(vertex_1) && !isNaN(vertex_2)) {
-				this.number_of_edges += 1;
-				this.addEdge(vertex_1, vertex_2);
+				if (vertex_1 > 0 && vertex_2 > 0) {
+					this.number_of_edges += 1;
+					this.addEdge(vertex_1, vertex_2);
+				} else if (vertex_1 < 0) {
+					if (vertex_2 > 0) {
+						this.addVertex(vertex_2);
+					}
+				} else if (vertex_2 < 0) {
+					if (vertex_1 > 0) {
+						this.addVertex(vertex_1);
+					}
+				}
 			}
+			vertex_1 = -1;
+			vertex_2 = -1;
 		} else if (file[i] === ' ') {
 			vertex_1 = parseInt(current_number);
 			current_number = '';
@@ -174,9 +186,8 @@ GraphBase.prototype.forEach = function (fn) {
 	//fn(vertex)
 	
 	for (var vertex = 0, vertices_length = this.data.length; vertex < vertices_length; vertex += 1) {
-		//If the vertex neighbors is undefined, it means the vertex doesn't exist. If it
-		//existed but had no neighbors, there would be anything but undefined
-		if (this.hasNeighbors(vertex)) {
+		//Check if the vertex exists and then call the function
+		if (this.exists(vertex)) {
 			fn(vertex);
 		}
 	}
@@ -196,12 +207,17 @@ GraphBase.prototype.getRandomVertex = function () {
 	if (data_length > 0 && this.number_of_vertices > 0) {
 		while (!found_vertex) {
 			vertex = parseInt(Math.random() * (data_length));
-			if (this.data[vertex] !== undefined) {
+			if (this.exists(vertex)) {
 				found_vertex = true;
 			}
 		}
 	}
 	return vertex;
+};
+
+GraphBase.prototype.exists = function (vertex) {
+	//Returns if the vertex exists
+	return !!this.data[vertex];
 };
 
 module.exports = GraphBase;

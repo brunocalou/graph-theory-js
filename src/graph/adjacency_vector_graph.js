@@ -35,7 +35,7 @@ AdjacencyVectorGraph.prototype.print = function () {
 
 	for (var i = 0; i < data_length; i += 1) {
 
-		if (this.data[i] != undefined) {
+		if (this.exists(i)) {
 			line += '| ' + i + ' |' + " --> ";
 
 			this.forEachNeighbor(i, function (neighbor) {
@@ -56,11 +56,15 @@ AdjacencyVectorGraph.prototype.neighbors = function (vertex) {
 };
 
 AdjacencyVectorGraph.prototype.hasNeighbors = function (vertex) {
-	return !!this.data[vertex];
+	var has_neighbors = false;
+	if (this.exsists(vertex)) {
+		has_neighbors = !!this.data[vertex].length;
+	}
+	return has_neighbors;
 };
 
 AdjacencyVectorGraph.prototype.forEachNeighbor = function (vertex, fn) {
-	if (this.data[vertex] !== undefined) {
+	if (this.exists(vertex)) {
 		for (var i = 0, neighbors_length = this.data[vertex].length; i < neighbors_length; i += 1) {
 			fn(this.data[vertex][i]);
 		}

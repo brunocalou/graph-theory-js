@@ -83,7 +83,7 @@ AdjacencyMatrixGraph.prototype.neighbors = function (vertex) {
 	var neighbors;
 	var data_length = this.data.length;
 
-	if (this.data[vertex] != undefined) {
+	if (this.exists(vertex)) {
 		neighbors = [];
 
 		for (var i = 0; i < data_length; i += 1) {
@@ -100,7 +100,7 @@ AdjacencyMatrixGraph.prototype.hasNeighbors = function (vertex) {
 	var has_neighbors = false;
 	var data_length = this.data.length;
 
-	if (this.data[vertex] !== undefined) {
+	if (this.exists(vertex)) {
 		for (var i = 0; i < data_length; i += 1) {
 			if (this.data[vertex][i]) {
 				has_neighbors = true;
@@ -114,7 +114,7 @@ AdjacencyMatrixGraph.prototype.hasNeighbors = function (vertex) {
 AdjacencyMatrixGraph.prototype.forEachNeighbor = function (vertex, fn) {
 	var data_length = this.data.length;
 
-	if (this.data[vertex] !== undefined) {
+	if (this.exists(vertex)) {
 		for (var i = 0; i < data_length; i += 1) {
 			if (this.data[vertex][i]) {
 				fn(i);

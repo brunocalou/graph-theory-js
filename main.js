@@ -6,41 +6,45 @@ var BFS = require('./src/algorithms/breadth_first_search');
 // var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_VECTOR);
 // var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_LIST);
 var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_MATRIX);
-my_graph.loadFromFile('./test/graph_files/small_graph.txt');
+// my_graph.loadFromFile('./test/graph_files/small_graph.txt');
+my_graph.loadFromFile('./test/graph_files/small_multicluster_graph.txt');
 // my_graph.loadFromFile('./test/graph_files/as_graph.txt');
 // my_graph.saveGraphStatisticsToFile();
 // my_graph.print();
 // console.log("Neighbors of vertex 1 = ");
 // console.log(my_graph.neighbors(1));
 // console.log("Iterate over all the vertices");
-// my_graph.forEach(function (vertex) {
-// 	console.log("Iterate over all the neighbors of vertex " + vertex);
-// 	my_graph.forEachNeighbor(vertex, function (neighbor) {
-// 		console.log(neighbor);
-// 	});
-// });
+my_graph.forEach(function (vertex) {
+	console.log("Iterate over all the neighbors of vertex " + vertex);
+	my_graph.forEachNeighbor(vertex, function (neighbor) {
+		console.log(neighbor);
+	});
+});
 
-// function foundVertex(vertex, degree) {
-// 	console.log("Found vertex " + vertex + " with degree " + degree);
-// }
+my_graph.print();
+console.log(my_graph.data);
 
-// function visitedVertex(vertex, degree) {
-// 	console.log("Visited vertex " + vertex + " with degree " + degree);
-// }
+function foundVertex(vertex, degree) {
+	console.log("Found vertex " + vertex + " with degree " + degree);
+}
 
-// var callbacks = {
-// 	onVertexFound: foundVertex,
-// 	onVertexVisited: visitedVertex 
-// };
+function visitedVertex(vertex, degree) {
+	console.log("Visited vertex " + vertex + " with degree " + degree);
+}
 
-// console.log("DFS");
-// var dfs_spanning_tree = DFS(my_graph, 1, callbacks);
-// // console.log(dfs_spanning_tree);
+var callbacks = {
+	onVertexFound: foundVertex,
+	onVertexVisited: visitedVertex 
+};
 
-// console.log("\nBFS");
-// var bfs_spanning_tree = BFS(my_graph, 1, callbacks);
+console.log("DFS");
+var dfs_spanning_tree = DFS(my_graph, 7, callbacks);
+// console.log(dfs_spanning_tree);
 
-// // console.log(bfs_spanning_tree);
-// for (i = 0; i < 20; i += 1) {
-// 	console.log(my_graph.getRandomVertex());
-// }
+console.log("\nBFS");
+var bfs_spanning_tree = BFS(my_graph, 7, callbacks);
+
+// console.log(bfs_spanning_tree);
+for (i = 0; i < 20; i += 1) {
+	console.log(my_graph.getRandomVertex());
+}

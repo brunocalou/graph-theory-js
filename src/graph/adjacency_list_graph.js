@@ -35,15 +35,15 @@ AdjacencyListGraph.prototype.print = function () {
 	var data_length = this.data.length;
 
 	for (var i = 0; i < data_length; i += 1) {
-		
-		if (this.data[i] != undefined) {
+
+		if (this.exists(i)) {
 			line += '| ' + i + ' |';
-			
+
 			this.forEachNeighbor(i, function (neighbor) {
 				line += ' --> ';
 				line += neighbor;
 			});
-			
+
 			console.log(line);
 			line = '';
 		}
@@ -53,7 +53,7 @@ AdjacencyListGraph.prototype.print = function () {
 AdjacencyListGraph.prototype.neighbors = function (vertex) {
 	var neighbors;
 
-	if (this.data[vertex] != undefined) {
+	if (this.exists(vertex)) {
 		neighbors = [];
 
 		var node = this.data[vertex].findFirst();
@@ -68,14 +68,14 @@ AdjacencyListGraph.prototype.neighbors = function (vertex) {
 
 AdjacencyListGraph.prototype.hasNeighbors = function (vertex) {
 	var has_neighbors = false;
-	if (this.data[vertex] !== undefined) {
+	if (this.exists(vertex)) {
 		has_neighbors = !!this.data[vertex].count();
 	}
 	return has_neighbors;
 };
 
 AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
-	if (this.data[vertex] !== undefined) {
+	if (this.exists(vertex)) {
 		var node = this.data[vertex].findFirst();
 		while (node) {
 			fn(node.getValue());
