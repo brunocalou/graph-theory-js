@@ -62,6 +62,11 @@ function saveJSON(graph_obj, data, suffix) {
 		);
 }
 
+function createProgressBar (options) {
+	if (!options.clear) options.clear = true;
+	return new ProgressBar('running [:bar] :percent :elapsed', options);
+}
+
 function init() {
 	//If the data structure was not specified, use the vector
 	if (!argv.vector && !argv.list && !argv.matrix) {
@@ -128,8 +133,13 @@ function runPerformanceTest() {
 	//Run the performance test
 	var
 		current_graph,
+		number_of_cyles = 10,
+		bar = createProgressBar({
+			total: number_of_cyles,
+		}),
+
 		benchmark_options = {
-			cycles: 10,
+			cycles: number_of_cyles,
 			onFinishedFunctionTest: function (fn_item) {
 				console.log(chalk.yellow("FINISHED " + fn_item.name + "\n"));
 				console.log(chalk.yellow(' Cycles : ') + benchmark_options.cycles);
@@ -141,6 +151,11 @@ function runPerformanceTest() {
 					'average time': fn_item.time,
 					'time unity': 'ms'
 				}, '_' + fn_item.name + '_performance_test');
+				bar.terminate();
+				bar = createProgressBar({total: number_of_cyles});
+			},
+			onFinishedCycle: function (current_cycle, cycle_time) {
+				bar.tick();
 			}
 		};
 	console.log(chalk.yellow("====== PERFORMANCE TEST ======\n"));
@@ -159,6 +174,9 @@ function runPerformanceTest() {
 		benchmark.add("DFS", function () {
 			DFS(current_graph.graph, current_graph.graph.getRandomVertex());
 		});
+		
+		//Start the progress bar
+		bar.tick(0);
 
 		benchmark.run(benchmark_options);
 
@@ -178,20 +196,29 @@ function runSpecificTests() {
 		parents = {
 			'DFS': {},
 			'BFS': {}
-		};
+		},
+		bar = createProgressBar({
+			total: 10//Run 5 times for the BFS and 5 for the DFS (vertices 1, 2, 3, 4, 5)
+		});
 
 	console.log(chalk.yellow('SPECIFIC TESTS USING ' + current_graph.name.toUpperCase()) + '\n');
 	printSeparator();
+	
+	bar.tick(0);
 
 	for (var i = 1; i < 6; i += 1) {
 		parents.BFS[i] = {};
 		parents.DFS[i] = {};
+		
+		var bfs_spanning_tree = BFS(current_graph.graph, i);
+		bar.tick();
+		
+		var dfs_spanning_tree = DFS(current_graph.graph, i);
+		bar.tick();
+		
 		for (var j = 10; j < 51; j += 10) {
-			var spanning_tree = BFS(current_graph.graph, i);
-			parents.BFS[i][j] = spanning_tree.tree[j];//Get the parent of the vertex j
-				
-			spanning_tree = DFS(current_graph.graph, i);
-			parents.DFS[i][j] = spanning_tree.tree[j];//Get the parent of the vertex j
+			parents.BFS[i][j] = bfs_spanning_tree.tree[j];//Get the parent of the vertex j
+			parents.DFS[i][j] = dfs_spanning_tree.tree[j];//Get the parent of the vertex j
 		}
 	}
 
@@ -220,9 +247,9 @@ function runFindClusters() {
 	var current_graph = graph_list[0];
 	console.log(chalk.yellow('FINDING CLUSTERS USING ' + current_graph.name.toUpperCase()) + '\n');
 
-	var bar = new ProgressBar('running [:bar] :percent :elapsed', {
+	var bar = createProgressBar({
 		total: current_graph.graph.number_of_vertices,
-		width: 100
+		width: 20
 	});
 	
 	//Start the progress
