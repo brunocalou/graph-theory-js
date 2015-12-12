@@ -8,14 +8,12 @@ function BFS(graph, initial_vertex, callbacks) {
 	// 	onVertexFound = function (vertex, vertex_degree)
 	// }
 	
+	if (!callbacks) { callbacks = {}; }
+
 	var queue = new Queue();
 	var explored_vertices = new Array(graph.number_of_vertices);
 	var spanning_tree = new Array(graph.number_of_vertices);
 	var degrees = new Array(graph.number_of_vertices);
-
-	if (!callbacks) {
-		callbacks = {};
-	}
 
 	queue.enqueue(initial_vertex);
 	spanning_tree[initial_vertex] = null;

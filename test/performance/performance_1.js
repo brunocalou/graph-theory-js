@@ -8,6 +8,7 @@ var
 	BFS = graphtheoryjs.algorithms.BFS,
 	DFS = graphtheoryjs.algorithms.DFS,
 	findClusters = graphtheoryjs.algorithms.FindClusters,
+	findDiameter = graphtheoryjs.algorithms.FindDiameter,
 	fs = require('fs'),
 	ProgressBar = require('progress'),
 	argv = require('yargs').usage('Usage: $0 <command> [options]')
@@ -52,19 +53,28 @@ function printSeparator(color) {
 	console.log(chalk[color]("==============================\n"));
 }
 
-function saveJSON(graph_obj, data, suffix) {
+function saveJSON(graph_obj, data, suffix, use_graph_name_as_prefix) {
+	
+	if (use_graph_name_as_prefix === undefined) use_graph_name_as_prefix = true;
+	
 	//Save the data on the file
 	graph_obj.graph.createOutputFolder();
 
+	var name = '';
+	
+	if (use_graph_name_as_prefix) {
+		name = graph_obj.name;
+	}
+
 	fs.writeFileSync(
-		graph_obj.graph.output.folder + '/' + graph_obj.name + suffix + '.json',
+		graph_obj.graph.output.folder + '/' + name + suffix + '.json',
 		JSON.stringify(data, null, 4)
 		);
 }
 
-function createProgressBar (options) {
+function createProgressBar(options) {
 	if (!options.clear) options.clear = true;
-	return new ProgressBar('running [:bar] :percent :elapsed', options);
+	return new ProgressBar('running [:bar] :percent :elapsed s', options);
 }
 
 function init() {
@@ -152,7 +162,7 @@ function runPerformanceTest() {
 					'time unity': 'ms'
 				}, '_' + fn_item.name + '_performance_test');
 				bar.terminate();
-				bar = createProgressBar({total: number_of_cyles});
+				bar = createProgressBar({ total: number_of_cyles });
 			},
 			onFinishedCycle: function (current_cycle, cycle_time) {
 				bar.tick();
@@ -203,19 +213,19 @@ function runSpecificTests() {
 
 	console.log(chalk.yellow('SPECIFIC TESTS USING ' + current_graph.name.toUpperCase()) + '\n');
 	printSeparator();
-	
+
 	bar.tick(0);
 
 	for (var i = 1; i < 6; i += 1) {
 		parents.BFS[i] = {};
 		parents.DFS[i] = {};
-		
+
 		var bfs_spanning_tree = BFS(current_graph.graph, i);
 		bar.tick();
-		
+
 		var dfs_spanning_tree = DFS(current_graph.graph, i);
 		bar.tick();
-		
+
 		for (var j = 10; j < 51; j += 10) {
 			parents.BFS[i][j] = bfs_spanning_tree.tree[j];//Get the parent of the vertex j
 			parents.DFS[i][j] = dfs_spanning_tree.tree[j];//Get the parent of the vertex j
@@ -237,7 +247,7 @@ function runSpecificTests() {
 		console.log('');
 	}
 
-	saveJSON(current_graph, parents, '_specific_parent_test');
+	saveJSON(current_graph, parents, 'specific_parent_test', false);
 
 	printSeparator();
 }
@@ -268,7 +278,39 @@ function runFindClusters() {
 	console.log(chalk.yellow(' Smallest : ') + cluster_statistics.smallest);
 	console.log('');
 
-	saveJSON(current_graph, cluster_statistics, '_clusters_test');
+	saveJSON(current_graph, cluster_statistics, 'clusters_test', false);
+	printSeparator();
+}
+
+function runFindDiameter() {
+	var current_graph = graph_list[0];
+	console.log(chalk.yellow('FINDING DIAMETER USING ' + current_graph.name.toUpperCase()) + '\n');
+
+	var bar = createProgressBar({
+		total: current_graph.graph.number_of_vertices,
+		width: 20
+	});
+	
+	//Start the progress
+	bar.tick(0);
+
+	function updateProgressBar(diameter) {
+		var progress = -bar.curr + diameter.initial_vertex;
+		bar.tick(progress);
+	}
+
+	var diameter = findDiameter(current_graph.graph, {
+		onDiameterUpdated: updateProgressBar
+	});
+
+	bar.terminate();
+
+	console.log(chalk.yellow(' Size : ') + diameter.size);
+	console.log(chalk.yellow(' Initial Vertex : ') + diameter.initial_vertex);
+	console.log(chalk.yellow(' Last Vertex : ') + diameter.last_vertex);
+	console.log('');
+
+	saveJSON(current_graph, diameter, 'diameter', false);
 	printSeparator();
 }
 
@@ -290,4 +332,5 @@ runMemoryTest();
 runPerformanceTest();
 runSpecificTests();
 runFindClusters();
+runFindDiameter();
 saveGraphStatistics();

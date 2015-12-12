@@ -8,14 +8,12 @@ function DFS(graph, initial_vertex, callbacks) {
 	// 	onVertexFound = function (vertex, vertex_degree)
 	// }
 	
+	if (!callbacks) { callbacks = {}; }
+
 	var stack = new Stack();
 	var visited_vertices = new Array(graph.number_of_vertices);
 	var spanning_tree = new Array(graph.number_of_vertices);
 	var degrees = new Array(graph.number_of_vertices);
-
-	if (!callbacks) {
-		callbacks = {};
-	}
 
 	stack.push(initial_vertex);
 	spanning_tree[initial_vertex] = null; //Mark the root
