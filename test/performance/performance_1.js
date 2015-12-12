@@ -15,6 +15,8 @@ var
 		.example('$0 -f foo.txt --vector --list', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
 		.example('$0 -f foo.txt -vl', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
 		.example('$0 -f foo.txt -m -v', 'Load the foo.txt graph file using matrix and vector data structures and perform the tests')
+		.example('$0 -f foo.txt --clusters', 'Find the clusters of the foo graph')
+		.example('$0 -f foo.txt -ps', 'Run the performance and specific tests on the foo graph')
 		.option('f', {
 			alias: 'file',
 			nargs: 1,
@@ -32,6 +34,22 @@ var
 		.option('m', {
 			alias: 'matrix',
 			describe: 'Use adjacency matrix data structure'
+		})
+		.option('p', {
+			alias: 'performance',
+			describe: 'Run the performance test (10 BFS, 10 DFS)'
+		})
+		.option('s', {
+			alias: 'specific',
+			describe: 'Run specific tests'
+		})
+		.option('c', {
+			alias: 'clusters',
+			describe: 'Find clusters'
+		})
+		.option('d', {
+			alias: 'diameter',
+			describe: 'Find diameter of the graph'
 		})
 		.help('h')
 		.alias('h', 'help')
@@ -54,14 +72,14 @@ function printSeparator(color) {
 }
 
 function saveJSON(graph_obj, data, suffix, use_graph_name_as_prefix) {
-	
+
 	if (use_graph_name_as_prefix === undefined) use_graph_name_as_prefix = true;
 	
 	//Save the data on the file
 	graph_obj.graph.createOutputFolder();
 
 	var name = '';
-	
+
 	if (use_graph_name_as_prefix) {
 		name = graph_obj.name;
 	}
@@ -78,6 +96,11 @@ function createProgressBar(options) {
 }
 
 function init() {
+	
+	//If the options are all empty, run all of them
+	if (!argv.p && !argv.s && !argv.c && !argv.d) {
+		argv.p = argv.s = argv.c = argv.d = true;
+	}
 	//If the data structure was not specified, use the vector
 	if (!argv.vector && !argv.list && !argv.matrix) {
 		argv.vector = true;
@@ -215,7 +238,7 @@ function runSpecificTests() {
 	printSeparator();
 
 	bar.tick(0);
-	
+
 	timer.start();
 
 	for (var i = 1; i < 6; i += 1) {
@@ -233,7 +256,7 @@ function runSpecificTests() {
 			parents.DFS[i][j] = dfs_spanning_tree.tree[j];//Get the parent of the vertex j
 		}
 	}
-	
+
 	var time_to_complete = timer.getElapsedTime();
 
 	for (var algorithm in parents) {
@@ -275,13 +298,13 @@ function runFindClusters() {
 	function updateProgressBar(cluster_size, cluster_statistics) {
 		bar.tick(cluster_size);
 	}
-	
+
 	timer.start();
 
 	var cluster_statistics = findClusters(current_graph.graph, {
 		onClusterFound: updateProgressBar
 	});
-	
+
 	cluster_statistics.time_to_complete = timer.getElapsedTime();
 	cluster_statistics['time unity'] = 's';
 
@@ -311,13 +334,13 @@ function runFindDiameter() {
 		var progress = -bar.curr + diameter.initial_vertex;
 		bar.tick(progress);
 	}
-	
+
 	timer.start();
 
 	var diameter = findDiameter(current_graph.graph, {
 		onDiameterUpdated: updateProgressBar
 	});
-	
+
 	diameter.time_to_complete = timer.getElapsedTime();
 	diameter['time unity'] = 's';
 
@@ -348,8 +371,8 @@ function saveGraphStatistics() {
 //Init and run
 init();
 runMemoryTest();
-runPerformanceTest();
-runSpecificTests();
-runFindClusters();
-runFindDiameter();
+if (argv.p) runPerformanceTest();
+if (argv.s) runSpecificTests();
+if (argv.c) runFindClusters();
+if (argv.d) runFindDiameter();
 saveGraphStatistics();
