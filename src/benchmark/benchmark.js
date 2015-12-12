@@ -18,7 +18,7 @@ Benchmark.prototype.run = function (options, context) {
 		options = {
 			cycles: number, //The number of times each function will run
 			onFinishedFunctionTest: function(function_list_item), //The callback function to call when the test for each function is finished
-			onFinishedCycle: function(current_cycle, cycle_time) //The callback function to call when a cycle is finished
+			onFinishedCycle: function(current_cycle, cycle_time) //The callback function to call when a cycle is finished, cycle_time in nanoseconds
 		}
 	 */
 

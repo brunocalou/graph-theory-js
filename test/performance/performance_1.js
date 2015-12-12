@@ -215,6 +215,8 @@ function runSpecificTests() {
 	printSeparator();
 
 	bar.tick(0);
+	
+	timer.start();
 
 	for (var i = 1; i < 6; i += 1) {
 		parents.BFS[i] = {};
@@ -231,6 +233,8 @@ function runSpecificTests() {
 			parents.DFS[i][j] = dfs_spanning_tree.tree[j];//Get the parent of the vertex j
 		}
 	}
+	
+	var time_to_complete = timer.getElapsedTime();
 
 	for (var algorithm in parents) {
 		console.log(chalk.yellow(algorithm));
@@ -246,7 +250,10 @@ function runSpecificTests() {
 		}
 		console.log('');
 	}
-
+	console.log(chalk.yellow('\nTIME : ') + time_to_complete + ' s');
+	console.log('');
+	parents.time_to_complete = time_to_complete;
+	parents['time unity'] = 's';
 	saveJSON(current_graph, parents, 'specific_parent_test', false);
 
 	printSeparator();
@@ -268,14 +275,20 @@ function runFindClusters() {
 	function updateProgressBar(cluster_size, cluster_statistics) {
 		bar.tick(cluster_size);
 	}
+	
+	timer.start();
 
 	var cluster_statistics = findClusters(current_graph.graph, {
 		onClusterFound: updateProgressBar
 	});
+	
+	cluster_statistics.time_to_complete = timer.getElapsedTime();
+	cluster_statistics['time unity'] = 's';
 
 	console.log(chalk.yellow(' Total : ') + cluster_statistics.total);
 	console.log(chalk.yellow(' Biggest : ') + cluster_statistics.biggest);
 	console.log(chalk.yellow(' Smallest : ') + cluster_statistics.smallest);
+	console.log(chalk.yellow('\nTIME : ') + cluster_statistics.time_to_complete + ' s');
 	console.log('');
 
 	saveJSON(current_graph, cluster_statistics, 'clusters_test', false);
@@ -298,16 +311,22 @@ function runFindDiameter() {
 		var progress = -bar.curr + diameter.initial_vertex;
 		bar.tick(progress);
 	}
+	
+	timer.start();
 
 	var diameter = findDiameter(current_graph.graph, {
 		onDiameterUpdated: updateProgressBar
 	});
+	
+	diameter.time_to_complete = timer.getElapsedTime();
+	diameter['time unity'] = 's';
 
 	bar.terminate();
 
 	console.log(chalk.yellow(' Size : ') + diameter.size);
 	console.log(chalk.yellow(' Initial Vertex : ') + diameter.initial_vertex);
 	console.log(chalk.yellow(' Last Vertex : ') + diameter.last_vertex);
+	console.log(chalk.yellow('\nTIME : ') + diameter.time_to_complete + ' s');
 	console.log('');
 
 	saveJSON(current_graph, diameter, 'diameter', false);
