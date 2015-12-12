@@ -360,19 +360,22 @@ function saveGraphStatistics() {
 	//Save the graph statistics
 	
 	var current_graph = graph_list[0];
-	console.log(chalk.yellow('SAVING GRAPH STATISTICS TO FILE ...\n'));
+
+	console.log(chalk.yellow('====== GRAPH STATISTICS ======\n'));
 	var file = current_graph.graph.saveGraphStatisticsToFile();
-	console.log(chalk.yellow(' Filename : ') + file.filename);
-	console.log(chalk.yellow(' Destination Folder : ') + file.folder);
-	console.log(chalk.yellow(' Path : ') + file.destination);
+	
+	console.log(chalk.yellow(' Number of Vertices : ') + current_graph.graph.number_of_vertices);
+	console.log(chalk.yellow(' Number of Edges : ') + current_graph.graph.number_of_edges);
+	console.log(chalk.yellow(' Medium Degree : ') + current_graph.graph.medium_degree);
 	console.log('');
+	printSeparator();
 }
 
 //Init and run
 init();
 runMemoryTest();
+saveGraphStatistics();
 if (argv.p) runPerformanceTest();
 if (argv.s) runSpecificTests();
 if (argv.c) runFindClusters();
 if (argv.d) runFindDiameter();
-saveGraphStatistics();
