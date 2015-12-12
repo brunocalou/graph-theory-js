@@ -2,13 +2,14 @@ var graph = require('./src/graph/graph');
 var DFS = require('./src/algorithms/depth_first_search');
 var BFS = require('./src/algorithms/breadth_first_search');
 var findClusters = require('./src/algorithms/find_clusters');
+var findDiameter = require('./src/algorithms/find_diameter');
 //Temporary debug tests
 
 var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_VECTOR);
 // var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_LIST);
 // var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_MATRIX);
-// my_graph.loadFromFile('./test/graph_files/small_graph.txt');
-my_graph.loadFromFile('./test/graph_files/small_multicluster_graph.txt');
+my_graph.loadFromFile('./test/graph_files/small_graph_3.txt');
+// my_graph.loadFromFile('./test/graph_files/small_multicluster_graph.txt');
 // my_graph.loadFromFile('./test/graph_files/as_graph.txt');
 // my_graph.saveGraphStatisticsToFile();
 // my_graph.print();
@@ -45,9 +46,14 @@ my_graph.print();
 // console.log("\nBFS");
 // var bfs_spanning_tree = BFS(my_graph, 7, callbacks);
 
-console.log("\nFind Clusters");
-var cluster_statistics = findClusters(my_graph);
-console.log(cluster_statistics);
+// console.log("\nFind Clusters");
+// var cluster_statistics = findClusters(my_graph);
+// console.log(cluster_statistics);
+
+console.log("\nFind Diameter");
+var diameter_statistics = findDiameter(my_graph);
+console.log(diameter_statistics);
+
 // console.log(bfs_spanning_tree);
 // for (i = 0; i < 20; i += 1) {
 // 	console.log(my_graph.getRandomVertex());

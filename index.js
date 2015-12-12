@@ -14,6 +14,7 @@ var
 algorithms.BFS = require(getResource('algorithms/breadth_first_search'));
 algorithms.DFS = require(getResource('algorithms/depth_first_search'));
 algorithms.FindClusters = require(getResource('algorithms/find_clusters'));
+algorithms.FindDiameter = require(getResource('algorithms/find_diameter'));
 
 benchmark.Benchmark = require(getResource('benchmark/benchmark'));
 
