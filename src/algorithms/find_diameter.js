@@ -7,10 +7,10 @@ function findDiameter (graph) {
 		initial_vertex: 0,
 		last_vertex: 0
 	};
-	var clusters = new findClusters(graph);
+	var clusters = findClusters(graph);
 	var initial_vertex_aux;
 	var callback = {
-		onVertexVisited:  function visitedVertex(vertex_visited, degree) {
+		onVertexVisited: function visitedVertex(vertex_visited, degree) {
 			if (degree === 0) {
 				initial_vertex_aux = vertex_visited;
 			}
