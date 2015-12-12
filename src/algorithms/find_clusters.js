@@ -1,6 +1,11 @@
 var BFS = require('./breadth_first_search');
 
-function findClusters (graph) {
+function findClusters (graph, callbacks) {
+	//callbacks is an object with the following properties
+	// {
+	// 	onClusterFound = function (cluster_size, cluster_statistics)
+	// }
+	
 	var cluster_statistics = {
 		total: 0,
 		biggest: 0,
@@ -31,6 +36,8 @@ function findClusters (graph) {
 			if (cluster_statistics.smallest > vertices_found) {
 				cluster_statistics.smallest = vertices_found;
 			}
+			
+			if (callbacks.onClusterFound) callbacks.onClusterFound(vertices_found, cluster_statistics);
 		}
 	});
 	

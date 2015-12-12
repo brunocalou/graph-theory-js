@@ -7,7 +7,9 @@ var
 	chalk = require('chalk'),
 	BFS = graphtheoryjs.algorithms.BFS,
 	DFS = graphtheoryjs.algorithms.DFS,
+	findClusters = graphtheoryjs.algorithms.FindClusters,
 	fs = require('fs'),
+	ProgressBar = require('progress'),
 	argv = require('yargs').usage('Usage: $0 <command> [options]')
 		.example('$0 -f foo.txt --vector --list', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
 		.example('$0 -f foo.txt -vl', 'Load the foo.txt graph file using adjacency vector and list data structures and perform the tests')
@@ -85,7 +87,7 @@ function init() {
 				name: 'matrix'
 			});
 	}
-	
+
 	if (argv.list) {
 		graph_list.push(
 			{
@@ -115,7 +117,7 @@ function runMemoryTest() {
 		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
 		graphtheoryjs.util.printMemory(memory_diff);
 		console.log(chalk.yellow("LOAD TIME : ") + time_to_load + " s\n");
-		
+
 		saveJSON(current_graph, memory_diff, '_memory_test');
 
 	}
@@ -132,7 +134,7 @@ function runPerformanceTest() {
 				console.log(chalk.yellow("FINISHED " + fn_item.name + "\n"));
 				console.log(chalk.yellow(' Cycles : ') + benchmark_options.cycles);
 				console.log(chalk.yellow(' Average time : ') + fn_item.time + ' ms\n');
-				
+
 				saveJSON(current_graph, {
 					algorithm: fn_item.name,
 					cycles: benchmark_options.cycles,
@@ -209,7 +211,37 @@ function runSpecificTests() {
 	}
 
 	saveJSON(current_graph, parents, '_specific_parent_test');
+
+	printSeparator();
+}
+
+function runFindClusters() {
+
+	var current_graph = graph_list[0];
+	console.log(chalk.yellow('FINDING CLUSTERS USING ' + current_graph.name.toUpperCase()) + '\n');
+
+	var bar = new ProgressBar('running [:bar] :percent :elapsed', {
+		total: current_graph.graph.number_of_vertices,
+		width: 100
+	});
 	
+	//Start the progress
+	bar.tick(0);
+
+	function updateProgressBar(cluster_size, cluster_statistics) {
+		bar.tick(cluster_size);
+	}
+
+	var cluster_statistics = findClusters(current_graph.graph, {
+		onClusterFound: updateProgressBar
+	});
+
+	console.log(chalk.yellow(' Total : ') + cluster_statistics.total);
+	console.log(chalk.yellow(' Biggest : ') + cluster_statistics.biggest);
+	console.log(chalk.yellow(' Smallest : ') + cluster_statistics.smallest);
+	console.log('');
+
+	saveJSON(current_graph, cluster_statistics, '_clusters_test');
 	printSeparator();
 }
 
@@ -230,4 +262,5 @@ init();
 runMemoryTest();
 runPerformanceTest();
 runSpecificTests();
+runFindClusters();
 saveGraphStatistics();
