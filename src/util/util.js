@@ -3,7 +3,7 @@ var
 	MemorySize = Object.freeze({
 		BYTE: 1,
 		KB: 1024,
-		MB: 1024 * 2014
+		MB: 1024 * 1024
 	});
 
 var inherit = function (parent, child) {
