@@ -21,7 +21,9 @@ var
 			alias: 'file',
 			nargs: 1,
 			type: 'string',
-			describe: 'Load a file'
+			describe: 'Load a file',
+			requiresArgs: true,
+			demand: true
 		})
 		.option('v', {
 			alias: 'vector',
@@ -64,7 +66,7 @@ var
 	vector_graph = new graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_VECTOR),
 	matrix_graph = new graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_MATRIX),
 	graph_list = [],
-	graph_file = argv.file || '../graph_files/as_graph.txt';
+	graph_file = argv.file;
 
 function printSeparator(color) {
 	if (!color) color = 'yellow';

@@ -7,7 +7,7 @@ Memory.prototype.start = function () {
 };
 
 Memory.prototype.getDiff = function (initial_usage, last_usage) {
-	// Get the difference
+	// Get the difference in bytes
 	var diff = {};
 
 	if (!initial_usage) initial_usage = this.memory_usage;
