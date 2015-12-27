@@ -88,6 +88,7 @@ describe('Linked List', function () {
             ll.add(back_value);
             ll.add(middle_value, 1);
 
+            //front - middle - back
             assert.equal(ll._length, 3);
             assert.equal(ll._front.value, front_value);
             assert.equal(ll._front.next.value, middle_value);
@@ -95,6 +96,16 @@ describe('Linked List', function () {
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._back, ll._front.next.next);
             assert.equal(ll._front.next, ll._back.prev);
+            
+            //front - front - middle - back
+            ll.add(front_value, 1);
+            assert.equal(ll._front.next.value, front_value);
+            assert.equal(ll._back.prev.value, middle_value);
+            
+            //front - front - back - middle - back
+            ll.add(back_value, 2);
+            assert.equal(ll._front.next.next.value, back_value);
+            assert.equal(ll._back.prev.value, middle_value);
         });
 
         it('should throw an exception when trying to insert to an index higher than the length', function () {
@@ -171,28 +182,28 @@ describe('Linked List', function () {
             var first;
             var middle;
             var last;
-            
+
             ll.add(123);
             ll.add(456);
             ll.add(789);
-            
+
             first = ll.get(0);
             middle = ll.get(1);
             last = ll.get(2);
-            
+
             ll.clear();
-            
+
             assert.equal(ll._front, null);
             assert.equal(ll._back, null);
             assert.equal(ll._length, 0);
-            
+
             assert.equal(first._next, null);
             assert.equal(first._prev, null);
             assert.equal(middle._next, null);
             assert.equal(middle._prev, null);
             assert.equal(last._next, null);
             assert.equal(last._prev, null);
-            
+
         });
     });
 
@@ -518,12 +529,37 @@ describe('Linked List', function () {
 
             removed_element = ll.remove(1);
 
+            //front - back
             assert.equal(ll._length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, middle_value);
             assert.equal(removed_element.prev, null);
             assert.equal(removed_element.next, null);
+
+            ll.add(middle_value, 1);
+            ll.add(back_value, 2);
+            ll.add(front_value, 1);
+            
+            //front - front - middle - back - back
+            removed_element = ll.remove(3);
+            
+            //front - front - middle - back
+            assert.equal(removed_element, back_value);
+            assert.equal(ll._back.prev.value, middle_value);
+            assert.equal(ll._front.next.next.value, middle_value);
+            assert.equal(ll._front.next.value, front_value);
+
+            ll.add(removed_element, 3);
+            
+            //front - front - middle - back - back
+            removed_element = ll.remove(1);
+            
+            //front - middle - back - back
+            assert.equal(removed_element, front_value);
+            assert.equal(ll._front.next.value, middle_value);
+            assert.equal(ll._back.prev.prev.value, middle_value);
+            assert.equal(ll._back.prev.value, back_value);
         });
 
         it('should remove the first element', function () {
@@ -585,9 +621,9 @@ describe('Linked List', function () {
             assert.equal(removed_element, front_value);
         });
     });
-    
-    describe('removeFirstOccurrence', function() {
-        it('should remove the first occurrence of the element', function() {
+
+    describe('removeFirstOccurrence', function () {
+        it('should remove the first occurrence of the element', function () {
             var ll = new LinkedList();
             var front_value = 123;
             var middle_value = 345;
@@ -597,20 +633,20 @@ describe('Linked List', function () {
             ll.add(middle_value);
             ll.add(back_value);
             ll.add(middle_value);
-            
+
             ll.removeFirstOccurrence(middle_value);
             assert.equal(ll._front.next.value, back_value);
             assert.equal(ll._back.value, middle_value);
         });
-        
-        it('should do nothing if the element does not exist', function() {
+
+        it('should do nothing if the element does not exist', function () {
             var ll = new LinkedList();
             var value = 123;
-            
+
             ll.add(value);
 
             ll.removeFirstOccurrence(5);
-            
+
             assert.equal(ll._length, 1);
             assert.equal(ll._front.value, value);
         });
@@ -636,9 +672,9 @@ describe('Linked List', function () {
             assert.equal(removed_element, back_value);
         });
     });
-    
-    describe('removeLastOccurrence', function() {
-        it('should remove the last occurrence of the element', function() {
+
+    describe('removeLastOccurrence', function () {
+        it('should remove the last occurrence of the element', function () {
             var ll = new LinkedList();
             var front_value = 123;
             var middle_value = 345;
@@ -648,90 +684,90 @@ describe('Linked List', function () {
             ll.add(middle_value);
             ll.add(back_value);
             ll.add(middle_value);
-            
+
             ll.removeLastOccurrence(middle_value);
             assert.equal(ll._front.next.value, middle_value);
             assert.equal(ll._back.value, back_value);
         });
-        
-        it('should do nothing if the element does not exist', function() {
+
+        it('should do nothing if the element does not exist', function () {
             var ll = new LinkedList();
             var value = 123;
-            
+
             ll.add(value);
 
             ll.removeFirstOccurrence(5);
-            
+
             assert.equal(ll._length, 1);
             assert.equal(ll._front.value, value);
         });
     });
-    
-    describe('set', function() {
-        it('should set the the element at the specified index', function() {
+
+    describe('set', function () {
+        it('should set the the element at the specified index', function () {
             var ll = new LinkedList();
             var front_value = 123;
             var middle_value = 345;
             var back_value = 678;
-            
+
             ll.add(front_value);
             ll.add(middle_value);
             ll.add(back_value);
-            
+
             ll.set(back_value, 0);
             assert.equal(ll._front.value, back_value);
-            
+
             ll.set(middle_value, 2);
             assert.equal(ll._back.value, middle_value);
-            
+
             ll.set(front_value, 1);
             assert.equal(ll._front.next.value, front_value);
         });
-        
-        it('should throw an exception if trying to set a number at an invalid index', function() {
+
+        it('should throw an exception if trying to set a number at an invalid index', function () {
             var ll = new LinkedList();
             var error = false;
             ll.add(123);
-            
+
             try {
                 ll.set(456, 1);
             } catch (e) {
                 error = true;
             }
-            
+
             assert(error);
         });
-        
-        it('should throw an exception if trying to set a number at a negative index', function() {
+
+        it('should throw an exception if trying to set a number at a negative index', function () {
             var ll = new LinkedList();
             var error = false;
             ll.add(123);
-            
+
             try {
                 ll.set(456, -1);
             } catch (e) {
                 error = true;
             }
-            
+
             assert(error);
         });
-        
-        it('should throw an exception if trying to set a number at an empty list', function() {
+
+        it('should throw an exception if trying to set a number at an empty list', function () {
             var ll = new LinkedList();
             var error = false;
-            
+
             try {
                 ll.set(123, 0);
             } catch (e) {
                 error = true;
             }
-            
+
             assert(error);
         });
     });
-    
-    describe('size', function() {
-        it('should return the length of the list', function() {
+
+    describe('size', function () {
+        it('should return the length of the list', function () {
             var ll = new LinkedList();
             assert.equal(ll.size(), 0);
             ll.add(123);

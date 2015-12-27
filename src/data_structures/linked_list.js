@@ -59,21 +59,37 @@ LinkedList.prototype.add = function (element, index) {
         } else {
             //Add the element on the specified index
             var current_node = this._front;
-
-            for (var i = 0; i < this._length; i += 1) {
-                if (i !== index) {
+            var i;
+            
+            //Check if the index is closer to the front or to the back and performs the
+            //insertion accordingly
+            if (index < this._length / 2) {
+                for (i = 0; i < this._length; i += 1) {
+                    if (i === index) {
+                        break;
+                    }
                     //Get the next node
                     current_node = current_node.next;
+
                 }
-                else {
-                    node.prev = current_node.prev;
-                    node.next = current_node;
+            } else {
+                current_node = this._back;
 
-                    current_node.prev.next = node;
-
-                    current_node.prev = node;
+                for (i = this._length - 1; i > 0; i -= 1) {
+                    if (i === index) {
+                        break;
+                    }
+                    //Get the previous node
+                    current_node = current_node.prev;
                 }
             }
+
+            node.prev = current_node.prev;
+            node.next = current_node;
+
+            current_node.prev.next = node;
+
+            current_node.prev = node;
         }
 
         this._length += 1;
@@ -136,7 +152,7 @@ LinkedList.prototype.contains = function (element) {
 /**
  * Performs the fn function for all the elements of the list, untill the callback function returns false
  * @param {iterateCallback} fn - The function the be executed on each element
- * @param {object} this_arg - The object to use as this when calling the fn function 
+ * @param {object} [this_arg] - The object to use as this when calling the fn function 
  */
 LinkedList.prototype.every = function (fn, this_arg) {
     var current_node = this._front;
@@ -154,7 +170,7 @@ LinkedList.prototype.every = function (fn, this_arg) {
 /**
  * Performs the fn function for all the elements of the list
  * @param {iterateCallback} fn - The function the be executed on each element
- * @param {object} this_arg - The object to use as this when calling the fn function
+ * @param {object} [this_arg] - The object to use as this when calling the fn function
  */
 LinkedList.prototype.forEach = function (fn, this_arg) {
     var current_node = this._front;
@@ -256,6 +272,16 @@ LinkedList.prototype.lastIndexOf = function (element) {
 };
 
 /**
+ * Returns the length of the list
+ * This method is equivalent to size
+ * @see size
+ * @returns {number} The length of the list
+ */
+LinkedList.prototype.length = function () {
+    return this.size();
+};
+
+/**
  * Removes and returns the first element of the list.
  * This method is equivalent to removeFirst
  * @see removeFirst
@@ -300,16 +326,28 @@ LinkedList.prototype.remove = function (index) {
         } else {
             //Remove the element at the specified index
             var node = this._front;
-            var counter = 0;
-            for (var i = 0; i < this._length; i += 1) {
-                if (counter === index) {
-                    removed_node = node;
-                    this.removeNode(removed_node);
+            var i;
 
-                    break;
+            if (index < this._length / 2) {
+                for (i = 0; i < this._length; i += 1) {
+                    if (i === index) {
+                        removed_node = node;
+                        this.removeNode(removed_node);
+                        break;
+                    }
+                    node = node.next;
                 }
-                node = node.next;
-                counter += 1;
+            } else {
+                node = this._back;
+
+                for (i = this._length - 1; i > 0; i -= 1) {
+                    if (i === index) {
+                        removed_node = node;
+                        this.removeNode(removed_node);
+                        break;
+                    }
+                    node = node.prev;
+                }
             }
         }
         this._length -= 1;
