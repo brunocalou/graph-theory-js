@@ -20,6 +20,7 @@ algorithms.FindDiameter = require(getResource('algorithms/find_diameter'));
 benchmark.Benchmark = require(getResource('benchmark/benchmark'));
 
 dataStructures.LinkedList = require(getResource('data_structures/linked_list'));
+dataStructures.Queue = require(getResource('data_structures/queue'));
 
 memory.Memory = require(getResource('memory/memory'));
 

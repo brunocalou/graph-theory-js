@@ -488,7 +488,7 @@ LinkedList.prototype.size = function () {
 
 /**
  * Converts the list to an array
- * @returns {any} The converted list in an array format
+ * @returns {array} The converted list in an array format
  */
 LinkedList.prototype.toArray = function () {
     var array = new Array(this._length);

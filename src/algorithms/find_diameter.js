@@ -41,6 +41,6 @@ function findDiameter(graph, callbacks) {
 	}
 
 	return diameter;
-};
+}
 
 module.exports = findDiameter;

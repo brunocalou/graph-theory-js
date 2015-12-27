@@ -19,7 +19,7 @@ function findClusters(graph, callbacks) {
 
 	graph.forEach(function (vertex) {
 		if (!discovered_vertices[vertex]) {
-			cluster_statistics.total += 1
+			cluster_statistics.total += 1;
 			vertices_found = 1;
 			discovered_vertices[vertex] = true;
 			bfs_spanning_tree = BFS(graph, vertex);
@@ -44,6 +44,6 @@ function findClusters(graph, callbacks) {
 	});
 
 	return cluster_statistics;
-};
+}
 
 module.exports = findClusters;
