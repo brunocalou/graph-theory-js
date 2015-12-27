@@ -1,4 +1,4 @@
-var Stack = require('datastructures-js').stack;
+var Stack = require('../data_structures/stack');
 var SpanningTree = require('../trees/spanning_tree.js');
 
 function DFS(graph, initial_vertex, callbacks) {
