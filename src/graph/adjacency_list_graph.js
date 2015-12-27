@@ -1,6 +1,6 @@
 var GraphBase = require("./graph_base");
 var util = require('../util/util');
-var linkedList = require('datastructures-js').linkedList;
+var LinkedList = require('../data_structures/linked_list');
 
 var AdjacencyListGraph = function () {
 	GraphBase.call(this);
@@ -19,7 +19,7 @@ AdjacencyListGraph.prototype.createDataStructure = function (number_of_vertices)
 
 AdjacencyListGraph.prototype.addVertex = function (vertex) {
 	if (!this.data[vertex]) {
-		this.data[vertex] = linkedList();
+		this.data[vertex] = new LinkedList();
 	}
 };
 
@@ -54,13 +54,7 @@ AdjacencyListGraph.prototype.neighbors = function (vertex) {
 	var neighbors;
 
 	if (this.exists(vertex)) {
-		neighbors = [];
-
-		var node = this.data[vertex].findFirst();
-		while (node) {
-			neighbors.push(node.getValue());
-			node = node.getNext();
-		}
+		neighbors = this.data[vertex].toArray();
 	}
 
 	return neighbors;
@@ -69,23 +63,19 @@ AdjacencyListGraph.prototype.neighbors = function (vertex) {
 AdjacencyListGraph.prototype.hasNeighbors = function (vertex) {
 	var has_neighbors = false;
 	if (this.exists(vertex)) {
-		has_neighbors = !!this.data[vertex].count();
+		has_neighbors = !!this.data[vertex].size();
 	}
 	return has_neighbors;
 };
 
 AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
 	if (this.exists(vertex)) {
-		var node = this.data[vertex].findFirst();
-		while (node) {
-			fn(node.getValue());
-			node = node.getNext();
-		}
+		this.data[vertex].forEach(fn);
 	}
 };
 
 AdjacencyListGraph.prototype.degree = function (vertex) {
-	return this.data[vertex].count();
+	return this.data[vertex].size();
 };
 
 module.exports = AdjacencyListGraph;

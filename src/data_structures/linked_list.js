@@ -476,4 +476,18 @@ LinkedList.prototype.size = function () {
     return this._length;
 };
 
+/**
+ * Converts the list to an array
+ * @returns {any} The converted list in an array format
+ */
+LinkedList.prototype.toArray = function () {
+    var array = new Array(this._length);
+    
+    this.forEach(function(element, index) {
+        array[index] = element;
+    });
+    
+    return array;
+};
+
 module.exports = LinkedList;

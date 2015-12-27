@@ -781,5 +781,32 @@ describe('Linked List', function () {
             ll.pop();
             assert.equal(ll.size(), 0);
         });
+    })
+    
+    describe('toArray', function() {
+        it('should convert the list to an array', function() {
+            var ll = new LinkedList();
+            var front_value = 123;
+            var middle_value = 345;
+            var back_value = 678;
+            var array;
+            
+            ll.add(front_value);
+            ll.add(middle_value);
+            ll.add(back_value);
+            
+            array = ll.toArray();
+            assert.equal(array.length, ll.length());
+            assert.equal(array[0], ll.get(0));
+            assert.equal(array[1], ll.get(1));
+            assert.equal(array[2], ll.get(2));
+        });
+        
+        it('should convert an empty list to an empty array', function() {
+            var ll = new LinkedList();
+            var array = ll.toArray();
+            
+            assert.equal(array.length, 0);
+        });
     });
 });
