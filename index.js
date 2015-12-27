@@ -5,6 +5,7 @@ function getResource(name) {
 var
 	algorithms = {},
 	benchmark = {},
+    dataStructures = {},
 	memory = {},
 	graph = {},
 	timer = {},
@@ -17,6 +18,8 @@ algorithms.FindClusters = require(getResource('algorithms/find_clusters'));
 algorithms.FindDiameter = require(getResource('algorithms/find_diameter'));
 
 benchmark.Benchmark = require(getResource('benchmark/benchmark'));
+
+dataStructures.LinkedList = require(getResource('data_structures/linked_list'));
 
 memory.Memory = require(getResource('memory/memory'));
 
@@ -36,6 +39,7 @@ util = require(getResource('util/util'));
 module.exports = {
 	algorithms,
 	benchmark,
+    dataStructures,
 	memory,
 	graph,
 	timer,

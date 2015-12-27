@@ -17,8 +17,7 @@ Benchmark.prototype.run = function (options, context) {
 		options is expected to be on the following format
 		options = {
 			cycles: number, //The number of times each function will run
-			onFinishedFunctionTest: function(function_list_item), //The callback function to call when the test for each function is finished
-			onFinishedCycle: function(current_cycle, cycle_time) //The callback function to call when a cycle is finished, cycle_time in nanoseconds
+			onFinishedFunctionTest: function(function_list_item) //The callback function to call when the test for each function is finished
 		}
 	 */
 
@@ -29,6 +28,7 @@ Benchmark.prototype.run = function (options, context) {
 	// Initialize the options object
 	if (!options) options = {};
 	if (!options.cycles) options.cycles = 100;
+	if (!options.onFinishedFunctionTest) options.onFinishedFunctionTest = function(){};
 
 	var
 		fn_list_length = this.functions_list.length, // Stores the length of the functions list
@@ -43,7 +43,6 @@ Benchmark.prototype.run = function (options, context) {
 	for (var i = 0, fn_list_length = this.functions_list.length; i < fn_list_length; i += 1) {
 
 		var
-			cycle_time = 0,
 			fn = this.functions_list[i].fn.bind(context),
 			initial_time = process.hrtime(),
 			diff = process.hrtime();
@@ -55,16 +54,13 @@ Benchmark.prototype.run = function (options, context) {
 			fn();
 
 			diff = process.hrtime(initial_time);
-			cycle_time = diff[0] * 1e9 + diff[1]; // Time in nanoseconds
-			times[i] += cycle_time; 
-			
-			if (options.onFinishedCycle) options.onFinishedCycle(j, cycle_time);
+			times[i] += diff[0] * 1e9 + diff[1]; // Time in nanoseconds
 		}
 
 		// Converts the time to milliseconds and calculate the average
 		this.functions_list[i].time = times[i] / (options.cycles * 1000000);
 		//Call the onFinishedFunctionTest callback
-		if (options.onFinishedFunctionTest) options.onFinishedFunctionTest(this.functions_list[i]);
+		options.onFinishedFunctionTest(this.functions_list[i]);
 	}
 
 	return this.functions_list;
