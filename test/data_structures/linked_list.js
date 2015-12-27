@@ -432,6 +432,20 @@ describe('Linked List', function () {
             assert.equal(ll.lastIndexOf(5), -1);
         });
     });
+    
+    describe('peek', function () {
+        it('should get the first element', function () {
+            var ll = new LinkedList();
+            var front_value = 123;
+            var back_value = 456;
+
+            ll.add(front_value);
+            ll.add(back_value);
+
+            assert.equal(ll.peek(), front_value);
+            assert.equal(ll._length, 2);
+        });
+    });
 
     describe('pop', function () {
         it('should remove the first element', function () {

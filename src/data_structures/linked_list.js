@@ -282,6 +282,16 @@ LinkedList.prototype.length = function () {
 };
 
 /**
+ * Retrieves the first element without removing it.
+ * This method is equivalent to getFirst
+ * @see getFirst
+ * @returns {any} The first element
+ */
+LinkedList.prototype.peek = function () {
+    return this.get(0);
+};
+
+/**
  * Removes and returns the first element of the list.
  * This method is equivalent to removeFirst
  * @see removeFirst
