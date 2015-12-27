@@ -1,3 +1,5 @@
+/**@module dataStructures */
+
 "use strict";
 
 var Node = require('./node');
@@ -142,7 +144,7 @@ LinkedList.prototype.contains = function (element) {
 
 /**
  * The function called by the forEach method.
- * @name iterateCallback
+ * @callback LinkedList~iterateCallback
  * @function
  * @param {any} element - The current element
  * @param {number} [index] - The index of the current element

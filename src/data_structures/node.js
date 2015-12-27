@@ -1,3 +1,5 @@
+/**@module dataStructures */
+
 "use strict";
 
 /**

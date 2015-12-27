@@ -5,9 +5,9 @@ var findClusters = require('./src/algorithms/find_clusters');
 var findDiameter = require('./src/algorithms/find_diameter');
 //Temporary debug tests
 
-var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_VECTOR);
-// var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_LIST);
-// var my_graph = new graph.Graph(graph.DataStructure.ADJACENCY_MATRIX);
+var my_graph = graph.Graph(graph.DataStructure.ADJACENCY_VECTOR);
+// var my_graph = graph.Graph(graph.DataStructure.ADJACENCY_LIST);
+// var my_graph = graph.Graph(graph.DataStructure.ADJACENCY_MATRIX);
 my_graph.loadFromFile('./test/graph_files/small_graph_3.txt');
 // my_graph.loadFromFile('./test/graph_files/small_multicluster_graph.txt');
 // my_graph.loadFromFile('./test/graph_files/as_graph.txt');

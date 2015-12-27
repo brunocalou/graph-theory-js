@@ -1,6 +1,15 @@
+/**@module graph */
+
 var GraphBase = require("./graph_base");
 var util = require('../util/util');
 
+/**
+ * AdjacencyMatrixGraph class
+ * @constructor
+ * @classdesc This class uses a matrix of vertices to store the graph. The graph
+ * is represented by an array of array of vertices
+ * @extends GraphBase
+ */
 var AdjacencyMatrixGraph = function () {
 	GraphBase.call(this);
 };
@@ -48,7 +57,7 @@ AdjacencyMatrixGraph.prototype.print = function () {
 	var line_length = line.length;
 	line = '';
 
-	for (var k = 0; k < line_length; k += 1) {
+	for (k = 0; k < line_length; k += 1) {
 		if (k % 2) {
 			line += ' ';
 		} else {
