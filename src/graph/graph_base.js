@@ -3,6 +3,14 @@
 var fs = require('fs');
 
 /**
+ * Output object used by the GraphBase class
+ * @typedef {object} output_obj
+ * @property {string} folder - The folder to save the file
+ * @property {string} filename - The name of the statistics file
+ * @property {string} destination - The full path of the file
+*/
+    
+/**
  * GraphBase class
  * @constructor
  * @classdesc The GraphBase class is the base of all the other graph classes.
@@ -11,24 +19,17 @@ var fs = require('fs');
 function GraphBase() {
     /**
      * Stores the graph
-     * @type {object}
+     * @type {array}
      */
-    this.data = {};
+    this.data = [];
 
     /**
      * Stores the path to the graph file
      * @type {string}
      */
     this.path = '';
-    
-    /**
-     * Output object used by the GraphBase class
-     * @name GraphBase~OutputObj
-     * @property {object} output - Output object
-     * @property {string} output.folder - The folder to save the file
-     * @property {string} output.filename - The name of the statistics file
-     * @property {string} output.destination - The full path of the file
-     */
+
+    /**@type {output_obj} */
     this.output = {
         folder: '',
         filename: '',
@@ -128,7 +129,7 @@ GraphBase.prototype.createOutputFolder = function () {
  * Saves the graph statistics as on the output folder.
  * The file will contain the number of vertices, number of edges, medium degree
  * and the degree distribution
- * @returns {GraphBase~OutputObj} The output object
+ * @returns {output_obj} The output object, member of the GraphBase class
  */
 GraphBase.prototype.saveGraphStatisticsToFile = function () {
 
@@ -294,7 +295,6 @@ GraphBase.prototype.forEach = function (fn) {
  * @returns {number} The degree of the vertex
  */
 GraphBase.prototype.degree = function (vertex) {
-    //Returns the degree of the vertex
 };
 
 /**
@@ -302,7 +302,6 @@ GraphBase.prototype.degree = function (vertex) {
  * @returns {number} A random valid vertex
  */
 GraphBase.prototype.getRandomVertex = function () {
-    //Returns a random valid vertex
     var
         data_length = this.data.length,
         found_vertex = false,
@@ -325,7 +324,6 @@ GraphBase.prototype.getRandomVertex = function () {
  * @returns {boolean} True if the vertex exists
  */
 GraphBase.prototype.exists = function (vertex) {
-    //Returns if the vertex exists
     return !!this.data[vertex];
 };
 

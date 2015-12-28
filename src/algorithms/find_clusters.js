@@ -1,3 +1,5 @@
+/**@module algorithms */
+
 var BFS = require('./breadth_first_search');
 
 function findClusters(graph, callbacks) {

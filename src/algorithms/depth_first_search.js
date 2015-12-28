@@ -1,3 +1,5 @@
+/**@module algorithms */
+
 var Stack = require('../data_structures/stack');
 var SpanningTree = require('../trees/spanning_tree.js');
 

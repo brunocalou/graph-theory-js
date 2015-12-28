@@ -7,9 +7,10 @@ var AdjacencyMatrixGraph = require("./adjacency_matrix_graph");
 
 /**
  * Data structure enum
- * @name DataStructure
- * @readonly
- * @enum {number}
+ * @typedef {object} DataStructure
+ * @property {number} ADJACENCY_LIST - Store the graph using adjacency list
+ * @property {number} ADJACENCY_MATRIX - Store the graph using adjacency matrix
+ * @property {number} ADJACENCY_VECTOR - Store the graph using adjacency vector
  */
 var DataStructure = {
 	ADJACENCY_LIST: 0,
