@@ -2,7 +2,7 @@
   "name": "graph-theory-js",
   "version": "1.0.0",
   "description": "Graph library to the Graph Theory class at UFRJ",
-  "main": "main.js",
+  "main": "./index.js",
   "directories": {
     "test": "test"
   },

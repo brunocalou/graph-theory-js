@@ -22,7 +22,7 @@
  */
 
 var Queue = require('../data_structures/queue');
-var SpanningTree = require('../trees/spanning_tree.js');
+var SpanningTree = require('../data_structures/spanning_tree.js');
 
 /**
  * @function
