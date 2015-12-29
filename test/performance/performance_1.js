@@ -1,9 +1,9 @@
 var
 	util = require('util'),
 	graphtheoryjs = require('../../index'),
-	Benchmark = graphtheoryjs.Benchmark.Benchmark,
-	Memory = graphtheoryjs.Memory.Memory,
-	Timer = graphtheoryjs.Timer.Timer,
+	Benchmark = graphtheoryjs.Util.Benchmark,
+	Memory = graphtheoryjs.Util.Memory,
+	Timer = graphtheoryjs.Util.Timer,
 	chalk = require('chalk'),
 	BFS = graphtheoryjs.Algorithms.BFS,
 	DFS = graphtheoryjs.Algorithms.DFS,
@@ -109,7 +109,7 @@ function init() {
 	}
 
 	console.log(chalk.yellow("\n==== CURRENT MEMORY USAGE ===="));
-	graphtheoryjs.Util.printMemory();
+	graphtheoryjs.Util.Util.printMemory();
 	printSeparator();
 
 	if (argv.vector) {
@@ -155,7 +155,7 @@ function runMemoryTest() {
 		time_to_load = timer.getElapsedTime();
 
 		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
-		graphtheoryjs.Util.printMemory(memory_diff);
+		graphtheoryjs.Util.Util.printMemory(memory_diff);
 		console.log(chalk.yellow("LOAD TIME : ") + time_to_load + " s\n");
 
 		saveJSON(current_graph, memory_diff, '_memory_test');
