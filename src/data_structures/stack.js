@@ -81,7 +81,7 @@ Stack.prototype.push = function(element) {
  * @returns {any} The removed element of the stack
  */
 Stack.prototype.remove = function() {
-    return this.removeLast();
+    return this._elements.removeLast();
 };
 
 /**

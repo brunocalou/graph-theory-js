@@ -1,6 +1,6 @@
 module.exports = {
-    Algorithms: require('./algorithms'),
-    DataStructures: require('./data_structures'),
-    Graph: require('./graph'),
-    Util: require('./util')
+    Algorithms: require('./src/algorithms'),
+    DataStructures: require('./src/data_structures'),
+    Graph: require('./src/graph'),
+    Util: require('./src/util')
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-var LinkedList = require('../../index').dataStructures.LinkedList;
+var LinkedList = require('../../index').DataStructures.LinkedList;
 var assert = require('assert');
 
 describe('Linked List', function () {

@@ -1,6 +1,6 @@
 'use strict';
 
-var Stack = require('../../index').dataStructures.Stack;
+var Stack = require('../../index').DataStructures.Stack;
 var assert = require('assert');
 
 describe('Stack', function() {
