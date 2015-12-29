@@ -142,16 +142,18 @@ function runMemoryTest() {
 	var
 		time_to_load = 0,
 		current_graph,
-		memory_diff;
+		memory_diff,
+        memoryTestFunction = function () {
+			current_graph.graph.loadFromFile(graph_file);
+		};
 
 	for (var i = 0, graph_list_length = graph_list.length; i < graph_list_length; i += 1) {
 		current_graph = graph_list[i];
 		
 		//Load the graphs and measure time and memory
+        
 		timer.start();
-		memory_diff = memory.run(function () {
-			current_graph.graph.loadFromFile(graph_file);
-		});
+		memory_diff = memory.run(memoryTestFunction);
 		time_to_load = timer.getElapsedTime();
 
 		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
@@ -172,6 +174,12 @@ function runPerformanceTest() {
 		bar = createProgressBar({
 			total: number_of_cyles,
 		}),
+        bfs = function () {
+			BFS(current_graph.graph, current_graph.graph.getRandomVertex());
+		},
+        dfs = function () {
+			DFS(current_graph.graph, current_graph.graph.getRandomVertex());
+		},
 
 		benchmark_options = {
 			cycles: number_of_cyles,
@@ -202,13 +210,9 @@ function runPerformanceTest() {
 		console.log(chalk.yellow("==== ADJACENCY " + current_graph.name.toUpperCase() + " GRAPH ====\n"));
 		
 		//Performs DFS test and BFS tests
-		benchmark.add("BFS", function () {
-			BFS(current_graph.graph, current_graph.graph.getRandomVertex());
-		});
+		benchmark.add("BFS", bfs);
 
-		benchmark.add("DFS", function () {
-			DFS(current_graph.graph, current_graph.graph.getRandomVertex());
-		});
+		benchmark.add("DFS", dfs);
 		
 		//Start the progress bar
 		bar.tick(0);

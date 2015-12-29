@@ -1,7 +1,46 @@
+/**@module util */
+
+/**
+ * The options object used on the benchmark class
+ * @typedef {object} benchmark_options
+ * @property {number} cycles - The number of cycles to run each function
+ * @property {function} onFinishedFunctionTest
+*/
+
+/**
+ * The object that holds the function to be tested
+ * @typedef {object} function_list_item
+ * @property {function} fn - The function to be tested
+ * @property {name} - The name or key to refer to the function  
+*/
+
+/**
+ * Called when a function test was finished
+ * @typedef {function} onFinishedFunctionTest
+ * @param {function_list_item} function_list_item
+ */
+
+/**
+ * Benchmark class
+ * @constructor
+ * @classdesc The Benchmark class performs several function callings and measures the average time.
+ * The user can define the number of cycles a function will run and the functions to be tested
+ */
+
+'use strict';
+
 function Benchmark() {
+    /**Stores the functions to be tested
+     * @type {array}
+     */
 	this.functions_list = [];
 }
 
+/**
+ * Adds a function to the benchmark
+ * @param {string} name - The name or key to refer to the function
+ * @param {function} fn - The function to be tested
+ */
 Benchmark.prototype.add = function (name, fn) {
 	if (typeof fn === 'function') {
 		this.functions_list.push({
@@ -12,6 +51,12 @@ Benchmark.prototype.add = function (name, fn) {
 	}
 };
 
+/**
+ * Runs the benchmark test
+ * @param {benchmark_options} options
+ * @param {object} context - The context to run the function
+ * @returns {array} An array with the function_list_item objects
+ */
 Benchmark.prototype.run = function (options, context) {
 	/*
 		options is expected to be on the following format
@@ -32,15 +77,16 @@ Benchmark.prototype.run = function (options, context) {
 
 	var
 		fn_list_length = this.functions_list.length, // Stores the length of the functions list
-		times = new Array(fn_list_length); // Stores all the measured times
+		times = new Array(fn_list_length), // Stores all the measured times
+        i;
 
 	// Initialize the array with zeros
-	for (var i = 0; i < fn_list_length; i += 1) {
+	for (i = 0; i < fn_list_length; i += 1) {
 		times[i] = 0;
 	}
 	
 	// Performs the benchmark test
-	for (var i = 0, fn_list_length = this.functions_list.length; i < fn_list_length; i += 1) {
+	for (i = 0, fn_list_length = this.functions_list.length; i < fn_list_length; i += 1) {
 
 		var
 			fn = this.functions_list[i].fn.bind(context),
@@ -66,6 +112,9 @@ Benchmark.prototype.run = function (options, context) {
 	return this.functions_list;
 };
 
+/**
+ * Clears the benchmark, removing all the added functions
+ */
 Benchmark.prototype.clear = function() {
 	// Empty the functions list array
 	this.functions_list.splice(0, this.functions_list.length);
