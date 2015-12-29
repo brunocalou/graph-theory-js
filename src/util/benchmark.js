@@ -4,7 +4,7 @@
  * The options object used on the benchmark class
  * @typedef {object} benchmark_options
  * @property {number} cycles - The number of cycles to run each function
- * @property {function} onFinishedFunctionTest
+ * @property {function} onFinishedFunctionTest - The function called when a function test is finished
 */
 
 /**
@@ -20,15 +20,14 @@
  * @param {function_list_item} function_list_item
  */
 
+'use strict';
+
 /**
  * Benchmark class
  * @constructor
  * @classdesc The Benchmark class performs several function callings and measures the average time.
  * The user can define the number of cycles a function will run and the functions to be tested
  */
-
-'use strict';
-
 function Benchmark() {
     /**Stores the functions to be tested
      * @type {array}
