@@ -22,6 +22,7 @@ function Memory() {
  * Starts the memory usage measurement
  */
 Memory.prototype.start = function () {
+    /**@type  memory_usage_obj*/
 	this.memory_usage = process.memoryUsage();
 };
 
