@@ -1,5 +1,34 @@
+/**@module algorithms */
+
+/**
+ * Callbacks used by the find clusters function
+ * @typedef {object} cluster_callbacks
+ * @property {cluster_size} cluster_size
+ * @property {cluster_statistics} cluster_statistics
+ */
+
+/**
+ * The cluster statistics
+ * @typedef {object} cluster_statistics
+ * @property {number} total - The total number of clusters
+ * @property {number} biggest - The biggest cluster
+ * @property {number} smallest - The smallest cluster
+ */
+
+/**
+ * Called when a cluster was found
+ * @typedef {function} onClusterFound
+ * @param {number} cluster_size - The size of the found cluster
+ * @param {cluster_statistics} cluster_statistics - The cluster statistics object
+ */
+
 var BFS = require('./breadth_first_search');
 
+/**
+ * @function
+ * @param {Graph} graph - The graph to use
+ * @param {cluster_callbacks} callbacks - The callback object
+ */
 function findClusters(graph, callbacks) {
 	//callbacks is an object with the following properties
 	// {

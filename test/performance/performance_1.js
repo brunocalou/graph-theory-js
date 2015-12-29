@@ -1,14 +1,14 @@
 var
 	util = require('util'),
 	graphtheoryjs = require('../../index'),
-	Benchmark = graphtheoryjs.benchmark.Benchmark,
-	Memory = graphtheoryjs.memory.Memory,
-	Timer = graphtheoryjs.timer.Timer,
+	Benchmark = graphtheoryjs.Util.Benchmark,
+	Memory = graphtheoryjs.Util.Memory,
+	Timer = graphtheoryjs.Util.Timer,
 	chalk = require('chalk'),
-	BFS = graphtheoryjs.algorithms.BFS,
-	DFS = graphtheoryjs.algorithms.DFS,
-	findClusters = graphtheoryjs.algorithms.FindClusters,
-	findDiameter = graphtheoryjs.algorithms.FindDiameter,
+	BFS = graphtheoryjs.Algorithms.BFS,
+	DFS = graphtheoryjs.Algorithms.DFS,
+	findClusters = graphtheoryjs.Algorithms.FindClusters,
+	findDiameter = graphtheoryjs.Algorithms.FindDiameter,
 	fs = require('fs'),
 	ProgressBar = require('progress'),
 	argv = require('yargs').usage('Usage: $0 <command> [options]')
@@ -62,9 +62,9 @@ var
 	benchmark = new Benchmark(),
 	memory = new Memory(),
 	timer = new Timer(),
-	list_graph = graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_LIST),
-	vector_graph = graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_VECTOR),
-	matrix_graph = graphtheoryjs.graph.Graph(graphtheoryjs.graph.DataStructure.ADJACENCY_MATRIX),
+	list_graph = graphtheoryjs.Graph.Graph(graphtheoryjs.Graph.DataStructure.ADJACENCY_LIST),
+	vector_graph = graphtheoryjs.Graph.Graph(graphtheoryjs.Graph.DataStructure.ADJACENCY_VECTOR),
+	matrix_graph = graphtheoryjs.Graph.Graph(graphtheoryjs.Graph.DataStructure.ADJACENCY_MATRIX),
 	graph_list = [],
 	graph_file = argv.file;
 
@@ -109,7 +109,7 @@ function init() {
 	}
 
 	console.log(chalk.yellow("\n==== CURRENT MEMORY USAGE ===="));
-	graphtheoryjs.util.printMemory();
+	graphtheoryjs.Util.Util.printMemory();
 	printSeparator();
 
 	if (argv.vector) {
@@ -142,20 +142,22 @@ function runMemoryTest() {
 	var
 		time_to_load = 0,
 		current_graph,
-		memory_diff;
+		memory_diff,
+        memoryTestFunction = function () {
+			current_graph.graph.loadFromFile(graph_file);
+		};
 
 	for (var i = 0, graph_list_length = graph_list.length; i < graph_list_length; i += 1) {
 		current_graph = graph_list[i];
 		
 		//Load the graphs and measure time and memory
+        
 		timer.start();
-		memory_diff = memory.run(function () {
-			current_graph.graph.loadFromFile(graph_file);
-		});
+		memory_diff = memory.run(memoryTestFunction);
 		time_to_load = timer.getElapsedTime();
 
 		console.log(chalk.yellow("LOADED GRAPH USING " + current_graph.name.toUpperCase()));
-		graphtheoryjs.util.printMemory(memory_diff);
+		graphtheoryjs.Util.Util.printMemory(memory_diff);
 		console.log(chalk.yellow("LOAD TIME : ") + time_to_load + " s\n");
 
 		saveJSON(current_graph, memory_diff, '_memory_test');
@@ -172,6 +174,12 @@ function runPerformanceTest() {
 		bar = createProgressBar({
 			total: number_of_cyles,
 		}),
+        bfs = function () {
+			BFS(current_graph.graph, current_graph.graph.getRandomVertex());
+		},
+        dfs = function () {
+			DFS(current_graph.graph, current_graph.graph.getRandomVertex());
+		},
 
 		benchmark_options = {
 			cycles: number_of_cyles,
@@ -202,13 +210,9 @@ function runPerformanceTest() {
 		console.log(chalk.yellow("==== ADJACENCY " + current_graph.name.toUpperCase() + " GRAPH ====\n"));
 		
 		//Performs DFS test and BFS tests
-		benchmark.add("BFS", function () {
-			BFS(current_graph.graph, current_graph.graph.getRandomVertex());
-		});
+		benchmark.add("BFS", bfs);
 
-		benchmark.add("DFS", function () {
-			DFS(current_graph.graph, current_graph.graph.getRandomVertex());
-		});
+		benchmark.add("DFS", dfs);
 		
 		//Start the progress bar
 		bar.tick(0);
@@ -364,7 +368,7 @@ function saveGraphStatistics() {
 	var current_graph = graph_list[0];
 
 	console.log(chalk.yellow('====== GRAPH STATISTICS ======\n'));
-	var file = current_graph.graph.saveGraphStatisticsToFile();
+	current_graph.graph.saveGraphStatisticsToFile();
 	
 	console.log(chalk.yellow(' Number of Vertices : ') + current_graph.graph.number_of_vertices);
 	console.log(chalk.yellow(' Number of Edges : ') + current_graph.graph.number_of_edges);
