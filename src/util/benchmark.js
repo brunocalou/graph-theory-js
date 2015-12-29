@@ -32,7 +32,7 @@ function Benchmark() {
     /**Stores the functions to be tested
      * @type {array}
      */
-	this.functions_list = [];
+    this.functions_list = [];
 }
 
 /**
@@ -41,13 +41,13 @@ function Benchmark() {
  * @param {function} fn - The function to be tested
  */
 Benchmark.prototype.add = function (name, fn) {
-	if (typeof fn === 'function') {
-		this.functions_list.push({
-			fn: fn,
-			name: name,
-			time: 0, //Milliseconds
-		});
-	}
+    if (typeof fn === 'function') {
+        this.functions_list.push({
+            fn: fn,
+            name: name,
+            time: 0, //Milliseconds
+        });
+    }
 };
 
 /**
@@ -65,58 +65,58 @@ Benchmark.prototype.run = function (options, context) {
 		}
 	 */
 
-	if (!context) {
-		context = this;
-	}
+    if (!context) {
+        context = this;
+    }
 
-	// Initialize the options object
-	if (!options) options = {};
-	if (!options.cycles) options.cycles = 100;
-	if (!options.onFinishedFunctionTest) options.onFinishedFunctionTest = function(){};
+    // Initialize the options object
+    if (!options) options = {};
+    if (!options.cycles) options.cycles = 100;
+    if (!options.onFinishedFunctionTest) options.onFinishedFunctionTest = function () { };
 
-	var
-		fn_list_length = this.functions_list.length, // Stores the length of the functions list
-		times = new Array(fn_list_length), // Stores all the measured times
+    var
+        fn_list_length = this.functions_list.length, // Stores the length of the functions list
+        times = new Array(fn_list_length), // Stores all the measured times
         i;
 
-	// Initialize the array with zeros
-	for (i = 0; i < fn_list_length; i += 1) {
-		times[i] = 0;
-	}
+    // Initialize the array with zeros
+    for (i = 0; i < fn_list_length; i += 1) {
+        times[i] = 0;
+    }
 	
-	// Performs the benchmark test
-	for (i = 0, fn_list_length = this.functions_list.length; i < fn_list_length; i += 1) {
+    // Performs the benchmark test
+    for (i = 0, fn_list_length = this.functions_list.length; i < fn_list_length; i += 1) {
 
-		var
-			fn = this.functions_list[i].fn.bind(context),
-			initial_time = process.hrtime(),
-			diff = process.hrtime();
+        var
+            fn = this.functions_list[i].fn.bind(context),
+            initial_time = process.hrtime(),
+            diff = process.hrtime();
 
-		// Iterates the number of times according to the options
-		for (var j = 0; j < options.cycles; j += 1) {
-			initial_time = process.hrtime();
+        // Iterates the number of times according to the options
+        for (var j = 0; j < options.cycles; j += 1) {
+            initial_time = process.hrtime();
 
-			fn();
+            fn();
 
-			diff = process.hrtime(initial_time);
-			times[i] += diff[0] * 1e9 + diff[1]; // Time in nanoseconds
-		}
+            diff = process.hrtime(initial_time);
+            times[i] += diff[0] * 1e9 + diff[1]; // Time in nanoseconds
+        }
 
-		// Converts the time to milliseconds and calculate the average
-		this.functions_list[i].time = times[i] / (options.cycles * 1000000);
-		//Call the onFinishedFunctionTest callback
-		options.onFinishedFunctionTest(this.functions_list[i]);
-	}
+        // Converts the time to milliseconds and calculate the average
+        this.functions_list[i].time = times[i] / (options.cycles * 1000000);
+        //Call the onFinishedFunctionTest callback
+        options.onFinishedFunctionTest(this.functions_list[i]);
+    }
 
-	return this.functions_list;
+    return this.functions_list;
 };
 
 /**
  * Clears the benchmark, removing all the added functions
  */
-Benchmark.prototype.clear = function() {
-	// Empty the functions list array
-	this.functions_list.splice(0, this.functions_list.length);
+Benchmark.prototype.clear = function () {
+    // Empty the functions list array
+    this.functions_list.splice(0, this.functions_list.length);
 };
 
 module.exports = Benchmark;

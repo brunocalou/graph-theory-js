@@ -1,5 +1,7 @@
 /**@module util */
 
+'use strict';
+
 /**
  * The memory usage object
  * @typedef {object} memory_usage_obj
@@ -15,7 +17,7 @@
  * memory usage object.
  */
 function Memory() {
-	this.memory_usage = process.memoryUsage();
+    this.memory_usage = process.memoryUsage();
 }
 
 /**
@@ -23,7 +25,7 @@ function Memory() {
  */
 Memory.prototype.start = function () {
     /**@type  memory_usage_obj*/
-	this.memory_usage = process.memoryUsage();
+    this.memory_usage = process.memoryUsage();
 };
 
 /**
@@ -33,17 +35,17 @@ Memory.prototype.start = function () {
  * @returns {memory_usage_obj} The memory usage difference
  */
 Memory.prototype.getDiff = function (initial_usage, last_usage) {
-	// Get the difference in bytes
-	var diff = {};
+    // Get the difference in bytes
+    var diff = {};
 
-	if (!initial_usage) initial_usage = this.memory_usage;
-	if (!last_usage) last_usage = process.memoryUsage();
+    if (!initial_usage) initial_usage = this.memory_usage;
+    if (!last_usage) last_usage = process.memoryUsage();
 
-	diff.rss = last_usage.rss - initial_usage.rss;
-	diff.heapTotal = last_usage.heapTotal - initial_usage.heapTotal;
-	diff.heapUsed = last_usage.heapUsed - initial_usage.heapUsed;
+    diff.rss = last_usage.rss - initial_usage.rss;
+    diff.heapTotal = last_usage.heapTotal - initial_usage.heapTotal;
+    diff.heapUsed = last_usage.heapUsed - initial_usage.heapUsed;
 
-	return diff;
+    return diff;
 };
 
 /**
@@ -51,7 +53,7 @@ Memory.prototype.getDiff = function (initial_usage, last_usage) {
  * @returns {memory_usage_obj} The current memory usage
  */
 Memory.prototype.getCurrentUsage = function () {
-	return process.memoryUsage();
+    return process.memoryUsage();
 };
 
 /**
@@ -61,10 +63,10 @@ Memory.prototype.getCurrentUsage = function () {
  * @returns {memory_usage_obj} The memory usage difference
  */
 Memory.prototype.run = function (fn) {
-	// Get the memory used after calling the function
-	var current_usage = this.getCurrentUsage();
-	fn();
-	return this.getDiff(current_usage);
+    // Get the memory used after calling the function
+    var current_usage = this.getCurrentUsage();
+    fn();
+    return this.getDiff(current_usage);
 };
 
 module.exports = Memory;

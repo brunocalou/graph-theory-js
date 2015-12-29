@@ -1,5 +1,7 @@
 /**@module util */
 
+'use strict';
+
 /**
  * Timer class
  * @class
