@@ -31,9 +31,9 @@ function GraphBase() {
 
     /**@type {output_obj} */
     this.output = {
-        folder: '',
-        filename: '',
-        destination: ''
+        folder: '_out',
+        filename: 'statistics.txt',
+        destination: '_out/out.txt'
     };
 
     /**@type {number} */
@@ -120,13 +120,12 @@ GraphBase.prototype.createOutputFolder = function () {
     try {
         fs.accessSync(this.output.folder);
     } catch (err) {
-        console.log("Folder " + this.output.folder + " doesn't exist. Will create it\n");
         fs.mkdirSync(this.output.folder);
     }
 };
 
 /**
- * Saves the graph statistics as on the output folder.
+ * Calculates and saves the graph statistics as on the output folder.
  * The file will contain the number of vertices, number of edges, medium degree
  * and the degree distribution
  * @returns {output_obj} The output object, member of the GraphBase class
@@ -193,6 +192,9 @@ GraphBase.prototype.loadFromFile = function (path) {
 
     this.number_of_vertices = parseInt(file.substr(0, ++second_line_start).replace('\n', ''));
     this.createDataStructure(this.number_of_vertices);
+    
+    //Reset the number of vertices, because the file can be wrong
+    this.number_of_vertices = 0;
 
     for (var i = second_line_start; i < final_character + 1; i += 1) {
 
@@ -201,7 +203,6 @@ GraphBase.prototype.loadFromFile = function (path) {
             current_number = '';
             if (!isNaN(vertex_1) && !isNaN(vertex_2)) {
                 if (vertex_1 > 0 && vertex_2 > 0) {
-                    this.number_of_edges += 1;
                     this.addEdge(vertex_1, vertex_2);
                 } else if (vertex_1 < 0) {
                     if (vertex_2 > 0) {
@@ -279,33 +280,35 @@ GraphBase.prototype.forEachNeighbor = function (vertex, fn) {
 /**
  * Iterates over each valid vertex
  * @param {forEachCallback} fn - The callback function
+ * @param {object} [this_arg] - The object to use as this when calling the fn function
  */
-GraphBase.prototype.forEach = function (fn) {
+GraphBase.prototype.forEach = function (fn, this_arg) {
     for (var vertex = 0, vertices_length = this.data.length; vertex < vertices_length; vertex += 1) {
         //Check if the vertex exists and then call the function
         if (this.exists(vertex)) {
-            fn(vertex);
+            fn.call(this_arg, vertex);
         }
     }
 };
 
 /**
- * Returns the degree of the vertex
+ * Returns the degree of the vertex. If the vertex does not exist,
+ * it returns 0
  * @param {number} vertex - The vertex to be used
- * @returns {number} The degree of the vertex
+ * @returns {number} The degree of the vertex, or 0 if it does not exist
  */
 GraphBase.prototype.degree = function (vertex) {
 };
 
 /**
  * Returns a random valid vertex
- * @returns {number} A random valid vertex
+ * @returns {number} A random valid vertex or undefined if the graph is empty
  */
 GraphBase.prototype.getRandomVertex = function () {
     var
         data_length = this.data.length,
         found_vertex = false,
-        vertex = 0;
+        vertex;
 
     if (data_length > 0 && this.number_of_vertices > 0) {
         while (!found_vertex) {

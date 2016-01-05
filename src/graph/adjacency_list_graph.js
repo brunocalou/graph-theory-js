@@ -29,14 +29,28 @@ AdjacencyListGraph.prototype.createDataStructure = function (number_of_vertices)
 AdjacencyListGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
         this.data[vertex] = new LinkedList();
+        this.number_of_vertices += 1;
     }
 };
 
 AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2) {
+    var added_edge = false;
+
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
-    this.data[vertex_1].addLast(vertex_2);
-    this.data[vertex_2].addLast(vertex_1);
+
+    if (!this.data[vertex_1].contains(vertex_2)) {
+        this.data[vertex_1].addLast(vertex_2);
+        added_edge = true;
+    }
+    if (!this.data[vertex_2].contains(vertex_1)) {
+        this.data[vertex_2].addLast(vertex_1);
+        added_edge = true;
+    }
+
+    if (added_edge) {
+        this.number_of_edges += 1;
+    }
 };
 
 AdjacencyListGraph.prototype.print = function () {
@@ -61,7 +75,7 @@ AdjacencyListGraph.prototype.print = function () {
 };
 
 AdjacencyListGraph.prototype.neighbors = function (vertex) {
-    var neighbors;
+    var neighbors = [];
 
     if (this.exists(vertex)) {
         neighbors = this.data[vertex].toArray();
@@ -85,7 +99,10 @@ AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
 };
 
 AdjacencyListGraph.prototype.degree = function (vertex) {
-    return this.data[vertex].size();
+    if (this.exists(vertex)) {
+        return this.data[vertex].size();
+    }
+    return 0;
 };
 
 module.exports = AdjacencyListGraph;

@@ -28,14 +28,29 @@ AdjacencyVectorGraph.prototype.createDataStructure = function (number_of_vertice
 AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
         this.data[vertex] = [];
+        this.number_of_vertices += 1;
     }
 };
 
 AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2) {
+    var added_edge = false;
+
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
-    this.data[vertex_1].push(vertex_2);
-    this.data[vertex_2].push(vertex_1);
+
+    if (this.data[vertex_1].lastIndexOf(vertex_2) == -1) {
+        this.data[vertex_1].push(vertex_2);
+        added_edge = true;
+    }
+
+    if (this.data[vertex_2].lastIndexOf(vertex_1) == -1) {
+        this.data[vertex_2].push(vertex_1);
+        added_edge = true;
+    }
+
+    if (added_edge) {
+        this.number_of_edges += 1;
+    }
 };
 
 AdjacencyVectorGraph.prototype.print = function () {
@@ -63,12 +78,17 @@ AdjacencyVectorGraph.prototype.print = function () {
 };
 
 AdjacencyVectorGraph.prototype.neighbors = function (vertex) {
-    return this.data[vertex];
+    var neighbors = [];
+
+    if (this.exists(vertex)) {
+        return this.data[vertex];
+    }
+    return neighbors;
 };
 
 AdjacencyVectorGraph.prototype.hasNeighbors = function (vertex) {
     var has_neighbors = false;
-    if (this.exsists(vertex)) {
+    if (this.exists(vertex)) {
         has_neighbors = !!this.data[vertex].length;
     }
     return has_neighbors;
@@ -83,7 +103,10 @@ AdjacencyVectorGraph.prototype.forEachNeighbor = function (vertex, fn) {
 };
 
 AdjacencyVectorGraph.prototype.degree = function (vertex) {
-    return this.data[vertex].length;
+    if (this.exists(vertex)) {
+        return this.data[vertex].length;
+    }
+    return 0;
 };
 
 module.exports = AdjacencyVectorGraph;
