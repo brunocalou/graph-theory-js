@@ -330,4 +330,40 @@ GraphBase.prototype.exists = function (vertex) {
     return !!this.data[vertex];
 };
 
+/**
+ * For each callback
+ * @callback GraphBase~everyCallback
+ * @param {number} vertex - The current vertex
+ */
+
+/**
+ * Iterates over all the valid vertices while the callback function is returning true
+ * @param {everyCallback} fn - The callback function
+ * @param {object} [this_arg] - The object to use as this when calling the fn function
+ */
+GraphBase.prototype.every = function (fn, this_arg) {
+    for (var vertex = 0, vertices_length = this.data.length; vertex < vertices_length; vertex += 1) {
+        //Check if the vertex exists and then call the function
+        if (this.exists(vertex)) {
+            if (!fn.call(this_arg, vertex)) {
+                break;
+            }
+        }
+    }
+};
+
+/**
+ * For each Neighbor callback
+ * @callback GraphBase~everyNeighborCallback
+ * @param {number} neighbor - The current neighbor
+ */
+
+/**
+ * Iterates over all the valid vertices while the callback function is returning true
+ * @param {number} vertex - The vertex to use
+ * @param {everyNeighborCallback} fn - The callback function
+ */
+GraphBase.prototype.everyNeighbor = function (vertex, fn) {
+};
+
 module.exports = GraphBase;

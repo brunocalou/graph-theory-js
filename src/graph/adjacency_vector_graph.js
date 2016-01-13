@@ -109,4 +109,14 @@ AdjacencyVectorGraph.prototype.degree = function (vertex) {
     return 0;
 };
 
+AdjacencyVectorGraph.prototype.everyNeighbor = function (vertex, fn) {
+    if (this.exists(vertex)) {
+        for (var i = 0, neighbors_length = this.data[vertex].length; i < neighbors_length; i += 1) {
+            if (!fn(this.data[vertex][i])) {
+                break;
+            }
+        }
+    }
+};
+
 module.exports = AdjacencyVectorGraph;

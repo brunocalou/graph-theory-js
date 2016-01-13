@@ -34,7 +34,7 @@ AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
 
         if (data_length <= vertex) {
             must_refactor = true;
-            data_length += 1;
+            data_length += vertex - data_length + 1;
         }
 
         this.data[vertex] = new Uint8Array(data_length);
@@ -161,7 +161,6 @@ AdjacencyMatrixGraph.prototype.hasNeighbors = function (vertex) {
 
 AdjacencyMatrixGraph.prototype.forEachNeighbor = function (vertex, fn) {
     var data_length = this.data.length;
-
     if (this.exists(vertex)) {
         for (var i = 0; i < data_length; i += 1) {
             if (this.data[vertex][i]) {
@@ -176,6 +175,20 @@ AdjacencyMatrixGraph.prototype.degree = function (vertex) {
         return this.neighbors(vertex).length;
     }
     return 0;
+};
+
+AdjacencyMatrixGraph.prototype.everyNeighbor = function (vertex, fn) {
+    var data_length = this.data.length;
+
+    if (this.exists(vertex)) {
+        for (var i = 0; i < data_length; i += 1) {
+            if (this.data[vertex][i]) {
+                if (!fn(i)) {
+                    break;
+                }
+            }
+        }
+    }
 };
 
 module.exports = AdjacencyMatrixGraph;

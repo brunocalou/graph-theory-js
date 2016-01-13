@@ -17,7 +17,7 @@ function testGraph(graph) {
         } catch (err) {
         }
     }
-    
+
     return function () {
         describe('createDataStructure', function () {
             it('should create the data structure', function () {
@@ -39,6 +39,12 @@ function testGraph(graph) {
                 assert.equal(g.exists(1), true);
                 assert.equal(g.exists(2), false);
                 assert.equal(g.number_of_vertices, 2);
+
+                g.addVertex(3);
+
+                assert.equal(g.exists(3), true);
+                assert.equal(g.exists(2), false);
+                assert.equal(g.number_of_vertices, 3);
             });
 
             it('should not add duplicate vertices', function () {
@@ -76,6 +82,14 @@ function testGraph(graph) {
                 assert.equal(g.neighbors(2)[0], 1);
                 assert.equal(g.number_of_edges, 1);
                 assert.equal(g.number_of_vertices, 2);
+
+                g.addEdge(1, 4);
+
+                assert.equal(g.exists(4), true);
+                assert.equal(g.neighbors(1)[0], 2);
+                assert.equal(g.neighbors(1)[1], 4);
+                assert.equal(g.number_of_edges, 2);
+                assert.equal(g.number_of_vertices, 3);
             });
 
             it('should not add duplicate edges', function () {
@@ -307,13 +321,15 @@ function testGraph(graph) {
 
                 g.addEdge(1, 2);
                 g.addEdge(1, 3);
+                g.addEdge(1, 5);
 
                 g.forEachNeighbor(1, function (neighbor) {
-                    neighbors += neighbor;
+                    neighbors.push(neighbor);
                 });
 
-                assert.equal(g.neighbors(1)[0], neighbors[0]);
-                assert.equal(g.neighbors(1)[1], neighbors[1]);
+                assert.equal(2, neighbors[0]);
+                assert.equal(3, neighbors[1]);
+                assert.equal(5, neighbors[2]);
                 assert.equal(g.neighbors(1).length, neighbors.length);
             });
 
@@ -424,6 +440,98 @@ function testGraph(graph) {
 
                 assert.equal(g.exists(1), true);
                 assert.equal(g.exists(0), false);
+            });
+        });
+
+        describe('every', function () {
+            it('should iterate over all the vertices', function () {
+                var g = Graph(graph);
+                var expected_vertices = [false, true, true, true, false, true, true];
+                var called_callback = false;
+
+                g.addEdge(1, 2);
+                g.addEdge(2, 3);
+                g.addEdge(5, 6);
+
+                g.every(function (vertex) {
+                    assert.equal(expected_vertices[vertex], true);
+                    called_callback = true;
+                    return true;
+                });
+
+                assert.equal(called_callback, true);
+            });
+
+            it('should stop when the callback returns false', function () {
+                var g = Graph(graph);
+                var expected_vertices = [false, true, true, true, false, true, false, false];
+                var called_callback = false;
+                var stopped = false;
+
+                g.addEdge(1, 2);
+                g.addEdge(2, 3);
+                g.addEdge(5, 6);
+                g.addEdge(6, 7);
+
+                g.every(function (vertex) {
+                    assert.equal(expected_vertices[vertex], true);
+                    called_callback = true;
+                    if (vertex === 5) {
+                        stopped = true;
+                        return false;
+                    }
+                    assert.equal(stopped, false);
+                    return true;
+                });
+
+                assert.equal(called_callback, true);
+                assert.equal(stopped, true);
+            });
+        });
+
+        describe('everyNeighbor', function () {
+            it('should iterate over all the neighbors of a vertex', function () {
+                var g = Graph(graph);
+                var expected_vertices = [false, false, true, true, false, true];
+                var called_callback = false;
+
+                g.addEdge(1, 2);
+                g.addEdge(1, 3);
+                g.addEdge(1, 5);
+
+                g.everyNeighbor(1, function (vertex) {
+                    assert.equal(expected_vertices[vertex], true);
+                    called_callback = true;
+                    return true;
+                });
+
+                assert.equal(called_callback, true);
+            });
+
+            it('should stop when the callback returns false', function () {
+                var g = Graph(graph);
+                var expected_vertices = [false, false, true, true, false, true, false];
+                var called_callback = false;
+                var stopped = false;
+
+                g.addEdge(1, 2);
+                g.addEdge(1, 3);
+                g.addEdge(1, 5);
+                g.addEdge(1, 6);
+
+                g.everyNeighbor(1, function (vertex) {
+                    assert.equal(expected_vertices[vertex], true);
+                    called_callback = true;
+                    if (vertex === 5) {
+                        stopped = true;
+                        return false;
+                    }
+                    assert.equal(stopped, false);
+                    return true;
+                });
+
+                assert.equal(called_callback, true);
+                assert.equal(stopped, true);
             });
         });
     };

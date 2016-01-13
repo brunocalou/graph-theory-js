@@ -105,4 +105,12 @@ AdjacencyListGraph.prototype.degree = function (vertex) {
     return 0;
 };
 
+AdjacencyListGraph.prototype.everyNeighbor = function (vertex, fn) {
+    if (this.exists(vertex)) {
+        this.data[vertex].every(function (neighbor) {
+            return fn(neighbor);
+        });
+    }
+};
+
 module.exports = AdjacencyListGraph;
