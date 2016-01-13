@@ -188,7 +188,7 @@ LinkedList.prototype.forEach = function (fn, this_arg) {
 /**
  * Returns the element at the index, if any
  * @param {number} index - The index of the element to be returned
- * @returns {any} The element at the specified index, if any
+ * @returns {any} The element at the specified index, if any. Returns undefined otherwise
  */
 LinkedList.prototype.get = function (index) {
 

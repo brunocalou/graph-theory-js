@@ -63,9 +63,9 @@ function BFS(graph, initial_vertex, callbacks) {
 
     while (!queue.isEmpty()) {
         var vertex = queue.pop();
-        if (callbacks.onVertexVisited) callbacks.onVertexVisited(vertex, depths[vertex]);
-
         graph.forEachNeighbor(vertex, bfsLoop);
+
+        if (callbacks.onVertexVisited) callbacks.onVertexVisited(vertex, depths[vertex]);
     }
 
     return new SpanningTree(initial_vertex, spanning_tree, depths, graph);

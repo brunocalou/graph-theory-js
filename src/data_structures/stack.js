@@ -52,7 +52,7 @@ Stack.prototype.length = function() {
 
 /**
  * Retrieves the first element of the stack without removing it
- * @returns {any} The first element of the stack
+ * @returns {any} The first element of the stack. Returns undefined if the stack is empty
  */
 Stack.prototype.peek = function() {
     return this._elements.getLast();

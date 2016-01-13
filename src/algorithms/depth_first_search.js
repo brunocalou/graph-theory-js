@@ -40,8 +40,6 @@ function DFS(graph, initial_vertex, callbacks) {
 					
             //Add the vertex as the parent of the neighbor on the spaning tree
             spanning_tree[neighbor] = vertex;
-            //The depth of a neighbor is the depth of its parent +1
-            depths[neighbor] = depths[vertex] + 1;
 
             if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor]);
         }
@@ -51,10 +49,15 @@ function DFS(graph, initial_vertex, callbacks) {
         var vertex = stack.pop();
 
         if (!visited_vertices[vertex]) {
+            graph.forEachNeighbor(vertex, dfsLoop);
+            
+            //The depth of a neighbor is the depth of its parent +1
+            if (vertex !== initial_vertex) {
+                depths[vertex] = depths[spanning_tree[vertex]] + 1;
+            }
+
             visited_vertices[vertex] = true;
             if (callbacks.onVertexVisited) callbacks.onVertexVisited(vertex, depths[vertex]);
-
-            graph.forEachNeighbor(vertex, dfsLoop);
         }
     }
 
