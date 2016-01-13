@@ -236,8 +236,10 @@ GraphBase.prototype.loadFromGraph = function (data) {
 
 /**
  * Prints the graph
+ * @param {number} max_width - The max number of vertices to print horizontally
+ * @param {number} max_height - The max number of vertices to print vertically
  */
-GraphBase.prototype.print = function () {
+GraphBase.prototype.print = function (max_width, max_height) {
 };
 
 /**

@@ -53,14 +53,28 @@ AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2) {
     }
 };
 
-AdjacencyVectorGraph.prototype.print = function () {
+AdjacencyVectorGraph.prototype.print = function (max_width, max_height) {
     var line = '';
     var data_length = this.data.length;
+    var horizontal_vertex_counter = 0; //Counts how many vertices were printed on the current line
+
+    if (max_height) {
+        if (max_height < data_length) {
+            data_length = max_height + 1;
+        }
+    }
 
     function printNeighbor(neighbor) {
         line += '| ';
         line += neighbor;
         line += ' ';
+        horizontal_vertex_counter += 1;
+        if (max_width) {
+            if (horizontal_vertex_counter >= max_width) {
+                return false;
+            }
+        }
+        return true;
     }
 
     for (var i = 0; i < data_length; i += 1) {
@@ -68,7 +82,8 @@ AdjacencyVectorGraph.prototype.print = function () {
         if (this.exists(i)) {
             line += '| ' + i + ' |' + " --> ";
 
-            this.forEachNeighbor(i, printNeighbor);
+            horizontal_vertex_counter = 0;
+            this.everyNeighbor(i, printNeighbor);
 
             line += '|';
             console.log(line);

@@ -77,19 +77,38 @@ AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2) {
     }
 };
 
-AdjacencyMatrixGraph.prototype.print = function () {
+AdjacencyMatrixGraph.prototype.print = function (max_width, max_height) {
     var line = '';
     var data_length = this.data.length;
+    var number_of_rows = data_length;
+    var number_of_columns = data_length;
+
+    if (max_height) {
+        if (max_height < number_of_rows) {
+            number_of_rows = max_height + 1;
+        }
+    }
+
+    if (max_width) {
+        if (max_width < number_of_columns) {
+            number_of_columns = max_width;
+        }
+    }
 
     //Print the colums header
     //Get the space used by the representation of the first column header
-    line = new Array((data_length + '').length + 1).join(' ');
+    line = new Array((number_of_rows + '').length + 1).join(' ');
     line += ' | ';
 
+    var vertex_counter = 0;
     for (var k = 0; k < data_length; k += 1) {
         if (this.data[k] !== undefined) {
             line += k;
             line += ' ';
+            vertex_counter += 1;
+            if (vertex_counter >= number_of_columns) {
+                break;
+            }
         }
     }
     console.log(line);
@@ -107,16 +126,25 @@ AdjacencyMatrixGraph.prototype.print = function () {
     line = '';
 	
     //Print the rows. The first element is the vertex
-    for (var i = 0; i < data_length; i += 1) {
+    for (var i = 0; i < number_of_rows; i += 1) {
         if (this.data[i] !== undefined) {
             line += i + ' | ';
 
-            for (var j = 0; j < data_length; j += 1) {
+            var horizontal_vertex_counter = 0; //Counts how many vertices were printed on the current line
+            
+            for (var j = 0; j < number_of_columns + 1; j += 1) {
                 if (this.data[i][j]) {
                     line += '1 ';
+                    horizontal_vertex_counter += 1;
                 } else {
                     if (this.data[j] !== undefined) {
                         line += '0 ';
+                        horizontal_vertex_counter += 1;
+                    }
+                }
+                if (max_width) {
+                    if (horizontal_vertex_counter > max_width + 1) {
+                        break;
                     }
                 }
             }
