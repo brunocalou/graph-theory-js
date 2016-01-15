@@ -4,6 +4,7 @@ var Graph = require('../../../index').Graph.Graph;
 var DataStructures = require('../../../index').Graph.DataStructure;
 var fs = require('fs');
 var assert = require('assert');
+var appRoot = require('app-root-path');
 
 /**
  * Function to test the graphs
@@ -221,7 +222,7 @@ function testGraph(graph) {
         describe('loadFromFile', function () {
             it('should set the output object correctly', function () {
                 var g = Graph(graph);
-                var folder = __dirname + '../../../assets/graph_files';
+                var folder = appRoot + '/test/assets/graph_files';
                 var file = folder + '/small_graph.txt';
 
                 g.loadFromFile(file);
@@ -233,7 +234,7 @@ function testGraph(graph) {
 
             it('should load the graph', function () {
                 var g = Graph(graph);
-                var folder = __dirname + '../../../assets/graph_files';
+                var folder = appRoot + '/test/assets/graph_files';
                 var file = folder + '/small_graph.txt';
 
                 g.loadFromFile(file);
@@ -246,7 +247,7 @@ function testGraph(graph) {
 
             it('should load a graph with a zero degree vertex', function () {
                 var g = Graph(graph);
-                var folder = __dirname + '../../../assets/graph_files';
+                var folder = appRoot + '/test/assets/graph_files';
                 var file = folder + '/small_multicluster_graph.txt';
 
                 g.loadFromFile(file);
@@ -259,7 +260,7 @@ function testGraph(graph) {
 
             it('should ignore the number of vertices on the file and count it while adding the vertices', function () {
                 var g = Graph(graph);
-                var folder = __dirname + '../../../assets/graph_files';
+                var folder = appRoot + '/test/assets/graph_files';
                 var file = folder + '/wrong_number_of_vertices_graph.txt';
 
                 g.loadFromFile(file);

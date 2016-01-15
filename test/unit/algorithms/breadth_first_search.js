@@ -3,11 +3,12 @@
 var BFS = require('../../../index').Algorithms.BFS;
 var Graph = require('../../../index').Graph.AdjacencyVectorGraph;
 var assert = require('assert');
+var appRoot = require('app-root-path');
 
 function applyBFS(graph_file, initial_vertex, callbacks) {
     var g = new Graph();
 
-    g.loadFromFile(__dirname + '/../../assets/graph_files/' + graph_file);
+    g.loadFromFile(appRoot + '/test/assets/graph_files/' + graph_file);
 
     return BFS(g, initial_vertex, callbacks);
 }

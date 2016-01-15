@@ -3,11 +3,12 @@
 var findClustes = require('../../../index').Algorithms.FindClusters;
 var Graph = require('../../../index').Graph.AdjacencyVectorGraph;
 var assert = require('assert');
+var appRoot = require('app-root-path');
 
 function applyFindClusters(graph_file, callbacks) {
     var g = new Graph();
 
-    g.loadFromFile(__dirname + '/../../assets/graph_files/' + graph_file);
+    g.loadFromFile(appRoot + '/test/assets/graph_files/' + graph_file);
 
     return findClustes(g, callbacks);
 }

@@ -3,11 +3,12 @@
 var DFS = require('../../../index').Algorithms.DFS;
 var Graph = require('../../../index').Graph.AdjacencyVectorGraph;
 var assert = require('assert');
+var appRoot = require('app-root-path');
 
 function applyDFS(graph_file, initial_vertex, callbacks) {
     var g = new Graph();
 
-    g.loadFromFile(__dirname + '/../../assets/graph_files/' + graph_file);
+    g.loadFromFile(appRoot + '/test/assets/graph_files/' + graph_file);
 
     return DFS(g, initial_vertex, callbacks);
 }
