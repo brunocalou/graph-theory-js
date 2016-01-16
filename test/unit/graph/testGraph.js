@@ -145,6 +145,22 @@ function testGraph(graph) {
                 assert.equal(g.neighbors(3)[0][0], 1);
                 assert.equal(g.neighbors(3)[0][1], -4);
             });
+
+            it('should add a directed edge', function () {
+                var g = Graph(graph, true);
+
+                g.addEdge(1, 2, 3);
+                g.addEdge(3, 1, -4);
+
+                assert.equal(g.number_of_edges, 2);
+                assert.equal(g.neighbors(1).length, 1);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(1)[0][1], 3);
+                assert.equal(g.neighbors(2).length, 0);
+                assert.equal(g.neighbors(3)[0][0], 1);
+                assert.equal(g.neighbors(3)[0][1], -4);
+                assert.equal(g.neighbors(3).length, 1);
+            });
         });
 
         describe('calculateDegreeStatistics', function () {
@@ -363,15 +379,28 @@ function testGraph(graph) {
 
                 assert.equal(error, true);
             });
-            
-            it('should load a graph using a predefined token', function() {
+
+            it('should load a graph using a predefined token', function () {
                 var g = Graph(graph);
-                
+
                 g.loadFromFile(getGraphFile('small_token_graph.txt'), ',');
 
                 assert.equal(g.number_of_vertices, 4);
                 assert.equal(g.number_of_edges, 5);
-                
+            });
+
+            it('should load a directed graph', function () {
+                var g = Graph(graph, true);
+
+                g.loadFromFile(getGraphFile('small_directed_graph.txt'));
+
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(util.nearEquals(0.4, g.neighbors(1)[0][1], 0.1), true);
+                assert.equal(g.neighbors(1)[1][0], 3);
+                assert.equal(g.neighbors(1)[1][1], -5);
+                assert.equal(g.neighbors(2)[0][0], 1);
+                assert.equal(g.neighbors(2)[0][1], -7);
+                assert.equal(g.neighbors(3).length, 0);
             });
         });
 

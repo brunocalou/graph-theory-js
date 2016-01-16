@@ -22,19 +22,20 @@ var DataStructure = {
  * Graph factory function
  * @constructor
  * @param {DataStructure} data_structure - The datastructure
+ * @param {boolean} directed - If the graph is directed
  * to use when creating the graph
  * @returns The graph with the specified datastructure
  */
-function Graph(data_structure) {
+function Graph(data_structure, directed) {
 
 	if (data_structure === DataStructure.ADJACENCY_LIST) {
-		return new AdjacencyListGraph();
+		return new AdjacencyListGraph(directed);
         
 	} else if (data_structure === DataStructure.ADJACENCY_VECTOR) {
-		return new AdjacencyVectorGraph();
+		return new AdjacencyVectorGraph(directed);
 
 	} else if (data_structure === DataStructure.ADJACENCY_MATRIX) {
-		return new AdjacencyMatrixGraph();
+		return new AdjacencyMatrixGraph(directed);
 	}
 }
 

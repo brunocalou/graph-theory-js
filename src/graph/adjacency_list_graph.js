@@ -11,8 +11,8 @@ var LinkedList = require('../data_structures/linked_list');
  * is represented by an array of linked lists
  * @extends GraphBase
  */
-var AdjacencyListGraph = function () {
-    GraphBase.call(this);
+var AdjacencyListGraph = function (directed) {
+    GraphBase.call(this, directed);
 };
 
 util.inherit(GraphBase, AdjacencyListGraph);
@@ -52,21 +52,24 @@ AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
         return true;
     });
 
-    this.data[vertex_2].every(function (element) {
-        if (element[0] === vertex_1) {
-            vertex_1_is_neighbor = true;
-            return false;
-        }
-        return true;
-    });
-
     if (!vertex_2_is_neighbor) {
         this.data[vertex_1].addLast([vertex_2, weight]);
         added_edge = true;
     }
-    if (!vertex_1_is_neighbor) {
-        this.data[vertex_2].addLast([vertex_1, weight]);
-        added_edge = true;
+
+    if (!this.directed) {
+        this.data[vertex_2].every(function (element) {
+            if (element[0] === vertex_1) {
+                vertex_1_is_neighbor = true;
+                return false;
+            }
+            return true;
+        });
+
+        if (!vertex_1_is_neighbor) {
+            this.data[vertex_2].addLast([vertex_1, weight]);
+            added_edge = true;
+        }
     }
 
     if (added_edge) {

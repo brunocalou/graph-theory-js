@@ -11,8 +11,8 @@ var util = require('../util/util');
  * is represented by an array of array of vertices
  * @extends GraphBase
  */
-var AdjacencyMatrixGraph = function () {
-    GraphBase.call(this);
+var AdjacencyMatrixGraph = function (directed) {
+    GraphBase.call(this, directed);
     
     /**
      * Stores the array type to use. It will be changed automatically according to the graph
@@ -186,7 +186,7 @@ AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
         added_edge = true;
     }
 
-    if (!this.data[vertex_2][vertex_1]) {
+    if (!this.data[vertex_2][vertex_1] && !this.directed) {
         this.data[vertex_2][vertex_1] = weight;
         added_edge = true;
     }

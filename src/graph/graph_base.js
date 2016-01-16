@@ -15,8 +15,9 @@ var fs = require('fs');
  * @constructor
  * @classdesc The GraphBase class is the base of all the other graph classes.
  * It holds every method and implements just the ones that are datastructure-agnostic
+ * @param {boolean} directed - Holds if the graph is directed (the default is false)
  */
-function GraphBase() {
+function GraphBase(directed) {
     /**
      * Stores the graph
      * @type {array}
@@ -50,6 +51,9 @@ function GraphBase() {
      * @type {array}
      */
     this.degree_distribution = [];
+    
+    /**@type {boolean} */
+    this.directed = !!directed;
 }
 
 /**

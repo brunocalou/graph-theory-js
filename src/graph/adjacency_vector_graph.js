@@ -10,8 +10,8 @@ var util = require('../util/util');
  * is represented by an array of vertices
  * @extends GraphBase
  */
-var AdjacencyVectorGraph = function () {
-    GraphBase.call(this);
+var AdjacencyVectorGraph = function (directed) {
+    GraphBase.call(this, directed);
 };
 
 util.inherit(GraphBase, AdjacencyVectorGraph);
@@ -36,23 +36,16 @@ AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
     var added_edge = false;
 
     if (weight === undefined) weight = 1;
-    
+
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
-    
+
     var vertex_1_is_neighbor = false;
     var vertex_2_is_neighbor = false;
-    
+
     for (var i = 0, length = this.data[vertex_1].length; i < length; i += 1) {
         if (this.data[vertex_1][i][0] === vertex_2) {
             vertex_2_is_neighbor = true;
-            break;
-        }
-    }
-    
-    for (var i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
-        if (this.data[vertex_2][i][0] === vertex_1) {
-            vertex_1_is_neighbor = true;
             break;
         }
     }
@@ -62,9 +55,18 @@ AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
         added_edge = true;
     }
 
-    if (!vertex_1_is_neighbor) {
-        this.data[vertex_2].push([vertex_1, weight]);
-        added_edge = true;
+    if (!this.directed) {
+        for (var i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
+            if (this.data[vertex_2][i][0] === vertex_1) {
+                vertex_1_is_neighbor = true;
+                break;
+            }
+        }
+
+        if (!vertex_1_is_neighbor) {
+            this.data[vertex_2].push([vertex_1, weight]);
+            added_edge = true;
+        }
     }
 
     if (added_edge) {
@@ -86,7 +88,7 @@ AdjacencyVectorGraph.prototype.print = function (max_width, max_height) {
     function printNeighbor(neighbor, weight) {
         line += '| ';
         line += neighbor;
-        line += '~' + weight; 
+        line += '~' + weight;
         line += ' ';
         horizontal_vertex_counter += 1;
         if (max_width) {
@@ -100,12 +102,15 @@ AdjacencyVectorGraph.prototype.print = function (max_width, max_height) {
     for (var i = 0; i < data_length; i += 1) {
 
         if (this.exists(i)) {
-            line += '| ' + i + ' |' + " --> ";
+            line += '| ' + i + ' |';
+            if (this.hasNeighbors(i)) {
+                line += " --> ";
 
-            horizontal_vertex_counter = 0;
-            this.everyNeighbor(i, printNeighbor);
+                horizontal_vertex_counter = 0;
+                this.everyNeighbor(i, printNeighbor);
 
-            line += '|';
+                line += '|';
+            }
             console.log(line);
             line = '';
         }
