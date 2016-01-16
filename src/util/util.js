@@ -8,6 +8,16 @@ var
         BYTE: 1,
         KB: 1024,
         MB: 1024 * 1024
+    }),
+    MaxNumberSize = Object.freeze({
+        UINT_8: 127,
+        INT_8: 255,
+        UINT_16: 32767,
+        INT_16: 65535,
+        UINT_32: 4294967295,
+        INT_32: 2147483647,
+        FLOAT_32: 4294967295,
+        FLOAT_64: Infinity
     });
 /**
  * The memory size unity object
@@ -15,6 +25,19 @@ var
  * @property {number} BYTE
  * @property {number} KB - Kilobytes
  * @property {number} MB - Megabytes
+ */
+
+/**
+ * The max value a number type can hold
+ * @typedef {object} max_number_size
+ * @property {number} UINT_8
+ * @property {number} INT_8
+ * @property {number} UINT_16
+ * @property {number} INT_16
+ * @property {number} UINT_32
+ * @property {number} INT_32
+ * @property {number} FLOAT_32
+ * @property {number} FLOAT_64
  */
 
 /**
@@ -69,5 +92,6 @@ module.exports = {
     inherit: inherit,
     printObject: printObject,
     printMemory: printMemory,
-    MemorySize: MemorySize
+    MemorySize: MemorySize,
+    MaxNumberSize: MaxNumberSize
 };

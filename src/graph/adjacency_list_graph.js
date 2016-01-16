@@ -33,18 +33,39 @@ AdjacencyListGraph.prototype.addVertex = function (vertex) {
     }
 };
 
-AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2) {
+AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
     var added_edge = false;
+
+    if (weight === undefined) weight = 1;
 
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
 
-    if (!this.data[vertex_1].contains(vertex_2)) {
-        this.data[vertex_1].addLast(vertex_2);
+    var vertex_1_is_neighbor = false;
+    var vertex_2_is_neighbor = false;
+
+    this.data[vertex_1].every(function (element) {
+        if (element[0] === vertex_2) {
+            vertex_2_is_neighbor = true;
+            return false;
+        }
+        return true;
+    });
+
+    this.data[vertex_2].every(function (element) {
+        if (element[0] === vertex_1) {
+            vertex_1_is_neighbor = true;
+            return false;
+        }
+        return true;
+    });
+
+    if (!vertex_2_is_neighbor) {
+        this.data[vertex_1].addLast([vertex_2, weight]);
         added_edge = true;
     }
-    if (!this.data[vertex_2].contains(vertex_1)) {
-        this.data[vertex_2].addLast(vertex_1);
+    if (!vertex_1_is_neighbor) {
+        this.data[vertex_2].addLast([vertex_1, weight]);
         added_edge = true;
     }
 
@@ -64,9 +85,10 @@ AdjacencyListGraph.prototype.print = function (max_width, max_height) {
         }
     }
 
-    function printNeighbor(neighbor) {
+    function printNeighbor(neighbor, weight) {
         line += ' --> ';
         line += neighbor;
+        line += '~' + weight;
         horizontal_vertex_counter += 1;
         if (max_width) {
             if (horizontal_vertex_counter >= max_width) {
@@ -110,7 +132,9 @@ AdjacencyListGraph.prototype.hasNeighbors = function (vertex) {
 
 AdjacencyListGraph.prototype.forEachNeighbor = function (vertex, fn) {
     if (this.exists(vertex)) {
-        this.data[vertex].forEach(fn);
+        this.data[vertex].forEach(function (element) {
+            fn(element[0], element[1]); //vertex, weight
+        });
     }
 };
 
@@ -123,8 +147,8 @@ AdjacencyListGraph.prototype.degree = function (vertex) {
 
 AdjacencyListGraph.prototype.everyNeighbor = function (vertex, fn) {
     if (this.exists(vertex)) {
-        this.data[vertex].every(function (neighbor) {
-            return fn(neighbor);
+        this.data[vertex].every(function (element) {
+            return fn(element[0], element[1]); //vertex, weight
         });
     }
 };

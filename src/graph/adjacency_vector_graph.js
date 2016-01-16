@@ -32,19 +32,38 @@ AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
     }
 };
 
-AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2) {
+AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
     var added_edge = false;
 
+    if (weight === undefined) weight = 1;
+    
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
+    
+    var vertex_1_is_neighbor = false;
+    var vertex_2_is_neighbor = false;
+    
+    for (var i = 0, length = this.data[vertex_1].length; i < length; i += 1) {
+        if (this.data[vertex_1][i][0] === vertex_2) {
+            vertex_2_is_neighbor = true;
+            break;
+        }
+    }
+    
+    for (var i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
+        if (this.data[vertex_2][i][0] === vertex_1) {
+            vertex_1_is_neighbor = true;
+            break;
+        }
+    }
 
-    if (this.data[vertex_1].lastIndexOf(vertex_2) == -1) {
-        this.data[vertex_1].push(vertex_2);
+    if (!vertex_2_is_neighbor) {
+        this.data[vertex_1].push([vertex_2, weight]);
         added_edge = true;
     }
 
-    if (this.data[vertex_2].lastIndexOf(vertex_1) == -1) {
-        this.data[vertex_2].push(vertex_1);
+    if (!vertex_1_is_neighbor) {
+        this.data[vertex_2].push([vertex_1, weight]);
         added_edge = true;
     }
 
@@ -64,9 +83,10 @@ AdjacencyVectorGraph.prototype.print = function (max_width, max_height) {
         }
     }
 
-    function printNeighbor(neighbor) {
+    function printNeighbor(neighbor, weight) {
         line += '| ';
         line += neighbor;
+        line += '~' + weight; 
         line += ' ';
         horizontal_vertex_counter += 1;
         if (max_width) {
@@ -112,7 +132,7 @@ AdjacencyVectorGraph.prototype.hasNeighbors = function (vertex) {
 AdjacencyVectorGraph.prototype.forEachNeighbor = function (vertex, fn) {
     if (this.exists(vertex)) {
         for (var i = 0, neighbors_length = this.data[vertex].length; i < neighbors_length; i += 1) {
-            fn(this.data[vertex][i]);
+            fn(this.data[vertex][i][0], this.data[vertex][i][1]);
         }
     }
 };
@@ -127,7 +147,7 @@ AdjacencyVectorGraph.prototype.degree = function (vertex) {
 AdjacencyVectorGraph.prototype.everyNeighbor = function (vertex, fn) {
     if (this.exists(vertex)) {
         for (var i = 0, neighbors_length = this.data[vertex].length; i < neighbors_length; i += 1) {
-            if (!fn(this.data[vertex][i])) {
+            if (!fn(this.data[vertex][i][0], this.data[vertex][i][1])) {
                 break;
             }
         }

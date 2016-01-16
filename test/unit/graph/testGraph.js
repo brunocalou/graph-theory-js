@@ -79,16 +79,16 @@ function testGraph(graph) {
 
                 assert.equal(g.exists(1), true);
                 assert.equal(g.exists(2), true);
-                assert.equal(g.neighbors(1)[0], 2);
-                assert.equal(g.neighbors(2)[0], 1);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(2)[0][0], 1);
                 assert.equal(g.number_of_edges, 1);
                 assert.equal(g.number_of_vertices, 2);
 
                 g.addEdge(1, 4);
 
                 assert.equal(g.exists(4), true);
-                assert.equal(g.neighbors(1)[0], 2);
-                assert.equal(g.neighbors(1)[1], 4);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(1)[1][0], 4);
                 assert.equal(g.number_of_edges, 2);
                 assert.equal(g.number_of_vertices, 3);
             });
@@ -98,12 +98,47 @@ function testGraph(graph) {
 
                 g.addEdge(1, 2);
                 g.addEdge(1, 2);
+
                 assert.equal(g.exists(1), true);
                 assert.equal(g.exists(2), true);
                 assert.equal(g.neighbors(1).length, 1);
                 assert.equal(g.neighbors(2).length, 1);
                 assert.equal(g.number_of_edges, 1);
                 assert.equal(g.number_of_vertices, 2);
+            });
+
+            it('should add a weighted edge', function () {
+                var g = Graph(graph);
+
+                g.addEdge(1, 2, 3);
+
+                assert.equal(g.exists(1), true);
+                assert.equal(g.exists(2), true);
+                assert.equal(g.neighbors(1).length, 1);
+                assert.equal(g.neighbors(2).length, 1);
+                assert.equal(g.number_of_edges, 1);
+                assert.equal(g.number_of_vertices, 2);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(1)[0][1], 3);
+                assert.equal(g.neighbors(2)[0][0], 1);
+                assert.equal(g.neighbors(2)[0][1], 3);
+            });
+
+            it('should add a negative weighted edge', function () {
+                var g = Graph(graph);
+
+                g.addEdge(1, 2, 3);
+                g.addEdge(1, 3, -4);
+
+                assert.equal(g.exists(3), true);
+                assert.equal(g.neighbors(1).length, 2);
+                assert.equal(g.neighbors(3).length, 1);
+                assert.equal(g.number_of_edges, 2);
+                assert.equal(g.number_of_vertices, 3);
+                assert.equal(g.neighbors(1)[1][0], 3);
+                assert.equal(g.neighbors(1)[1][1], -4);
+                assert.equal(g.neighbors(3)[0][0], 1);
+                assert.equal(g.neighbors(3)[0][1], -4);
             });
         });
 
@@ -241,8 +276,8 @@ function testGraph(graph) {
 
                 assert.equal(g.number_of_vertices, 5);
                 assert.equal(g.number_of_edges, 5);
-                assert.equal(g.neighbors(1)[0], 2);
-                assert.equal(g.neighbors(1)[1], 5);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(1)[1][0], 5);
             });
 
             it('should load a graph with a zero degree vertex', function () {
@@ -254,7 +289,7 @@ function testGraph(graph) {
 
                 assert.equal(g.number_of_vertices, 11);
                 assert.equal(g.number_of_edges, 7);
-                assert.equal(g.neighbors(1)[0], 2);
+                assert.equal(g.neighbors(1)[0][0], 2);
                 assert.equal(g.neighbors(9).length, 0);
             });
 
@@ -267,8 +302,8 @@ function testGraph(graph) {
 
                 assert.equal(g.number_of_vertices, 3);
                 assert.equal(g.number_of_edges, 2);
-                assert.equal(g.neighbors(1)[0], 2);
-                assert.equal(g.neighbors(2)[1], 3);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(2)[1][0], 3);
             });
         });
 
@@ -278,8 +313,8 @@ function testGraph(graph) {
 
                 g.addEdge(1, 2);
 
-                assert.equal(g.neighbors(1)[0], 2);
-                assert.equal(g.neighbors(2)[0], 1);
+                assert.equal(g.neighbors(1)[0][0], 2);
+                assert.equal(g.neighbors(2)[0][0], 1);
             });
 
             it('should return an empty array', function () {

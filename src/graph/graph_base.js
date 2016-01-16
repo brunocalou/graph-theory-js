@@ -70,8 +70,9 @@ GraphBase.prototype.addVertex = function (vertex) {
  * Adds an edge to the graph
  * @param {number} vertex_1 - The first vertex
  * @param {number} vertex_2 - The second vertex
+ * @param {number} weight - The weight of the edge. The default is 1
  */
-GraphBase.prototype.addEdge = function (vertex_1, vertex_2) {
+GraphBase.prototype.addEdge = function (vertex_1, vertex_2, weight) {
 };
 
 /**
@@ -262,6 +263,7 @@ GraphBase.prototype.hasNeighbors = function (vertex) {
  * For each neighbor callback
  * @callback GraphBase~forEachNeighborCallback
  * @param {number} neighbor - The current neighbor
+ * @param {number} weight - The weight of the edge
  */
 
 /**
@@ -358,6 +360,7 @@ GraphBase.prototype.every = function (fn, this_arg) {
  * For each Neighbor callback
  * @callback GraphBase~everyNeighborCallback
  * @param {number} neighbor - The current neighbor
+ * @param {number} weight - The weight of the edge
  */
 
 /**

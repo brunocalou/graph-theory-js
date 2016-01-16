@@ -3,6 +3,7 @@
 var GraphBase = require("./graph_base");
 var util = require('../util/util');
 
+
 /**
  * AdjacencyMatrixGraph class
  * @constructor
@@ -12,6 +13,36 @@ var util = require('../util/util');
  */
 var AdjacencyMatrixGraph = function () {
     GraphBase.call(this);
+    
+    /**
+     * Stores the array type to use. It will be changed automatically according to the graph
+     * @type {Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array}
+     */
+    this.ArrayType = Uint8Array;
+    
+    /**
+     * Stores the maximum size of an array element, in bits
+     * @type {number}
+     */
+    this.array_max_element_size = util.MaxNumberSize.UINT_8;
+    
+    /**
+     * Stores if the array is signed
+     * @type {boolean}
+     */
+    this.array_is_signed = false;
+    
+    /**
+     * Stores if the array is an integer
+     * @type {boolean} 
+     */
+    this.array_is_integer = true;
+    
+    /**
+     * Stores if the array must be refactored
+     * @type {boolean}
+     */
+    this.array_must_be_refactored = false;
 };
 
 util.inherit(GraphBase, AdjacencyMatrixGraph);
@@ -27,23 +58,22 @@ AdjacencyMatrixGraph.prototype.createDataStructure = function (number_of_vertice
 
 AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
-        var must_refactor = false;
         var data_length = this.data.length;
 
         this.number_of_vertices += 1;
 
         if (data_length <= vertex) {
-            must_refactor = true;
+            this.array_must_be_refactored = true;
             data_length += vertex - data_length + 1;
         }
 
-        this.data[vertex] = new Uint8Array(data_length);
+        this.data[vertex] = new this.ArrayType(data_length);
 
-        if (must_refactor) {
+        if (this.array_must_be_refactored) {
             //Must recreate all the other vertices to fit the new matrix size
             this.forEach(function (v) {
                 if (this.data[v].length < data_length) {
-                    var aux = new Uint8Array(data_length);
+                    var aux = new this.ArrayType(data_length);
 
                     for (var i = 0, length = this.data[v].length; i < length; i += 1) {
                         aux[i] = this.data[v][i];
@@ -53,22 +83,111 @@ AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
                 }
             }, this);
         }
+
+        this.array_must_be_refactored = false;
     }
 };
 
-AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2) {
+AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
     var added_edge = false;
+
+    if (weight === undefined) weight = 1;
+        
+    //Change the array type, if needed
+    if (this.array_is_integer && weight % 1 === 0) {
+        //The array holds integers
+        if (Math.abs(weight) > this.array_max_element_size || (!this.array_is_signed && weight < 0)) {
+            //The array cannot hold the weight, must change the array type
+            must_refactor = true;
+            if (weight < 0 || this.array_is_signed) {
+                this.array_is_signed = true;
+                //The array is signed
+                if (Math.abs(weight) > util.MaxNumberSize.INT_8) { //8 bits
+                    if (Math.abs(weight) > util.MaxNumberSize.INT_16) {// 16 bits
+                        if (Math.abs(weight) > util.MaxNumberSize.INT_32) { // 32 bits
+                            // 64 bits
+                            this.ArrayType = Float64Array;
+                            this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
+                            this.array_is_integer = false;
+                        } else {
+                            // 32 bits
+                            this.ArrayType = Int32Array;
+                            this.array_max_element_size = util.MaxNumberSize.INT_32;
+                        }
+                    } else {
+                        // 16 bits
+                        this.ArrayType = Int16Array;
+                        this.array_max_element_size = util.MaxNumberSize.INT_16;
+                    }
+                } else {
+                    // 8 bits
+                    this.ArrayType = Int8Array;
+                    this.array_max_element_size = util.MaxNumberSize.INT_8;
+                }
+            } else {
+                //The array is not signed
+                if (Math.abs(weight) > util.MaxNumberSize.UINT_8) { //8 bits
+                    if (Math.abs(weight) > util.MaxNumberSize.UINT_16) {// 16 bits
+                        if (Math.abs(weight) > util.MaxNumberSize.UINT_32) { // 32 bits
+                            // 64 bits
+                            this.ArrayType = Float64Array;
+                            this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
+                            this.array_is_integer = false;
+                            this.array_is_signed = true;
+                        } else {
+                            // 32 bits
+                            this.ArrayType = Uint32Array;
+                            this.array_max_element_size = util.MaxNumberSize.UINT_32;
+                        }
+                    } else {
+                        // 16 bits
+                        this.ArrayType = Uint16Array;
+                        this.array_max_element_size = util.MaxNumberSize.UINT_16;
+                    }
+                } else {
+                    // 8 bits
+                    this.ArrayType = Uint8Array;
+                    this.array_max_element_size = util.MaxNumberSize.UINT_8;
+                }
+            }
+        }
+    } else {
+        //The array holds float numbers
+
+        if (this.ArrayType !== Float32Array && this.ArrayType !== Float64Array) {
+            //If the array was holding integers, change it to hold floats
+            this.ArrayType = Float32Array;
+            this.array_max_element_size = util.MaxNumberSize.FLOAT_32;
+            this.array_is_integer = false;
+            this.array_is_signed = true;
+            must_refactor = true;
+        }
+
+        if (Math.abs(weight) > this.array_max_element_size) {
+            must_refactor = true;
+
+            if (Math.abs(weight) > util.MaxNumberSize.FLOAT_32) { // 32 bits
+                // 64 bits
+                this.ArrayType = Float64Array;
+                this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
+            } else {
+                // 32 bits
+                this.ArrayType = Float32Array;
+                this.array_max_element_size = util.MaxNumberSize.FLOAT_32;
+            }
+        }
+    }
 
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
 
     if (!this.data[vertex_1][vertex_2]) {
-        this.data[vertex_1][vertex_2] = 1;
+        this.data[vertex_1][vertex_2] = weight;
         added_edge = true;
     }
 
     if (!this.data[vertex_2][vertex_1]) {
-        this.data[vertex_2][vertex_1] = 1;
+        this.data[vertex_2][vertex_1] = weight;
         added_edge = true;
     }
 
@@ -164,7 +283,7 @@ AdjacencyMatrixGraph.prototype.neighbors = function (vertex) {
 
         for (var i = 0; i < data_length; i += 1) {
             if (this.data[vertex][i]) {
-                neighbors.push(i);
+                neighbors.push([i, this.data[vertex][i]]);
             }
         }
     }
@@ -192,7 +311,7 @@ AdjacencyMatrixGraph.prototype.forEachNeighbor = function (vertex, fn) {
     if (this.exists(vertex)) {
         for (var i = 0; i < data_length; i += 1) {
             if (this.data[vertex][i]) {
-                fn(i);
+                fn(i, this.data[vertex][i]);
             }
         }
     }
@@ -211,7 +330,7 @@ AdjacencyMatrixGraph.prototype.everyNeighbor = function (vertex, fn) {
     if (this.exists(vertex)) {
         for (var i = 0; i < data_length; i += 1) {
             if (this.data[vertex][i]) {
-                if (!fn(i)) {
+                if (!fn(i, this.data[vertex][i])) {
                     break;
                 }
             }
