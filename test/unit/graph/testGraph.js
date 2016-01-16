@@ -5,6 +5,11 @@ var DataStructures = require('../../../index').Graph.DataStructure;
 var fs = require('fs');
 var assert = require('assert');
 var appRoot = require('app-root-path');
+var util = require('../../../index').Util.Util;
+
+function getGraphFile(filename) {
+    return appRoot + '/test/assets/graph_files/' + filename;
+}
 
 /**
  * Function to test the graphs
@@ -257,22 +262,19 @@ function testGraph(graph) {
         describe('loadFromFile', function () {
             it('should set the output object correctly', function () {
                 var g = Graph(graph);
-                var folder = appRoot + '/test/assets/graph_files';
-                var file = folder + '/small_graph.txt';
+                var folder = appRoot + '/test/assets/graph_files/';
 
-                g.loadFromFile(file);
+                g.loadFromFile(folder + 'small_graph.txt');
 
-                assert.equal(g.output.folder, folder + '/small_graph_output');
+                assert.equal(g.output.folder, folder + 'small_graph_output');
                 assert.equal(g.output.filename, 'statistics.txt');
                 assert.equal(g.output.destination, g.output.folder + '/' + g.output.filename);
             });
 
             it('should load the graph', function () {
                 var g = Graph(graph);
-                var folder = appRoot + '/test/assets/graph_files';
-                var file = folder + '/small_graph.txt';
 
-                g.loadFromFile(file);
+                g.loadFromFile(getGraphFile('small_graph.txt'));
 
                 assert.equal(g.number_of_vertices, 5);
                 assert.equal(g.number_of_edges, 5);
@@ -282,10 +284,8 @@ function testGraph(graph) {
 
             it('should load a graph with a zero degree vertex', function () {
                 var g = Graph(graph);
-                var folder = appRoot + '/test/assets/graph_files';
-                var file = folder + '/small_multicluster_graph.txt';
 
-                g.loadFromFile(file);
+                g.loadFromFile(getGraphFile('small_multicluster_graph.txt'));
 
                 assert.equal(g.number_of_vertices, 11);
                 assert.equal(g.number_of_edges, 7);
@@ -295,15 +295,83 @@ function testGraph(graph) {
 
             it('should ignore the number of vertices on the file and count it while adding the vertices', function () {
                 var g = Graph(graph);
-                var folder = appRoot + '/test/assets/graph_files';
-                var file = folder + '/wrong_number_of_vertices_graph.txt';
 
-                g.loadFromFile(file);
+                g.loadFromFile(getGraphFile('wrong_number_of_vertices_graph.txt'));
 
                 assert.equal(g.number_of_vertices, 3);
                 assert.equal(g.number_of_edges, 2);
                 assert.equal(g.neighbors(1)[0][0], 2);
                 assert.equal(g.neighbors(2)[1][0], 3);
+            });
+
+            it('should load a weighted graph', function () {
+                var g = Graph(graph);
+                var expected_graph = [
+                    undefined,
+                    [
+                        [2, 0.1],
+                        [5, 1]
+                    ],
+                    [
+                        [1, 0.1],
+                        [5, 0.2]
+                    ],
+                    [
+                        [4, -9.5],
+                        [5, 5]
+                    ],
+                    [
+                        [3, -9.5],
+                        [5, 2.3]
+                    ], [
+                        [1, 1],
+                        [2, 0.2],
+                        [3, 5],
+                        [4, 2.3]
+                    ]
+                ];
+
+                g.loadFromFile(getGraphFile('small_weighted_graph.txt'));
+
+                g.forEach(function (vertex) {
+                    g.forEachNeighbor(vertex, function (neighbor, weight) {
+                        var contains_neighbor = false;
+                        var contains_weight = false;
+
+                        for (var i = 0, length = expected_graph[vertex].length; i < length; i += 1) {
+                            if (expected_graph[vertex][i][0] === neighbor) {
+                                contains_neighbor = true;
+                                contains_weight = util.nearEquals(expected_graph[vertex][i][1], weight, 0.1);
+                            }
+                        }
+
+                        assert.equal(contains_neighbor, true);
+                        assert.equal(contains_weight, true);
+                    });
+                });
+            });
+
+            it('should throw an error if the first line of the file is invalid', function () {
+                var g = Graph(graph);
+                var error = false;
+
+                try {
+                    g.loadFromFile(getGraphFile('bad_file_format_graph.txt'));
+                } catch (e) {
+                    error = true;
+                }
+
+                assert.equal(error, true);
+            });
+            
+            it('should load a graph using a predefined token', function() {
+                var g = Graph(graph);
+                
+                g.loadFromFile(getGraphFile('small_token_graph.txt'), ',');
+
+                assert.equal(g.number_of_vertices, 4);
+                assert.equal(g.number_of_edges, 5);
+                
             });
         });
 

@@ -168,60 +168,51 @@ GraphBase.prototype.saveGraphStatisticsToFile = function () {
 /**
  * Loads the graph from a file. The graph file must be on the following format:
  * number_of_vertices
- * vertex_1 vertex_2
- * vertex_1 vertex_3
+ * vertex_1 vertex_2 weight
+ * vertex_1 vertex_3 weight
  * ...
  * Where each line is an edge
  * @param {string} path - The path to the graph file
+ * @param {string} token - The token to use when parsing the file. The default is a space character
  */
-GraphBase.prototype.loadFromFile = function (path) {
+GraphBase.prototype.loadFromFile = function (path, token) {
     //Store the data according to the data structure
     this.path = path;
+
+    if (token === undefined) token = ' ';
 	
     //Create an output folder. The name of the folder is the name of the file plus '_output'
     this.output.folder = this.path.substr(0, this.path.lastIndexOf('.')) + '_output';
     this.output.filename = 'statistics.txt';
     this.output.destination = this.output.folder + '/' + this.output.filename;
 
-    var
-        file = fs.readFileSync(path).toString(),
-        current_number = '',
-        second_line_start = file.indexOf('\n'),
-        final_character = file.length,
-        vertex_1 = 0,
-        vertex_2 = 0;
+    var error_message = 'Bad file format';
 
-    this.number_of_vertices = parseInt(file.substr(0, ++second_line_start).replace('\n', ''));
-    this.createDataStructure(this.number_of_vertices);
+    var lines = fs.readFileSync(path).toString().split('\n');
+
+    var number_of_vertices = lines.shift(); // The first line is the number of vertices
     
-    //Reset the number of vertices, because the file can be wrong
-    this.number_of_vertices = 0;
+    if (isNaN(number_of_vertices)) {
+        throw new Error(error_message);
+    }
 
-    for (var i = second_line_start; i < final_character + 1; i += 1) {
+    this.createDataStructure(parseInt(number_of_vertices));
 
-        if (file[i] === '\n' || i === final_character) {
-            vertex_2 = parseInt(current_number);
-            current_number = '';
-            if (!isNaN(vertex_1) && !isNaN(vertex_2)) {
-                if (vertex_1 > 0 && vertex_2 > 0) {
-                    this.addEdge(vertex_1, vertex_2);
-                } else if (vertex_1 < 0) {
-                    if (vertex_2 > 0) {
-                        this.addVertex(vertex_2);
-                    }
-                } else if (vertex_2 < 0) {
-                    if (vertex_1 > 0) {
-                        this.addVertex(vertex_1);
-                    }
-                }
-            }
-            vertex_1 = -1;
-            vertex_2 = -1;
-        } else if (file[i] === ' ') {
-            vertex_1 = parseInt(current_number);
-            current_number = '';
+    var current_line = lines.shift();
+    var current_line_array = [];
+
+    while (current_line !== undefined) {
+        current_line_array = current_line.split(token);
+        current_line = lines.shift();
+        if (current_line_array[1] === undefined) {
+            this.addVertex(parseFloat(current_line_array[0]));
         } else {
-            current_number += file[i];
+            if (current_line_array.length === 2) {
+                //Weightless graph
+                current_line_array[2] = 1;
+            }
+
+            this.addEdge(parseFloat(current_line_array[0]), parseFloat(current_line_array[1]), parseFloat(current_line_array[2]));
         }
     }
 };

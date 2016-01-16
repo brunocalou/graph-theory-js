@@ -88,10 +88,22 @@ function printMemory(memory_usage, size, color) {
     console.log('');
 }
 
+/**
+ * Checks if one number is equal to other according to an error margin
+ * @param {number} x1 - The first number
+ * @param {number} x2 - The second number
+ * @param {number} error - The error
+ * @returns {boolean} If one number is equal to other according to an error margin
+ */
+function nearEquals(x1, x2, error) {
+    return Math.abs(Math.abs(x1) - Math.abs(x2)) < error
+}
+
 module.exports = {
     inherit: inherit,
     printObject: printObject,
     printMemory: printMemory,
     MemorySize: MemorySize,
-    MaxNumberSize: MaxNumberSize
+    MaxNumberSize: MaxNumberSize,
+    nearEquals: nearEquals
 };
