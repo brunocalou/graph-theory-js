@@ -10,11 +10,16 @@
   "devDependencies": {
     "app-root-path": "^1.0.0",
     "chalk": "^1.1.1",
+    "pre-commit": "^1.1.2",
     "progress": "^1.1.8",
     "yargs": "^3.31.0"
   },
   "scripts": {
-    "test": "mocha --recursive ./test/unit"
+    "test": "mocha --recursive ./test/unit",
+    "jshint": "jshint ./src ./test"
+  },
+  "pre-commit": {
+      "run": ["test", "jshint"]
   },
   "repository": {
     "type": "git",

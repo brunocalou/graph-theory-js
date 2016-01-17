@@ -56,7 +56,7 @@ AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
     }
 
     if (!this.directed) {
-        for (var i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
+        for (i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
             if (this.data[vertex_2][i][0] === vertex_1) {
                 vertex_1_is_neighbor = true;
                 break;

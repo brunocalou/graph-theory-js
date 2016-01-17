@@ -795,7 +795,7 @@ describe('Linked List', function () {
             ll.pop();
             assert.equal(ll.size(), 0);
         });
-    })
+    });
     
     describe('toArray', function() {
         it('should convert the list to an array', function() {

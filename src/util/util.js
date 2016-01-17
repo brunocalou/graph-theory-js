@@ -96,7 +96,7 @@ function printMemory(memory_usage, size, color) {
  * @returns {boolean} If one number is equal to other according to an error margin
  */
 function nearEquals(x1, x2, error) {
-    return Math.abs(Math.abs(x1) - Math.abs(x2)) < error
+    return Math.abs(Math.abs(x1) - Math.abs(x2)) < error;
 }
 
 module.exports = {
