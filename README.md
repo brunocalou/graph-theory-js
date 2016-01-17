@@ -14,7 +14,6 @@ npm install
 
 ##Testing
 
-The project uses [mocha](https://mochajs.org/), so make sure it's installed before testing.
 Test the project using the following command
 ```
 npm test
