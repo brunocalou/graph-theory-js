@@ -105,6 +105,9 @@ describe('MinBinaryHeap', function () {
             heap.every(function (element, index, binary_heap) {
                 assert.equal(element, expected_array[index]);
                 assert.equal(binary_heap, heap);
+                if (index > 5) {
+                    assert(false);
+                }
                 return true;
             });
         });
@@ -150,6 +153,9 @@ describe('MinBinaryHeap', function () {
             heap.forEach(function (element, index, binary_heap) {
                 assert.equal(element, expected_array[index]);
                 assert.equal(binary_heap, heap);
+                if (index > 5) {
+                    assert(false);
+                }
             });
         });
     });
@@ -323,6 +329,9 @@ describe('MaxBinaryHeap', function () {
             heap.every(function (element, index, binary_heap) {
                 assert.equal(element, expected_array[index]);
                 assert.equal(binary_heap, heap);
+                if (index > 5) {
+                    assert(false);
+                }
                 return true;
             });
         });
@@ -368,6 +377,9 @@ describe('MaxBinaryHeap', function () {
             heap.forEach(function (element, index, binary_heap) {
                 assert.equal(element, expected_array[index]);
                 assert.equal(binary_heap, heap);
+                if (index > 5) {
+                    assert(false);
+                }
             });
         });
     });
