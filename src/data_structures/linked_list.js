@@ -482,7 +482,7 @@ LinkedList.prototype.set = function (element, index) {
 
 /**
  * Returns the size of the list
- * @returns {any} The size of the list
+ * @returns {number} The size of the list
  */
 LinkedList.prototype.size = function () {
     return this._length;

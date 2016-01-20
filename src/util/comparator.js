@@ -104,9 +104,9 @@ Comparator.prototype.greaterThanOrEqual = function (a, b) {
  * Comparator.greaterThan(1, 2);
  */
 Comparator.prototype.invert = function () {
-    this.originalCompare = this.compare;
+    this._originalCompare = this.compare;
     this.compare = function (a, b) {
-        return this.originalCompare(b, a);
+        return this._originalCompare(b, a);
     };
 };
 
