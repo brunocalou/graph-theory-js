@@ -9,17 +9,31 @@ var Node = require('./node');
  * @constructor
  */
 function LinkedList() {
-    /**@private */
+    /**@private
+     * @type {object}
+     */
     this._self = this;
     
-    /**@private */
+    /**@private
+     * @type {node}
+     */
     this._front = null;
     
-    /**@private */
+    /**@private
+     * @type {node}
+     */
     this._back = null;
     
-    /**@private */
+    /**@private
+     * @type{number}
+     */
     this._length = 0;
+
+    Object.defineProperty(this, 'length', {
+        get: function () {
+            return this._length;
+        }
+    });
 }
 
 /**
@@ -274,16 +288,6 @@ LinkedList.prototype.lastIndexOf = function (element) {
 };
 
 /**
- * Returns the length of the list
- * This method is equivalent to size
- * @see size
- * @returns {number} The length of the list
- */
-LinkedList.prototype.length = function () {
-    return this.size();
-};
-
-/**
  * Retrieves the first element without removing it.
  * This method is equivalent to getFirst
  * @see getFirst
@@ -494,11 +498,11 @@ LinkedList.prototype.size = function () {
  */
 LinkedList.prototype.toArray = function () {
     var array = new Array(this._length);
-    
-    this.forEach(function(element, index) {
+
+    this.forEach(function (element, index) {
         array[index] = element;
     });
-    
+
     return array;
 };
 

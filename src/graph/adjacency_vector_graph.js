@@ -10,7 +10,7 @@ var util = require('../util/util');
  * is represented by an array of vertices
  * @extends GraphBase
  */
-var AdjacencyVectorGraph = function (directed) {
+function AdjacencyVectorGraph (directed) {
     GraphBase.call(this, directed);
 };
 

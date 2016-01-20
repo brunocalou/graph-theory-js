@@ -9,8 +9,16 @@ var LinkedList = require('./linked_list');
  * @constructor
  */
 function Stack() {
-    /**@private */
+    /**@private
+     * @type {LinkedList}
+     */
     this._elements = new LinkedList();
+
+    Object.defineProperty(this, 'length', {
+        get: function () {
+            return this._elements.length;
+        }
+    });
 }
 
 /**
@@ -19,7 +27,7 @@ function Stack() {
  * @see push
  * @param {any} element - The element to be added
  */
-Stack.prototype.add = function(element) {
+Stack.prototype.add = function (element) {
     this.push(element);
 };
 
@@ -28,7 +36,7 @@ Stack.prototype.add = function(element) {
  * @param {any} element - The element to be searched
  * @returns {boolean} True if the stack contains the element
  */
-Stack.prototype.contains = function(element) {
+Stack.prototype.contains = function (element) {
     return this._elements.contains(element);
 };
 
@@ -36,25 +44,15 @@ Stack.prototype.contains = function(element) {
  * Returns if the stack is empty
  * @returns {boolean} If the stack is empty
  */
-Stack.prototype.isEmpty = function(element) {
+Stack.prototype.isEmpty = function (element) {
     return this._elements.isEmpty();
-};
-
-/**
- * Returns the length of the list
- * This method is equivalent to size
- * @see size
- * @returns {number} The size of the stack
- */
-Stack.prototype.length = function() {
-    return this._elements.length();
 };
 
 /**
  * Retrieves the first element of the stack without removing it
  * @returns {any} The first element of the stack. Returns undefined if the stack is empty
  */
-Stack.prototype.peek = function() {
+Stack.prototype.peek = function () {
     return this._elements.getLast();
 };
 
@@ -62,7 +60,7 @@ Stack.prototype.peek = function() {
  * Retrieves and removes the first element of the stack
  * @returns {any} The removed element of the stack
  */
-Stack.prototype.pop = function() {
+Stack.prototype.pop = function () {
     return this._elements.removeLast();
 };
 
@@ -70,7 +68,7 @@ Stack.prototype.pop = function() {
  * Adds the element to the top of the stack
  * @param {any} element - The element to be added
  */
-Stack.prototype.push = function(element) {
+Stack.prototype.push = function (element) {
     this._elements.addLast(element);
 };
 
@@ -80,7 +78,7 @@ Stack.prototype.push = function(element) {
  * @see pop
  * @returns {any} The removed element of the stack
  */
-Stack.prototype.remove = function() {
+Stack.prototype.remove = function () {
     return this._elements.removeLast();
 };
 
@@ -88,7 +86,7 @@ Stack.prototype.remove = function() {
  * Returns the size of the stack
  * @returns {number} The size of the stack
  */
-Stack.prototype.size = function() {
+Stack.prototype.size = function () {
     return this._elements.size();
 };
 
@@ -96,7 +94,7 @@ Stack.prototype.size = function() {
  * Converts the stack to an array
  * @returns {array} The converted stack in an array format
  */
-Stack.prototype.toArray = function() {
+Stack.prototype.toArray = function () {
     return this._elements.toArray();
 };
 

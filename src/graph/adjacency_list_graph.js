@@ -11,7 +11,7 @@ var LinkedList = require('../data_structures/linked_list');
  * is represented by an array of linked lists
  * @extends GraphBase
  */
-var AdjacencyListGraph = function (directed) {
+function AdjacencyListGraph (directed) {
     GraphBase.call(this, directed);
 };
 

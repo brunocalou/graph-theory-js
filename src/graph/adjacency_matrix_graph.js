@@ -11,7 +11,7 @@ var util = require('../util/util');
  * is represented by an array of array of vertices
  * @extends GraphBase
  */
-var AdjacencyMatrixGraph = function (directed) {
+function AdjacencyMatrixGraph (directed) {
     GraphBase.call(this, directed);
     
     /**

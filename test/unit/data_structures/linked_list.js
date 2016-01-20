@@ -8,7 +8,7 @@ describe('Linked List', function () {
         var ll = new LinkedList();
 
         assert(ll.isEmpty());
-        assert.equal(ll._length, 0);
+        assert.equal(ll.length, 0);
         assert.equal(ll.size(), 0);
     });
 
@@ -19,7 +19,7 @@ describe('Linked List', function () {
 
             ll.add(value);
 
-            assert.equal(ll._length, 1);
+            assert.equal(ll.length, 1);
             assert.equal(ll._front, ll._back);
             assert.equal(ll._front.value, value);
         });
@@ -32,7 +32,7 @@ describe('Linked List', function () {
             ll.add(back_value);
             ll.add(front_value, 0);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._front.prev, null);
             assert.equal(ll._front.next.next, null);
@@ -50,7 +50,7 @@ describe('Linked List', function () {
             ll.add(front_value);
             ll.add(back_value);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._front.prev, null);
             assert.equal(ll._front.next.next, null);
@@ -68,7 +68,7 @@ describe('Linked List', function () {
             ll.add(front_value);
             ll.add(back_value, 1);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._front.prev, null);
             assert.equal(ll._front.next.next, null);
@@ -89,7 +89,7 @@ describe('Linked List', function () {
             ll.add(middle_value, 1);
 
             //front - middle - back
-            assert.equal(ll._length, 3);
+            assert.equal(ll.length, 3);
             assert.equal(ll._front.value, front_value);
             assert.equal(ll._front.next.value, middle_value);
             assert.equal(ll._back.value, back_value);
@@ -132,7 +132,7 @@ describe('Linked List', function () {
             }
 
             assert(error);
-            assert.equal(ll._length, 0);
+            assert.equal(ll.length, 0);
         });
     });
 
@@ -145,7 +145,7 @@ describe('Linked List', function () {
             ll.add(back_value);
             ll.addFirst(front_value);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._front.prev, null);
             assert.equal(ll._front.next.next, null);
@@ -165,7 +165,7 @@ describe('Linked List', function () {
             ll.add(front_value);
             ll.addLast(back_value);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._front.prev, null);
             assert.equal(ll._front.next.next, null);
@@ -195,7 +195,7 @@ describe('Linked List', function () {
 
             assert.equal(ll._front, null);
             assert.equal(ll._back, null);
-            assert.equal(ll._length, 0);
+            assert.equal(ll.length, 0);
 
             assert.equal(first._next, null);
             assert.equal(first._prev, null);
@@ -432,7 +432,7 @@ describe('Linked List', function () {
             assert.equal(ll.lastIndexOf(5), -1);
         });
     });
-    
+
     describe('peek', function () {
         it('should get the first element', function () {
             var ll = new LinkedList();
@@ -443,7 +443,7 @@ describe('Linked List', function () {
             ll.add(back_value);
 
             assert.equal(ll.peek(), front_value);
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
         });
     });
 
@@ -461,7 +461,7 @@ describe('Linked List', function () {
 
             removed_element = ll.pop();
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, front_value);
@@ -477,7 +477,7 @@ describe('Linked List', function () {
             ll.add(back_value);
             ll.push(front_value);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front, ll._front.next.prev);
             assert.equal(ll._front.prev, null);
             assert.equal(ll._front.next.next, null);
@@ -544,7 +544,7 @@ describe('Linked List', function () {
             removed_element = ll.remove(1);
 
             //front - back
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, middle_value);
@@ -589,7 +589,7 @@ describe('Linked List', function () {
 
             removed_element = ll.remove(0);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, front_value);
@@ -608,7 +608,7 @@ describe('Linked List', function () {
 
             removed_element = ll.remove(2);
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, back_value);
@@ -629,7 +629,7 @@ describe('Linked List', function () {
 
             removed_element = ll.removeFirst();
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, front_value);
@@ -661,7 +661,7 @@ describe('Linked List', function () {
 
             ll.removeFirstOccurrence(5);
 
-            assert.equal(ll._length, 1);
+            assert.equal(ll.length, 1);
             assert.equal(ll._front.value, value);
         });
     });
@@ -680,7 +680,7 @@ describe('Linked List', function () {
 
             removed_element = ll.removeLast();
 
-            assert.equal(ll._length, 2);
+            assert.equal(ll.length, 2);
             assert.equal(ll._front.next, ll._back);
             assert.equal(ll._back.prev, ll._front);
             assert.equal(removed_element, back_value);
@@ -712,7 +712,7 @@ describe('Linked List', function () {
 
             ll.removeFirstOccurrence(5);
 
-            assert.equal(ll._length, 1);
+            assert.equal(ll.length, 1);
             assert.equal(ll._front.value, value);
         });
     });
@@ -780,46 +780,52 @@ describe('Linked List', function () {
         });
     });
 
-    describe('size', function () {
+    describe('size | length', function () {
         it('should return the length of the list', function () {
             var ll = new LinkedList();
             assert.equal(ll.size(), 0);
+            assert.equal(ll.length, 0);
             ll.add(123);
             assert.equal(ll.size(), 1);
+            assert.equal(ll.length, 1);
             ll.add(456);
             assert.equal(ll.size(), 2);
+            assert.equal(ll.length, 2);
             ll.pop();
             assert.equal(ll.size(), 1);
+            assert.equal(ll.length, 1);
             ll.pop();
             assert.equal(ll.size(), 0);
+            assert.equal(ll.length, 0);
             ll.pop();
             assert.equal(ll.size(), 0);
+            assert.equal(ll.length, 0);
         });
     });
-    
-    describe('toArray', function() {
-        it('should convert the list to an array', function() {
+
+    describe('toArray', function () {
+        it('should convert the list to an array', function () {
             var ll = new LinkedList();
             var front_value = 123;
             var middle_value = 345;
             var back_value = 678;
             var array;
-            
+
             ll.add(front_value);
             ll.add(middle_value);
             ll.add(back_value);
-            
+
             array = ll.toArray();
-            assert.equal(array.length, ll.length());
+            assert.equal(array.length, ll.length);
             assert.equal(array[0], ll.get(0));
             assert.equal(array[1], ll.get(1));
             assert.equal(array[2], ll.get(2));
         });
-        
-        it('should convert an empty list to an empty array', function() {
+
+        it('should convert an empty list to an empty array', function () {
             var ll = new LinkedList();
             var array = ll.toArray();
-            
+
             assert.equal(array.length, 0);
         });
     });
