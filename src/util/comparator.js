@@ -107,7 +107,7 @@ Comparator.prototype.invert = function () {
     this._originalCompare = this.compare;
     this.compare = function (a, b) {
         return this._originalCompare(b, a);
-    };
+    }.bind(this);
 };
 
 module.exports = Comparator;

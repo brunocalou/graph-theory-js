@@ -3,6 +3,7 @@
 'use strict';
 
 var Comparator = require('../util/comparator');
+var util = require('../util/util');
 
 /**
  * Min Binary Heap Class
@@ -136,37 +137,44 @@ MinBinaryHeap.prototype.push = function (element) {
  */
 MinBinaryHeap.prototype.pop = function () {
     var removed_element = this._elements[1];
-    if (this._length > 0) {
-        if (this._length === 1) {
-            this._elements.pop();
-        } else {
-            this._elements[1] = this._elements.pop();
-        }
+
+    if (this._length === 1) {
+        this._elements.pop();
+        this._length -= 1;
+
+    } else if (this._length > 1) {
+
+        this._elements[1] = this._elements.pop();
+
         this._length -= 1;
 
         var parent_index = 1;
         var left_child_index = 2;
         var right_child_index = 3;
         var smallest_child_index;
+        var array_length = this._length + 1;
+        while (parent_index < array_length &&
+            (left_child_index < array_length || right_child_index < array_length)) {
 
-        while (parent_index < this._length) {
-
-            if (this._elements[right_child_index] !== undefined) {
-                if (this._comparator.lessThan(this._elements[left_child_index], this._elements[right_child_index])) {
-                    smallest_child_index = left_child_index;
-                } else {
-                    smallest_child_index = right_child_index;
+            if (right_child_index < array_length) {
+                if (left_child_index < array_length) {
+                    if (this._comparator.lessThan(this._elements[left_child_index], this._elements[right_child_index])) {
+                        smallest_child_index = left_child_index;
+                    } else {
+                        smallest_child_index = right_child_index;
+                    }
                 }
             } else {
-                smallest_child_index = left_child_index;
+                if (left_child_index < array_length) {
+                    smallest_child_index = left_child_index;
+                }
             }
 
             if (this._comparator.greaterThan(this._elements[parent_index], this._elements[smallest_child_index])) {
                 this._swap(parent_index, smallest_child_index);
-                parent_index = smallest_child_index;
-            } else {
-                break;
             }
+
+            parent_index = smallest_child_index;
 
             left_child_index = parent_index * 2;
             right_child_index = parent_index * 2 + 1;
@@ -215,6 +223,33 @@ MinBinaryHeap.prototype.toArray = function () {
     return array;
 };
 
+/**
+ * Max Binary Heap Class
+ * @constructor
+ * @extends MinBinaryHeap
+ */
+function MaxBinaryHeap(comparator) {
+    MinBinaryHeap.call(this, comparator);
+    this._comparator.invert();
+}
+
+MaxBinaryHeap.prototype.toArray = function () {
+    var array = [];
+    var max_binary_heap = new MaxBinaryHeap();
+    max_binary_heap._elements = this._elements.slice();
+    max_binary_heap._length = this._length;
+    max_binary_heap._comparator = this._comparator;
+
+    while (max_binary_heap.peek() !== undefined) {
+        array.push(max_binary_heap.pop());
+    }
+
+    return array;
+};
+
+util.inherit(MinBinaryHeap, MaxBinaryHeap);
+
 module.exports = {
-    MinBinaryHeap: MinBinaryHeap
+    MinBinaryHeap: MinBinaryHeap,
+    MaxBinaryHeap: MaxBinaryHeap
 };
