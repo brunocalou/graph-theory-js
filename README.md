@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/brunocalou/graph-theory-js.svg?branch=master)](https://travis-ci.org/brunocalou/graph-theory-js)
+
 Graph library to the Graph Theory class at UFRJ
 
 ##Dependencies
