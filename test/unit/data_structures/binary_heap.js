@@ -90,6 +90,42 @@ function testCommonHeapFunctions(BinaryHeap) {
 describe('MinBinaryHeap', function () {
     testCommonHeapFunctions(MinBinaryHeap);
 
+    describe('changeElement', function () {
+        it('should change an element', function () {
+            var heap = new MinBinaryHeap();
+
+            heap.insert(1);
+            heap.insert(8);
+            heap.insert(4);
+            heap.insert(2);
+            heap.insert(5);
+
+            heap.changeElement(2, 9);
+
+            assert.equal(heap.pop(), 1);
+            assert.equal(heap.pop(), 4);
+            assert.equal(heap.pop(), 5);
+            assert.equal(heap.pop(), 8);
+            assert.equal(heap.pop(), 9);
+        });
+
+        it('should change an element of an arbitrary type', function () {
+            function comparator(a, b) {
+                return a[0] - b[0];
+            }
+
+            var heap = new MinBinaryHeap(comparator);
+
+            heap.heapify([[1, 5], [2, -4], [3, 2], [4, 0]]);
+            heap.changeElement([3, 2], [5, 6]);
+
+            assert.equal(heap.pop()[0], 1);
+            assert.equal(heap.pop()[0], 2);
+            assert.equal(heap.pop()[0], 4);
+            assert.equal(heap.pop()[0], 5);
+        });
+    });
+
     describe('every', function () {
         it('should iterate over all the elements in order', function () {
             var heap = new MinBinaryHeap();
@@ -157,6 +193,18 @@ describe('MinBinaryHeap', function () {
                     assert(false);
                 }
             });
+        });
+    });
+
+    describe('heapify', function () {
+        it('should transform an array into a min binary heap', function () {
+            var heap = new MinBinaryHeap();
+            heap.heapify([5, 2, 3, 1, 4, 7, 6]);
+
+            for (var i = 1; i < 3; i += 1) {
+                assert(heap._elements[i] < heap._elements[2 * i]);
+                assert(heap._elements[i] < heap._elements[2 * i + 1]);
+            }
         });
     });
 
@@ -285,6 +333,83 @@ describe('MinBinaryHeap', function () {
         });
     });
 
+    describe('_shiftDown', function () {
+        it('should shift the root', function () {
+            var heap = new MinBinaryHeap();
+            heap._elements = [null, 2, 1, 3];
+            heap._length = 3;
+            heap._shiftDown();
+
+            assert.equal(heap._elements[1], 1);
+            assert.equal(heap._elements[2], 2);
+            assert.equal(heap._elements[3], 3);
+
+            heap._elements = [null, 2, 3, 1];
+            heap._shiftDown();
+
+            assert.equal(heap._elements[1], 1);
+            assert.equal(heap._elements[2], 3);
+            assert.equal(heap._elements[3], 2);
+        });
+
+        it('should shift down an element', function () {
+            var heap = new MinBinaryHeap();
+            heap._elements = [null, 1, 2, 6, 4, 5, 3, 7];
+            heap._length = 7;
+            heap._shiftDown(3);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], i);
+            }
+        });
+
+        it('should not shift down an element if it is correct', function () {
+            var heap = new MinBinaryHeap();
+            heap._elements = [null, 1, 2, 3, 4, 5, 6, 7];
+            heap._length = 7;
+            heap._shiftDown(4);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], i);
+            }
+        });
+    });
+
+    describe('_shiftUp', function () {
+        it('should shift the last element', function () {
+            var heap = new MinBinaryHeap();
+            heap._elements = [null, 2, 3, 1];
+            heap._length = 3;
+            heap._shiftUp();
+
+            assert.equal(heap._elements[1], 1);
+            assert.equal(heap._elements[2], 3);
+            assert.equal(heap._elements[3], 2);
+        });
+
+        it('should shift up an element', function () {
+            var heap = new MinBinaryHeap();
+            heap._elements = [null, 1, 2, 6, 4, 5, 3, 7];
+            heap._length = 7;
+            heap._shiftUp(6);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], i);
+            }
+        });
+
+        it('should not shift up an element if it is correct', function () {
+            var heap = new MinBinaryHeap();
+            heap._elements = [null, 1, 2, 3, 4, 5, 6, 7];
+            heap._length = 7;
+            heap._shiftUp(4);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], i);
+            }
+        });
+    });
+
     describe('toArray', function () {
         it('should return the converted heap in an ordered array format', function () {
             var heap = new MinBinaryHeap();
@@ -313,6 +438,41 @@ describe('MinBinaryHeap', function () {
 
 describe('MaxBinaryHeap', function () {
     testCommonHeapFunctions(MaxBinaryHeap);
+
+    describe('changeElement', function () {
+        it('should change an element', function () {
+            var heap = new MaxBinaryHeap();
+
+            heap.insert(1);
+            heap.insert(8);
+            heap.insert(4);
+            heap.insert(2);
+            heap.insert(5);
+            heap.changeElement(2, 9);
+
+            assert.equal(heap.pop(), 9);
+            assert.equal(heap.pop(), 8);
+            assert.equal(heap.pop(), 5);
+            assert.equal(heap.pop(), 4);
+            assert.equal(heap.pop(), 1);
+        });
+
+        it('should change an element of an arbitrary type', function () {
+            function comparator(a, b) {
+                return a[0] - b[0];
+            }
+
+            var heap = new MaxBinaryHeap(comparator);
+
+            heap.heapify([[1, 5], [2, -4], [3, 2], [4, 0]]);
+            heap.changeElement([3, 2], [5, 6]);
+
+            assert.equal(heap.pop()[0], 5);
+            assert.equal(heap.pop()[0], 4);
+            assert.equal(heap.pop()[0], 2);
+            assert.equal(heap.pop()[0], 1);
+        });
+    });
 
     describe('every', function () {
         it('should iterate over all the elements in order', function () {
@@ -381,6 +541,18 @@ describe('MaxBinaryHeap', function () {
                     assert(false);
                 }
             });
+        });
+    });
+
+    describe('heapify', function () {
+        it('should transform an array into a min binary heap', function () {
+            var heap = new MaxBinaryHeap();
+            heap.heapify([5, 2, 3, 1, 4, 7, 6]);
+
+            for (var i = 1; i < 3; i += 1) {
+                assert(heap._elements[i] > heap._elements[2 * i]);
+                assert(heap._elements[i] > heap._elements[2 * i + 1]);
+            }
         });
     });
 
@@ -518,6 +690,83 @@ describe('MaxBinaryHeap', function () {
             heap.pop();
 
             assert.equal(heap.pop(), undefined);
+        });
+    });
+
+    describe('_shiftDown', function () {
+        it('should shift the root', function () {
+            var heap = new MaxBinaryHeap();
+            heap._elements = [null, 2, 1, 3];
+            heap._length = 3;
+            heap._shiftDown();
+
+            assert.equal(heap._elements[1], 3);
+            assert.equal(heap._elements[2], 1);
+            assert.equal(heap._elements[3], 2);
+
+            heap._elements = [null, 2, 3, 1];
+            heap._shiftDown();
+
+            assert.equal(heap._elements[1], 3);
+            assert.equal(heap._elements[2], 2);
+            assert.equal(heap._elements[3], 1);
+        });
+
+        it('should shift down an element', function () {
+            var heap = new MaxBinaryHeap();
+            heap._elements = [null, 7, 6, 1, 4, 3, 2, 5];
+            heap._length = 7;
+            heap._shiftDown(3);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], 8 - i);
+            }
+        });
+
+        it('should not shift down an element if it is correct', function () {
+            var heap = new MaxBinaryHeap();
+            heap._elements = [null, 7, 6, 5, 4, 3, 2, 1];
+            heap._length = 7;
+            heap._shiftDown(4);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], 8 - i);
+            }
+        });
+    });
+
+    describe('_shiftUp', function () {
+        it('should shift the last element', function () {
+            var heap = new MaxBinaryHeap();
+            heap._elements = [null, 2, 3, 1];
+            heap._length = 3;
+            heap._shiftUp();
+
+            assert.equal(heap._elements[1], 2);
+            assert.equal(heap._elements[2], 3);
+            assert.equal(heap._elements[3], 1);
+        });
+
+        it('should shift up an element', function () {
+            var heap = new MaxBinaryHeap();
+            heap._elements = [null, 7, 6, 1, 4, 3, 2, 5];
+            heap._length = 7;
+            heap._shiftUp(7);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], 8 - i);
+            }
+        });
+
+        it('should not shift up an element if it is correct', function () {
+            var heap = new MaxBinaryHeap();
+            heap._elements = [null, 7, 6, 5, 4, 3, 2, 1];
+            heap._length = 7;
+            heap._shiftUp(4);
+
+            for (var i = 1; i < heap._length; i += 1) {
+                assert.equal(heap._elements[i], 8 - i);
+            }
         });
     });
 
