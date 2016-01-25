@@ -53,7 +53,6 @@ describe('Dijkstra', function () {
 
     });
 
-
     describe('Callbacks', function () {
 
         it('should not find a visited vertex', function () {
@@ -65,12 +64,12 @@ describe('Dijkstra', function () {
                 assert.equal(visited_vertices[vertex], undefined);
                 called_the_callback = true;
             };
-            
+
             var onVertexVisited = function (vertex, vertex_depth, vertex_distance) {
                 visited_vertices[vertex] = true;
             };
 
-            var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, {
+            applyDijkstra('small_positive_weighted_graph.txt', root, {
                 onVertexFound: onVertexFound,
                 onVertexVisited: onVertexVisited
             });
@@ -89,11 +88,11 @@ describe('Dijkstra', function () {
                     called_the_callback = true;
                 };
 
-                var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexVisited: onVertexVisited });
+                applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexVisited: onVertexVisited });
 
                 assert.equal(called_the_callback, true);
             });
-            
+
             it('should pass all the vertices', function () {
                 var root = 1;
                 var expected_vertices = [false, true, true, true, true, true];
@@ -104,7 +103,7 @@ describe('Dijkstra', function () {
                     called_the_callback = true;
                 };
 
-                var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexVisited: onVertexVisited });
+                applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexVisited: onVertexVisited });
 
                 assert.equal(called_the_callback, true);
             });
@@ -119,7 +118,7 @@ describe('Dijkstra', function () {
                     called_the_callback = true;
                 };
 
-                var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexVisited: onVertexVisited });
+                applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexVisited: onVertexVisited });
 
                 assert.equal(called_the_callback, true);
             });
@@ -136,11 +135,11 @@ describe('Dijkstra', function () {
                     called_the_callback = true;
                 };
 
-                var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexFound: onVertexFound });
+                applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexFound: onVertexFound });
 
                 assert.equal(called_the_callback, true);
             });
-            
+
             it('should pass all the vertices, but the initial vertex', function () {
                 var root = 1;
                 var expected_vertices = [false, false, true, true, true, true];
@@ -151,7 +150,7 @@ describe('Dijkstra', function () {
                     called_the_callback = true;
                 };
 
-                var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexFound: onVertexFound });
+                applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexFound: onVertexFound });
 
                 assert.equal(called_the_callback, true);
             });
@@ -166,7 +165,7 @@ describe('Dijkstra', function () {
                     called_the_callback = true;
                 };
 
-                var spanning_tree = applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexFound: onVertexFound });
+                applyDijkstra('small_positive_weighted_graph.txt', root, { onVertexFound: onVertexFound });
 
                 assert.equal(called_the_callback, true);
             });
