@@ -31,6 +31,7 @@ var BinaryHeap = require('../data_structures/binary_heap');
  * @param {Graph} graph - The graph to use
  * @param {number} initial_vertex - The vertex to start
  * @param {dijkstra_callbacks} callbacks - The callback object
+ * @throws Will throw an error if the graph has a negative edge
  */
 function Dijkstra(graph, initial_vertex, callbacks) {
     //callbacks is an object with the following properties
@@ -73,6 +74,10 @@ function Dijkstra(graph, initial_vertex, callbacks) {
         graph.forEachNeighbor(vertex, function (neighbor, weight) {
 
             if (!explored_vertices[neighbor]) {
+
+                if (weight < 0) {
+                    throw ('Dijkstra algorithm cannot be used to negative weighted graphs!');
+                }
 
                 if (distance[neighbor] > distance[vertex] + weight) {
                     var aux = distance[neighbor];

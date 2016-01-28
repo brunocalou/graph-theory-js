@@ -16,6 +16,21 @@ function applyPrim(graph_file, initial_vertex, callbacks) {
 
 describe('Prim', function () {
 
+    it('should throw an error if the graph is directed', function () {
+        var g = new Graph(true);
+        var error = false;
+
+        g.addEdge(1, 2, 2);
+
+        try {
+            Prin(g, 1);
+        } catch (e) {
+            error = true;
+        }
+
+        assert.equal(error, true);
+    });
+
     describe('Spanning Tree', function () {
 
         it('should attribute the root to the first vertex', function () {

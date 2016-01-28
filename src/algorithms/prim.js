@@ -31,8 +31,13 @@ var BinaryHeap = require('../data_structures/binary_heap');
  * @param {Graph} graph - The graph to use
  * @param {number} initial_vertex - The vertex to start
  * @param {prim_callbacks} callbacks - The callback object
+ * @throws Will throw an error if the graph is directed
  */
 function Prim(graph, initial_vertex, callbacks) {
+
+    if (graph.isDirected()) {
+        throw ('Prim algorithm cannot be used to directed graphs!');
+    }
 
     if (!callbacks) { callbacks = {}; }
 

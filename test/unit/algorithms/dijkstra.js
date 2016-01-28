@@ -15,6 +15,23 @@ function applyDijkstra(graph_file, initial_vertex, callbacks) {
 }
 
 describe('Dijkstra', function () {
+    
+    it('should throw an error if there is a negative edge on the graph', function () {
+        var g = new Graph();
+        var error = false;
+        
+        g.addEdge(1,2,1);
+        g.addEdge(1,3,0.1);
+        g.addEdge(2,3,-3);
+        
+        try {
+            Dijkstra(g, 1);
+        } catch (e) {
+            error = true;
+        }
+        
+        assert.equal(error, true);
+    });
 
     describe('Spanning Tree', function () {
 

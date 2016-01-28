@@ -128,6 +128,12 @@ GraphBase.prototype.createOutputFolder = function () {
         fs.mkdirSync(this.output.folder);
     }
 };
+/**
+ * @returns {boolean} True if the graph is directed
+ */
+GraphBase.prototype.isDirected = function () {
+    return this.directed;
+};
 
 /**
  * Calculates and saves the graph statistics as on the output folder.
