@@ -4,5 +4,6 @@ module.exports = {
     FindClusters: require('./algorithms/find_clusters'),
     FindDiameter: require('./algorithms/find_diameter'),
     Dijkstra: require('./algorithms/dijkstra'),
-    Prim: require('./algorithms/prim')
+    Prim: require('./algorithms/prim'),
+    FloydWarshall: require('./algorithms/floyd_warshall')
 };
