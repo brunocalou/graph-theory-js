@@ -70,7 +70,7 @@ describe('Prim', function () {
             var root = 1;
             var spanning_tree = applyPrim('small_positive_weighted_graph.txt', root);
 
-            assert.equal(spanning_tree.totalWeight, 5.6);
+            assert.equal(spanning_tree.total_weight, 5.6);
         });
 
     });
