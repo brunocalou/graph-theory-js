@@ -359,4 +359,23 @@ GraphBase.prototype.every = function (fn, this_arg) {
 GraphBase.prototype.everyNeighbor = function (vertex, fn) {
 };
 
+/**
+ * Returns the weight of the edge
+ * @param {number} vertex_1 - The first vertex
+ * @param {number} vertex_2 - The second vertex
+ * @returns The weight of the edge, undefined if the edge does not exist
+ */
+GraphBase.prototype.weight = function (vertex_1, vertex_2) {
+    var weight;
+
+    this.everyNeighbor(vertex_1, function (neighbor, w) {
+        if (neighbor == vertex_2) {
+            weight = w;
+            return false;
+        }
+        return true;
+    });
+    return weight;
+};
+
 module.exports = GraphBase;

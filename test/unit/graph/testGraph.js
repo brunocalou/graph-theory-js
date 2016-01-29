@@ -658,6 +658,35 @@ function testGraph(graph) {
                 assert.equal(stopped, true);
             });
         });
+
+        describe('weight', function () {
+            it('should return the weight of an edge', function () {
+                var g = Graph(graph);
+
+                g.addEdge(1, 2, 3);
+
+                assert.equal(g.weight(1, 2), 3);
+            });
+
+            it('should return undefined if the edge does not exist', function () {
+                var g = Graph(graph);
+
+                g.addEdge(1, 2, 3);
+                g.addEdge(1, 3, 0);
+
+                assert.equal(g.weight(2, 3), undefined);
+            });
+
+            it('should return the correct weight of an edge on a directed graph', function () {
+                var g = Graph(graph, true);
+
+                g.addEdge(1, 2, 3);
+                g.addEdge(2, 1, -2);
+
+                assert.equal(g.weight(1, 2), 3);
+                assert.equal(g.weight(2, 1), -2);
+            });
+        });
     };
 }
 
