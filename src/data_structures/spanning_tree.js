@@ -6,13 +6,15 @@
  * @param {number} root - The root of the tree
  * @param {object} tree - Array that holds the parent of each vertex
  * @param {object} depths - Stores de depth of every vertex. The root has depth 0
- * @param {graph.GraphBase} graph - Stores a reference to the original graph   
+ * @param {GraphBase} graph - Stores a reference to the original graph   
+ * @param {number} total_weight - The total weight of the tree
  */
-function SpanningTree(root, tree, depths, graph) {
+function SpanningTree(root, tree, depths, graph, total_weight) {
     this.root = root;
     this.tree = tree; //Array that holds the parent of each vertex
     this.depths = depths; //Stores de depth of every vertex. The root has depth 0
     this.graph = graph; //Stores a reference to the original graph
+    this._total_weight = total_weight; // Stores the total weight of the tree
     this.length = Object.keys(this.tree).length; //Number of vertices on the tree
 };
 
@@ -53,19 +55,27 @@ SpanningTree.prototype.getPath = function (vertex) {
 };
 
 /**
- * Returns the weight of the tree (sum of edges)
+ * Returns the weight of the tree (sum of edges). If the weight was not computed before,
+ * the method will calculate it and return the result. Otherwise, it will return the previously
+ * computed value
  * @returns {number} Returns the weight of the tree
  */
 SpanningTree.prototype.getWeight = function () {
-    var weight = 0;
-    for (var key in this.tree) {
-        if (this.tree.hasOwnProperty(key)) {
-            if (this.tree[key] !== null) {
-                weight += this.graph.weight(this.tree[key], key);
+
+    if (this._total_weight !== undefined) {
+        return this._total_weight;
+    } else {
+        var weight = 0;
+        for (var key in this.tree) {
+            if (this.tree.hasOwnProperty(key)) {
+                if (this.tree[key] !== null) {
+                    weight += this.graph.weight(this.tree[key], key);
+                }
             }
         }
+        this._total_weight = weight;
+        return weight;
     }
-    return weight;
 };
 
 module.exports = SpanningTree;
