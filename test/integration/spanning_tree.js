@@ -103,6 +103,69 @@ describe('Spanning Tree', function () {
             assert.equal(path.distance, 6);
             assert.equal(path.unweighted_distance, 3);
         });
+    });
 
+    describe('getWeight', function () {
+
+        it('should get the correct weight for the BFS', function () {
+            var g = new Graph();
+
+            g.addEdge(1, 2, 3);
+            g.addEdge(1, 5, 2);
+            g.addEdge(2, 3, 1);
+            g.addEdge(2, 4, 6);
+            g.addEdge(3, 4, 2);
+
+            var tree = Algorithms.BFS(g, 1);
+
+            assert.equal(tree.getWeight(), 12);
+        });
+
+        it('should get the correct weight for the DFS', function () {
+            var g = new Graph();
+
+            g.addEdge(1, 2, 3);
+            g.addEdge(1, 5, 2);
+            g.addEdge(2, 3, 1);
+            g.addEdge(2, 4, 6);
+            g.addEdge(3, 4, 2);
+
+            var tree = Algorithms.DFS(g, 1);
+
+            if (tree.getPath(4).path[2] == 3) {
+                //Next must be 4
+                assert.equal(tree.getWeight(), 8);
+            } else {
+                assert.equal(tree.getWeight(), 13);
+            }
+        });
+
+        it('should return the correct weight for the Dijkstra algorithm', function () {
+            var g = new Graph();
+
+            g.addEdge(1, 2, 3);
+            g.addEdge(1, 5, 2);
+            g.addEdge(2, 3, 1);
+            g.addEdge(2, 4, 6);
+            g.addEdge(3, 4, 2);
+
+            var tree = Algorithms.Dijkstra(g, 1);
+
+            assert.equal(tree.getWeight(), 8);
+        });
+
+        it('should return the correct weight for the Prim algorithm', function () {
+            var g = new Graph();
+
+            g.addEdge(1, 2, 3);
+            g.addEdge(1, 5, 2);
+            g.addEdge(2, 3, 1);
+            g.addEdge(2, 4, 6);
+            g.addEdge(3, 4, 2);
+
+            var tree = Algorithms.Prim(g, 1);
+
+            assert.equal(tree.getWeight(), 8);
+        });
     });
 });

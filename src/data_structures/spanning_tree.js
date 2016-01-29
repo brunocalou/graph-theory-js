@@ -52,4 +52,20 @@ SpanningTree.prototype.getPath = function (vertex) {
     };
 };
 
+/**
+ * Returns the weight of the tree (sum of edges)
+ * @returns {number} Returns the weight of the tree
+ */
+SpanningTree.prototype.getWeight = function () {
+    var weight = 0;
+    for (var key in this.tree) {
+        if (this.tree.hasOwnProperty(key)) {
+            if (this.tree[key] !== null) {
+                weight += this.graph.weight(this.tree[key], key);
+            }
+        }
+    }
+    return weight;
+};
+
 module.exports = SpanningTree;
