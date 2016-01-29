@@ -363,10 +363,17 @@ GraphBase.prototype.everyNeighbor = function (vertex, fn) {
  * Returns the weight of the edge
  * @param {number} vertex_1 - The first vertex
  * @param {number} vertex_2 - The second vertex
- * @returns The weight of the edge, undefined if the edge does not exist
+ * @returns The weight of the edge, undefined if the edge does not exist, zero for the distance
+ * between the vertex and itself
  */
 GraphBase.prototype.weight = function (vertex_1, vertex_2) {
     var weight;
+    
+    if (vertex_1 === vertex_2) {
+        if (this.exists(vertex_1)) {
+            return 0;
+        }
+    }
 
     this.everyNeighbor(vertex_1, function (neighbor, w) {
         if (neighbor == vertex_2) {

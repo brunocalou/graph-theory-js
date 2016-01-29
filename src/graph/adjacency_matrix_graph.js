@@ -354,6 +354,11 @@ AdjacencyMatrixGraph.prototype.everyNeighbor = function (vertex, fn) {
 
 AdjacencyMatrixGraph.prototype.weight = function (vertex_1, vertex_2) {
     var weight = this.data[vertex_1][vertex_2];
+    if (vertex_1 === vertex_2) {
+        if (this.exists(vertex_1)) {
+            return 0;
+        }
+    }
     if (weight == 0) {
         weight = undefined;
     }

@@ -686,6 +686,14 @@ function testGraph(graph) {
                 assert.equal(g.weight(1, 2), 3);
                 assert.equal(g.weight(2, 1), -2);
             });
+            
+            it('should return zero for the distance between a vertex and itself', function () {
+                var g = Graph(graph);
+                
+                g.addEdge(1,2,3);
+                
+                assert.equal(g.weight(1,1), 0);
+            });
         });
     };
 }
