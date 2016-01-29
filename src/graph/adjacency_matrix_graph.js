@@ -58,6 +58,28 @@ AdjacencyMatrixGraph.prototype.createDataStructure = function (number_of_vertice
     this.data = new Array(number_of_vertices + 1);
 };
 
+/**
+ * Refactors the matrix
+ */
+AdjacencyMatrixGraph.prototype.refactor = function (data_length) {
+
+    if (!data_length) data_length = this.data.length;
+    
+    //Must recreate all the other vertices to fit the new matrix size
+    this.forEach(function (v) {
+        var aux = new this.ArrayType(data_length);
+
+        for (var i = 0, length = this.data[v].length; i < length; i += 1) {
+            aux[i] = this.data[v][i];
+        }
+
+        this.data[v] = aux;
+
+    }, this);
+
+    this.array_must_be_refactored = false;
+};
+
 AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
         var data_length = this.data.length;
@@ -72,21 +94,12 @@ AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
         this.data[vertex] = new this.ArrayType(data_length);
 
         if (this.array_must_be_refactored) {
-            //Must recreate all the other vertices to fit the new matrix size
-            this.forEach(function (v) {
-                if (this.data[v].length < data_length) {
-                    var aux = new this.ArrayType(data_length);
-
-                    for (var i = 0, length = this.data[v].length; i < length; i += 1) {
-                        aux[i] = this.data[v][i];
-                    }
-
-                    this.data[v] = aux;
-                }
-            }, this);
+            this.refactor(data_length);
         }
+    }
 
-        this.array_must_be_refactored = false;
+    if (this.array_must_be_refactored) {
+        this.refactor();
     }
 };
 
@@ -100,7 +113,7 @@ AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
         //The array holds integers
         if (Math.abs(weight) > this.array_max_element_size || (!this.array_is_signed && weight < 0)) {
             //The array cannot hold the weight, must change the array type
-            must_refactor = true;
+            this.array_must_be_refactored = true;
             if (weight < 0 || this.array_is_signed) {
                 this.array_is_signed = true;
                 //The array is signed
@@ -162,11 +175,11 @@ AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
             this.array_max_element_size = util.MaxNumberSize.FLOAT_32;
             this.array_is_integer = false;
             this.array_is_signed = true;
-            must_refactor = true;
+            this.array_must_be_refactored = true;
         }
 
         if (Math.abs(weight) > this.array_max_element_size) {
-            must_refactor = true;
+            this.array_must_be_refactored = true;
 
             if (Math.abs(weight) > util.MaxNumberSize.FLOAT_32) { // 32 bits
                 // 64 bits
@@ -182,7 +195,6 @@ AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
 
     this.addVertex(vertex_1);
     this.addVertex(vertex_2);
-
     if (!this.data[vertex_1][vertex_2]) {
         this.data[vertex_1][vertex_2] = weight;
         added_edge = true;
@@ -338,6 +350,19 @@ AdjacencyMatrixGraph.prototype.everyNeighbor = function (vertex, fn) {
             }
         }
     }
+};
+
+AdjacencyMatrixGraph.prototype.weight = function (vertex_1, vertex_2) {
+    var weight = this.data[vertex_1][vertex_2];
+    if (vertex_1 === vertex_2) {
+        if (this.exists(vertex_1)) {
+            return 0;
+        }
+    }
+    if (weight == 0) {
+        weight = undefined;
+    }
+    return weight;
 };
 
 module.exports = AdjacencyMatrixGraph;

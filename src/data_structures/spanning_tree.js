@@ -9,6 +9,7 @@
  * @param {object} depths - Stores de depth of every vertex. The root has depth 0
  * @param {graph.GraphBase} graph - Stores a reference to the original graph   
  */
+<<<<<<< HEAD
 function SpanningTree (root, tree, depths, total_weight, graph) {
 	this.root = root;
 	this.tree = tree; //Array that holds the parent of each vertex
@@ -16,6 +17,42 @@ function SpanningTree (root, tree, depths, total_weight, graph) {
 	this.total_weight = total_weight; // Stores the total weight of the tree
 	this.graph = graph; //Stores a reference to the original graph
     this.length = Object.keys(this.tree).length; //Number of vertices on the tree
+};
+
+/**
+ * Path object
+ * typedef {object} path_obj
+ * @property {array} path - The path
+ * @property {number} distance - The distance of the path
+ * @property {number} unweighted_distance - The distance of the path ignoring the weights
+ */
+
+/**
+ * Returns the path and the distance from the root to a vertex
+ * @param {number} vertex - The vertex to look for
+ * @returns {path_obj} The path and the distance from the root to a vertex or undefined if the vertex does not exist
+ */
+SpanningTree.prototype.getPath = function (vertex) {
+
+    if (!this.graph.exists(vertex)) return;
+
+    var path = [vertex];
+    var distance = 0;
+    var current_element = vertex;
+    var unweighted_distance = 0;
+
+    while (current_element != this.root) {
+        distance += this.graph.weight(current_element, this.tree[current_element]);// Add the distance of the vertex and its parent
+        unweighted_distance += 1; // Add one to the unweighted distance
+        current_element = this.tree[current_element]; // Get the parent
+        path.unshift(current_element);
+    }
+
+    return {
+        path: path,
+        distance: distance,
+        unweighted_distance: unweighted_distance
+    };
 };
 
 module.exports = SpanningTree;
