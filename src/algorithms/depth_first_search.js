@@ -15,6 +15,7 @@ var SpanningTree = require('../data_structures/spanning_tree.js');
  * @param {Graph} graph - The graph to use
  * @param {number} initial_vertex - The vertex to start
  * @param {DFS_callbacks} callbacks - The callback object
+ * @returns {SpanningTree}
  */
 function DFS(graph, initial_vertex, callbacks) {
     //callbacks is an object with the following properties

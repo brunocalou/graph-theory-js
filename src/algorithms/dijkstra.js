@@ -32,6 +32,7 @@ var BinaryHeap = require('../data_structures/binary_heap');
  * @param {number} initial_vertex - The vertex to start
  * @param {dijkstra_callbacks} callbacks - The callback object
  * @throws Will throw an error if the graph has a negative edge
+ * @returns {SpanningTree}
  */
 function Dijkstra(graph, initial_vertex, callbacks) {
     //callbacks is an object with the following properties

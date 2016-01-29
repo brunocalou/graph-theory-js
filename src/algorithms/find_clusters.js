@@ -28,6 +28,7 @@ var BFS = require('./breadth_first_search');
  * @function
  * @param {Graph} graph - The graph to use
  * @param {cluster_callbacks} callbacks - The callback object
+ * @returns {cluster_statistics}
  */
 function findClusters(graph, callbacks) {
     //callbacks is an object with the following properties

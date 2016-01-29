@@ -29,6 +29,7 @@ var SpanningTree = require('../data_structures/spanning_tree.js');
  * @param {Graph} graph - The graph to use
  * @param {number} initial_vertex - The vertex to start
  * @param {BFS_callbacks} callbacks - The callback object
+ * @returns {SpanningTree}
  */
 function BFS(graph, initial_vertex, callbacks) {
     //callbacks is an object with the following properties

@@ -32,6 +32,7 @@ var BinaryHeap = require('../data_structures/binary_heap');
  * @param {number} initial_vertex - The vertex to start
  * @param {prim_callbacks} callbacks - The callback object
  * @throws Will throw an error if the graph is directed
+ * @returns {SpanningTree}
  */
 function Prim(graph, initial_vertex, callbacks) {
 

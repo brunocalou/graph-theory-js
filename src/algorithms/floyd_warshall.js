@@ -1,60 +1,77 @@
 /**@module algorithms */
 
 /**
+ * Object returned by the Floyd-Warshall algorithm
+ * @typedef {object} fw_obj
+ * @property {object} shortest_paths - Matrix containing the shortest paths from a vertex i to a vertex j
+ * To discover the paths you must follow the vertices until you find the last vertex
+ * @property {object} distances - Matrix containing the distances between a vertex i and a vertex j
+ * @property {number} average_distance - The average distance of all the paths
+ */
+
+/**
  * @function
  * @param {Graph} graph - The graph to use
+ * @returns {fw_obj}
  */
 function FloydWarshall(graph) {
 
-    var shortest_path_matrix = [];
-    var distance_matrix = [];
-    for (var i = 1; i < graph.number_of_vertices + 1; i++) {
-        distance_matrix[i] = new Array(graph.number_of_vertices);
-        shortest_path_matrix[i] = new Array(graph.number_of_vertices);
-        for (j = 1; j < graph.number_of_vertices + 1; j++) {
-            distance_matrix[i][j] = Infinity;
-            shortest_path_matrix[i][j] = null;
-        }
-        distance_matrix[i][i] = 0;
-    }
+    var shortest_paths_matrix = {};
+    var distances_matrix = {};
+
+    graph.forEach(function (i) {
+        distances_matrix[i] = {};
+        shortest_paths_matrix[i] = {};
+        graph.forEach(function (j) {
+            distances_matrix[i][j] = Infinity;
+            shortest_paths_matrix[i][j] = null;
+        });
+        distances_matrix[i][i] = 0;
+    });
 
     graph.forEach(function (vertex) {
         graph.forEachNeighbor(vertex, function (neighbor, weight) {
-            distance_matrix[vertex][neighbor] = weight;
-            shortest_path_matrix[vertex][neighbor] = neighbor;
+            distances_matrix[vertex][neighbor] = weight;
+            shortest_paths_matrix[vertex][neighbor] = neighbor;
         });
     });
 
     graph.forEach(function (vertex) {
         graph.forEach(function (vertex1) {
             graph.forEach(function (vertex2) {
-                if (distance_matrix[vertex1][vertex2] > distance_matrix[vertex1][vertex] + distance_matrix[vertex][vertex2]) {
-                    distance_matrix[vertex1][vertex2] = distance_matrix[vertex1][vertex] + distance_matrix[vertex][vertex2];
-                    shortest_path_matrix[vertex1][vertex2] = shortest_path_matrix[vertex1][vertex];
+                if (distances_matrix[vertex1][vertex2] > distances_matrix[vertex1][vertex] + distances_matrix[vertex][vertex2]) {
+                    distances_matrix[vertex1][vertex2] = distances_matrix[vertex1][vertex] + distances_matrix[vertex][vertex2];
+                    shortest_paths_matrix[vertex1][vertex2] = shortest_paths_matrix[vertex1][vertex];
                 }
             });
         });
     });
 
     var average_distance = 0;
-    var average = 0;
-    for (var i = 1; i < distance_matrix.length + 1; i++) {
-        for (var j = i + 1; j < distance_matrix.length + 1; j++) {
-            if (distance_matrix[i][j] < Infinity) {
-                average++;
-                average_distance += distance_matrix[i][j];
+    var total = 0;
+
+    for (var vertex_from in distances_matrix) {
+        if (distances_matrix.hasOwnProperty(vertex_from)) {
+            for (var vertex_to in distances_matrix) {
+                if (distances_matrix.hasOwnProperty(vertex_to)) {
+                    if (vertex_from != vertex_to) {
+                        if (distances_matrix[vertex_from][vertex_to] < Infinity) {
+                            total += 1;
+                            average_distance += distances_matrix[vertex_from][vertex_to];
+                        }
+                    }
+                }
             }
         }
     }
 
-    average_distance = average_distance / average;
+    average_distance = average_distance / total;
 
     var FW_matrices = {
-        shortest_path: shortest_path_matrix,
-        distance: distance_matrix,
+        shortest_paths: shortest_paths_matrix,
+        distances: distances_matrix,
         average_distance: average_distance
     };
-
     return FW_matrices;
 }
 

@@ -19,14 +19,13 @@ describe('FloydWarshall', function () {
     it('should compute the correct average distance', function () {
         var average_distance = applyFloydWarshall('small_positive_weighted_graph.txt').average_distance;
         var expected_average = 26.5 / 10;
-
         assert.equal(util.nearEquals(average_distance, expected_average, 0.0001), true)
     });
 
     describe('Result Matrices', function () {
 
         it('should create the correct distances', function () {
-            var distances = applyFloydWarshall('small_positive_weighted_graph.txt').distance;
+            var distances = applyFloydWarshall('small_positive_weighted_graph.txt').distances;
             var expected_distances = [undefined,
                 [undefined, 0.0, 0.1, 5.3, 2.6, 0.3],
                 [undefined, 0.1, 0.0, 5.2, 2.5, 0.2],
@@ -43,7 +42,7 @@ describe('FloydWarshall', function () {
         });
 
         it('should create the correct shortest paths', function () {
-            var shortest_paths = applyFloydWarshall('small_positive_weighted_graph.txt').shortest_path;
+            var shortest_paths = applyFloydWarshall('small_positive_weighted_graph.txt').shortest_paths;
             var expected_paths = [undefined,
                 [undefined, null, 2, 2, 2, 2],
                 [undefined, 1, null, 5, 5, 5],

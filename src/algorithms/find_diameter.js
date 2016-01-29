@@ -27,6 +27,7 @@ var findClusters = require('./find_clusters');
  * @function
  * @param {Graph} graph - The graph to use
  * @param {diameter_callbacks} callbacks - The callback object
+ * @returns {diameter_obj}
  */
 function findDiameter(graph, callbacks) {
     //callbacks is an object with the following properties
