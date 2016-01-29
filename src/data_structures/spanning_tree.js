@@ -9,13 +9,12 @@
  * @param {object} depths - Stores de depth of every vertex. The root has depth 0
  * @param {graph.GraphBase} graph - Stores a reference to the original graph   
  */
-<<<<<<< HEAD
-function SpanningTree (root, tree, depths, total_weight, graph) {
+function SpanningTree (root, tree, depths, graph, total_weight) {
 	this.root = root;
 	this.tree = tree; //Array that holds the parent of each vertex
 	this.depths = depths; //Stores de depth of every vertex. The root has depth 0
-	this.total_weight = total_weight; // Stores the total weight of the tree
 	this.graph = graph; //Stores a reference to the original graph
+    this.total_weight = total_weight; // Stores the total weight of the tree
     this.length = Object.keys(this.tree).length; //Number of vertices on the tree
 };
 

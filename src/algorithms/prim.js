@@ -98,7 +98,7 @@ function Prim(graph, initial_vertex, callbacks) {
         });
     }
 
-    return new SpanningTree(initial_vertex, spanning_tree, depths, total_weight, graph);
+    return new SpanningTree(initial_vertex, spanning_tree, depths, graph, total_weight);
 }
 
 module.exports = Prim;
