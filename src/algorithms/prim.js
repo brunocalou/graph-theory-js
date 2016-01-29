@@ -51,6 +51,7 @@ function Prim(graph, initial_vertex, callbacks) {
     var set = new BinaryHeap.MinBinaryHeap(comparator);
     var explored_vertices = new Array(graph.number_of_vertices);
     var discovered_vertices = new Array(graph.number_of_vertices);
+    var totalWeight = 0;
 
     for (var i = 1; i < graph.number_of_vertices + 1; i++) {
         cost[i] = Infinity;
@@ -64,7 +65,9 @@ function Prim(graph, initial_vertex, callbacks) {
 
     while (!set.isEmpty()) {
 
-        var vertex = set.pop()[0];
+        var element = set.pop();
+        var vertex = element[0];
+        totalWeight += element[1];
 
         explored_vertices[vertex] = true;
 
@@ -95,7 +98,7 @@ function Prim(graph, initial_vertex, callbacks) {
         });
     }
 
-    return new SpanningTree(initial_vertex, spanning_tree, depths, graph);
+    return new SpanningTree(initial_vertex, spanning_tree, depths, totalWeight, graph);
 }
 
 module.exports = Prim;
