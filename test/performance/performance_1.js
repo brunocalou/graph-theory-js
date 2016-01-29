@@ -184,6 +184,7 @@ function runPerformanceTest() {
         benchmark_options = {
             cycles: number_of_cyles,
             onFinishedFunctionTest: function (fn_item) {
+                bar.terminate();
                 console.log(chalk.yellow("FINISHED " + fn_item.name + "\n"));
                 console.log(chalk.yellow(' Cycles : ') + benchmark_options.cycles);
                 console.log(chalk.yellow(' Average time : ') + fn_item.time + ' ms\n');
@@ -194,7 +195,6 @@ function runPerformanceTest() {
                     'average time': fn_item.time,
                     'time unity': 'ms'
                 }, '_' + fn_item.name + '_performance_test');
-                bar.terminate();
                 bar = createProgressBar({ total: number_of_cyles });
             },
             onFinishedCycle: function (current_cycle, cycle_time) {
@@ -264,6 +264,8 @@ function runSpecificTests() {
     }
 
     var time_to_complete = timer.getElapsedTime();
+    
+    bar.terminate();
 
     for (var algorithm in parents) {
         console.log(chalk.yellow(algorithm));
@@ -313,6 +315,8 @@ function runFindClusters() {
 
     cluster_statistics.time_to_complete = timer.getElapsedTime();
     cluster_statistics['time unity'] = 's';
+    
+    bar.terminate();
 
     console.log(chalk.yellow(' Total : ') + cluster_statistics.total);
     console.log(chalk.yellow(' Biggest : ') + cluster_statistics.biggest);
