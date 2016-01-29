@@ -25,14 +25,6 @@ function testGraph(graph) {
     }
 
     return function () {
-        describe('createDataStructure', function () {
-            it('should create the data structure', function () {
-                var g = Graph(graph);
-
-                g.createDataStructure(3);
-                assert.equal(g.data.length, 4);
-            });
-        });
 
         describe('addVertex', function () {
             it('should add a vertex', function () {
@@ -281,7 +273,6 @@ function testGraph(graph) {
                 var folder = appRoot + '/test/assets/graph_files/';
 
                 g.loadFromFile(folder + 'small_graph.txt');
-
                 assert.equal(g.output.folder, folder + 'small_graph_output');
                 assert.equal(g.output.filename, 'statistics.txt');
                 assert.equal(g.output.destination, g.output.folder + '/' + g.output.filename);
@@ -609,7 +600,7 @@ function testGraph(graph) {
                 g.every(function (vertex) {
                     assert.equal(expected_vertices[vertex], true);
                     called_callback = true;
-                    if (vertex === 5) {
+                    if (vertex == 5) {
                         stopped = true;
                         return false;
                     }

@@ -7,6 +7,15 @@ var util = require('../../../index').Util.Util;
 describe('Adjacency Matrix Graph', function () {
     testGraph(adjacency_matrix)();
 
+    describe('createDataStructure', function () {
+        it('should create the data structure', function () {
+            var g = new Graph();
+
+            g.createDataStructure(3);
+            assert.equal(g.data.length, 4);
+        });
+    });
+
     describe('addVertex', function () {
         it('should refactor the matrix', function () {
             var g = new Graph();

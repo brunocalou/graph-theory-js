@@ -22,7 +22,7 @@ function GraphBase(directed) {
      * Stores the graph
      * @type {array}
      */
-    this.data = [];
+    this.data = {};
 
     /**
      * Stores the path to the graph file
@@ -61,6 +61,7 @@ function GraphBase(directed) {
  * @param {number} number_of_vertices - Set the size of the graph
  */
 GraphBase.prototype.createDataStructure = function (number_of_vertices) {
+    this.data = {};
 };
 
 /**
@@ -288,9 +289,8 @@ GraphBase.prototype.forEachNeighbor = function (vertex, fn) {
  * @param {object} [this_arg] - The object to use as this when calling the fn function
  */
 GraphBase.prototype.forEach = function (fn, this_arg) {
-    for (var vertex = 0, vertices_length = this.data.length; vertex < vertices_length; vertex += 1) {
-        //Check if the vertex exists and then call the function
-        if (this.exists(vertex)) {
+    for (var vertex in this.data) {
+        if (this.data.hasOwnProperty(vertex)) {
             fn.call(this_arg, vertex);
         }
     }
@@ -310,20 +310,8 @@ GraphBase.prototype.degree = function (vertex) {
  * @returns {number} A random valid vertex or undefined if the graph is empty
  */
 GraphBase.prototype.getRandomVertex = function () {
-    var
-        data_length = this.data.length,
-        found_vertex = false,
-        vertex;
-
-    if (data_length > 0 && this.number_of_vertices > 0) {
-        while (!found_vertex) {
-            vertex = Math.floor(Math.random() * (data_length));
-            if (this.exists(vertex)) {
-                found_vertex = true;
-            }
-        }
-    }
-    return vertex;
+    var vertices = Object.keys(this.data);
+    return vertices[vertices.length * Math.random() << 0];;
 };
 
 /**
@@ -347,9 +335,8 @@ GraphBase.prototype.exists = function (vertex) {
  * @param {object} [this_arg] - The object to use as this when calling the fn function
  */
 GraphBase.prototype.every = function (fn, this_arg) {
-    for (var vertex = 0, vertices_length = this.data.length; vertex < vertices_length; vertex += 1) {
-        //Check if the vertex exists and then call the function
-        if (this.exists(vertex)) {
+    for (var vertex in this.data) {
+        if (this.data.hasOwnProperty(vertex)) {
             if (!fn.call(this_arg, vertex)) {
                 break;
             }

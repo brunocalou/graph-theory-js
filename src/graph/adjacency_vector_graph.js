@@ -10,20 +10,11 @@ var util = require('../util/util');
  * is represented by an array of vertices
  * @extends GraphBase
  */
-function AdjacencyVectorGraph (directed) {
+function AdjacencyVectorGraph(directed) {
     GraphBase.call(this, directed);
 };
 
 util.inherit(GraphBase, AdjacencyVectorGraph);
-
-AdjacencyVectorGraph.prototype.createDataStructure = function (number_of_vertices) {
-    //var array = new Array(size_of_array) is almost 5 times faster to insert elements than
-    //var array = [], according to local benchmark using nodejs
-    //the +1 is used because, on the test files, there were no vertices with index 0, but
-    //there were indexes equal to the total number of vertices. The first element will be undefined
-    //on the case (index = 0)
-    this.data = new Array(number_of_vertices + 1);
-};
 
 AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
@@ -76,14 +67,8 @@ AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
 
 AdjacencyVectorGraph.prototype.print = function (max_width, max_height) {
     var line = '';
-    var data_length = this.data.length;
     var horizontal_vertex_counter = 0; //Counts how many vertices were printed on the current line
-
-    if (max_height) {
-        if (max_height < data_length) {
-            data_length = max_height + 1;
-        }
-    }
+    var line_counter = 0;
 
     function printNeighbor(neighbor, weight) {
         line += '| ';
@@ -99,22 +84,25 @@ AdjacencyVectorGraph.prototype.print = function (max_width, max_height) {
         return true;
     }
 
-    for (var i = 0; i < data_length; i += 1) {
-
-        if (this.exists(i)) {
-            line += '| ' + i + ' |';
-            if (this.hasNeighbors(i)) {
-                line += " --> ";
-
-                horizontal_vertex_counter = 0;
-                this.everyNeighbor(i, printNeighbor);
-
-                line += '|';
-            }
-            console.log(line);
-            line = '';
+    this.every(function (vertex) {
+        if (line_counter >= max_height) {
+            return false;
         }
-    }
+        line += '| ' + vertex + ' |';
+        if (this.hasNeighbors(vertex)) {
+            line += " --> ";
+
+            horizontal_vertex_counter = 0;
+            this.everyNeighbor(vertex, printNeighbor);
+
+            line += '|';
+        }
+        console.log(line);
+        line = '';
+
+        line_counter += 1;
+        return true;
+    }, this);
 };
 
 AdjacencyVectorGraph.prototype.neighbors = function (vertex) {
