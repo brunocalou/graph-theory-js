@@ -66,11 +66,11 @@ describe('Prim', function () {
             assert.equal(spanning_tree.depths[5], 2);
         });
 
-        it('should compute the correct total weight', function() {
+        it('should compute the correct total weight', function () {
             var root = 1;
             var spanning_tree = applyPrim('small_positive_weighted_graph.txt', root);
 
-            assert.equal(spanning_tree.total_weight, 5.6);
+            assert.equal(spanning_tree._total_weight, 5.6);
         });
 
     });
