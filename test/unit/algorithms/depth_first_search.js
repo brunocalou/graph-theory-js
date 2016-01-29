@@ -30,25 +30,24 @@ describe('DFS', function () {
             var spanning_tree = applyDFS('small_graph.txt', root);
 
             assert.equal(spanning_tree.root, root);
-            assert.equal(spanning_tree.tree.pop(), 1);
-            assert.equal(spanning_tree.tree.pop(), 5);
-            assert.equal(spanning_tree.tree.pop(), 5);
-            assert.equal(spanning_tree.tree.pop(), 5);
-            assert.equal(spanning_tree.tree.pop(), null);
-            assert.equal(spanning_tree.tree.pop(), undefined);
-
+            assert.equal(spanning_tree.tree[0], undefined);
+            assert.equal(spanning_tree.tree[1], null);
+            assert.equal(spanning_tree.tree[2], 5);
+            assert.equal(spanning_tree.tree[3], 5);
+            assert.equal(spanning_tree.tree[4], 5);
+            assert.equal(spanning_tree.tree[5], 1);
         });
 
         it('should create the correct depths', function () {
             var root = 1;
             var spanning_tree = applyDFS('small_graph.txt', root);
 
-            assert.equal(spanning_tree.depths.pop(), 1);
-            assert.equal(spanning_tree.depths.pop(), 2);
-            assert.equal(spanning_tree.depths.pop(), 2);
-            assert.equal(spanning_tree.depths.pop(), 2);
-            assert.equal(spanning_tree.depths.pop(), 0);
-            assert.equal(spanning_tree.depths.pop(), undefined);
+            assert.equal(spanning_tree.depths[0], undefined);
+            assert.equal(spanning_tree.depths[1], 0);
+            assert.equal(spanning_tree.depths[2], 2);
+            assert.equal(spanning_tree.depths[3], 2);
+            assert.equal(spanning_tree.depths[4], 2);
+            assert.equal(spanning_tree.depths[5], 1);
         });
     });
 

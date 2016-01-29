@@ -46,10 +46,10 @@ function Prim(graph, initial_vertex, callbacks) {
     }
 
     var cost = new Array(graph.number_of_vertices);
-    var spanning_tree = new Array(graph.number_of_vertices);
+    var spanning_tree = {};
+    var depths = {};
     var set = new BinaryHeap.MinBinaryHeap(comparator);
     var explored_vertices = new Array(graph.number_of_vertices);
-    var depths = new Array(graph.number_of_vertices);
     var discovered_vertices = new Array(graph.number_of_vertices);
 
     for (var i = 1; i < graph.number_of_vertices + 1; i++) {
@@ -93,7 +93,6 @@ function Prim(graph, initial_vertex, callbacks) {
                 }
             }
         });
-
     }
 
     return new SpanningTree(initial_vertex, spanning_tree, depths, graph);

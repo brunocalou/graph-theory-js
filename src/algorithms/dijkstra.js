@@ -47,10 +47,10 @@ function Dijkstra(graph, initial_vertex, callbacks) {
     }
 
     var distance = new Array(graph.number_of_vertices);
-    var spanning_tree = new Array(graph.number_of_vertices);
+    var spanning_tree = {};
     var set = new BinaryHeap.MinBinaryHeap(comparator);
     var explored_vertices = new Array(graph.number_of_vertices);
-    var depths = new Array(graph.number_of_vertices);
+    var depths = {};
     var discovered_vertices = new Array(graph.number_of_vertices);
 
     for (var i = 1; i < graph.number_of_vertices + 1; i++) {

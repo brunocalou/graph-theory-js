@@ -13,18 +13,18 @@ function applyFindClusters(graph_file, callbacks) {
     return findClustes(g, callbacks);
 }
 
-describe('findClusters', function() {
-    it('should succeed for a graph with one cluster', function() {
+describe('findClusters', function () {
+    it('should succeed for a graph with one cluster', function () {
         var cluster_statistics = applyFindClusters('small_graph.txt');
-        
+
         assert.equal(cluster_statistics.total, 1);
         assert.equal(cluster_statistics.biggest, 5);
         assert.equal(cluster_statistics.smallest, 5);
     });
-    
-    it('should succeed for a graph with more than one cluster', function() {
+
+    it('should succeed for a graph with more than one cluster', function () {
         var cluster_statistics = applyFindClusters('small_multicluster_graph.txt');
-        
+
         assert.equal(cluster_statistics.total, 4);
         assert.equal(cluster_statistics.biggest, 5);
         assert.equal(cluster_statistics.smallest, 1);

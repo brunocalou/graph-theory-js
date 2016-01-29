@@ -7,9 +7,17 @@
  */
 
 /**
+ * Diameter object
+ * @typedef {object} diameter_obj
+ * @property {number} size - The size of the cluster
+ * @property {number | string} initial_vertex - The initial vertex of the diameter path 
+ * @property {number | string} last_vertex - The last vertex  of the diamter path
+ */
+
+/**
  * Called when the diameter was updated
  * @typedef {function} onDiameterUpdated
- * @param {number} diameter - The updated diameter
+ * @param {diameter_obj} diameter - The updated diameter object
  */
 
 var BFS = require('./breadth_first_search');

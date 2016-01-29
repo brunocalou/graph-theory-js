@@ -27,8 +27,8 @@ function DFS(graph, initial_vertex, callbacks) {
 
     var stack = new Stack();
     var visited_vertices = new Array(graph.number_of_vertices);
-    var spanning_tree = new Array(graph.number_of_vertices);
-    var depths = new Array(graph.number_of_vertices);
+    var spanning_tree = {};
+    var depths = {};
 
     stack.push(initial_vertex);
     spanning_tree[initial_vertex] = null; //Mark the root
