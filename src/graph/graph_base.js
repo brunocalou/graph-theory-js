@@ -216,14 +216,13 @@ GraphBase.prototype.loadFromFile = function (path, token) {
         current_line_array = current_line.split(token);
         current_line = lines.shift();
         if (current_line_array[1] === undefined) {
-            this.addVertex(parseFloat(current_line_array[0]));
+            this.addVertex(parseInt(current_line_array[0]));
         } else {
             if (current_line_array.length === 2) {
                 //Weightless graph
                 current_line_array[2] = 1;
             }
-
-            this.addEdge(parseFloat(current_line_array[0]), parseFloat(current_line_array[1]), parseFloat(current_line_array[2]));
+            this.addEdge(parseInt(current_line_array[0]), parseInt(current_line_array[1]), parseFloat(current_line_array[2]));
         }
     }
 };
@@ -368,7 +367,7 @@ GraphBase.prototype.everyNeighbor = function (vertex, fn) {
  */
 GraphBase.prototype.weight = function (vertex_1, vertex_2) {
     var weight;
-    
+
     if (vertex_1 === vertex_2) {
         if (this.exists(vertex_1)) {
             return 0;
