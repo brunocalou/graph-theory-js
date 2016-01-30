@@ -278,5 +278,5 @@ init();
 runMemoryTest();
 saveGraphStatistics();
 if (argv.p) runPrim();
-if (argv.w) runFloydWarshall();
 if (argv.s) runSpecificTests();
+if (argv.w) runFloydWarshall();

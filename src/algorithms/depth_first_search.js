@@ -27,7 +27,7 @@ function DFS(graph, initial_vertex, callbacks) {
     if (!callbacks) { callbacks = {}; }
 
     var stack = new Stack();
-    var visited_vertices = new Array(graph.number_of_vertices);
+    var visited_vertices = {};
     var spanning_tree = {};
     var depths = {};
 

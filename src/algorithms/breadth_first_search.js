@@ -41,7 +41,7 @@ function BFS(graph, initial_vertex, callbacks) {
     if (!callbacks) { callbacks = {}; }
 
     var queue = new Queue();
-    var explored_vertices = new Array(graph.number_of_vertices);
+    var explored_vertices = {};
     var spanning_tree = {};
     var depths = {};
 

@@ -82,6 +82,16 @@ describe('Spanning Tree', function () {
             assert.equal(path.path[3], 4);
             assert.equal(path.distance, 6);
             assert.equal(path.unweighted_distance, 3);
+            
+            tree = Algorithms.Dijkstra(g, 4);
+            path = tree.getPath(1);
+
+            assert.equal(path.path[3], 1);
+            assert.equal(path.path[2], 2);
+            assert.equal(path.path[1], 3);
+            assert.equal(path.path[0], 4);
+            assert.equal(path.distance, 6);
+            assert.equal(path.unweighted_distance, 3);
         });
 
         it('should return the correct path and distance for the Prim algorithm', function () {

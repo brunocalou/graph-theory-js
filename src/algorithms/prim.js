@@ -46,27 +46,27 @@ function Prim(graph, initial_vertex, callbacks) {
         return a[1] - b[1];
     }
 
-    var cost = new Array(graph.number_of_vertices);
+    var cost = {};
     var spanning_tree = {};
     var depths = {};
-    var set = new BinaryHeap.MinBinaryHeap(comparator);
-    var explored_vertices = new Array(graph.number_of_vertices);
-    var discovered_vertices = new Array(graph.number_of_vertices);
+    var heap = new BinaryHeap.MinBinaryHeap(comparator);
+    var explored_vertices = {};
+    var discovered_vertices = {};
     var total_weight = 0;
 
-    for (var i = 1; i < graph.number_of_vertices + 1; i++) {
-        cost[i] = Infinity;
-    }
+    graph.forEach(function (vertex) {
+        cost[vertex] = Infinity;
+    });
 
     cost[initial_vertex] = 0;
     spanning_tree[initial_vertex] = null;
     depths[initial_vertex] = 0;
-    set.push([initial_vertex, cost[initial_vertex]]);
+    heap.push([initial_vertex, cost[initial_vertex]]);
     discovered_vertices[initial_vertex] = true;
 
-    while (!set.isEmpty()) {
+    while (!heap.isEmpty()) {
 
-        var element = set.pop();
+        var element = heap.pop();
         var vertex = element[0];
         total_weight += element[1];
 
@@ -87,12 +87,12 @@ function Prim(graph, initial_vertex, callbacks) {
 
                     if (!discovered_vertices[neighbor]) {
                         discovered_vertices[neighbor] = true;
-                        set.push([neighbor, cost[neighbor]]);
+                        heap.push([neighbor, cost[neighbor]]);
 
                         if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], cost[neighbor]);
                     }
                     else {
-                        set.changeElement([neighbor, aux], [neighbor, cost[neighbor]]);
+                        heap.changeElement([neighbor, aux], [neighbor, cost[neighbor]]);
                     }
                 }
             }

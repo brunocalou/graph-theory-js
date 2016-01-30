@@ -47,26 +47,26 @@ function Dijkstra(graph, initial_vertex, callbacks) {
         return a[1] - b[1];
     }
 
-    var distance = new Array(graph.number_of_vertices);
+    var distance = {};
     var spanning_tree = {};
-    var set = new BinaryHeap.MinBinaryHeap(comparator);
-    var explored_vertices = new Array(graph.number_of_vertices);
+    var heap = new BinaryHeap.MinBinaryHeap(comparator);
+    var explored_vertices = {};
     var depths = {};
-    var discovered_vertices = new Array(graph.number_of_vertices);
+    var discovered_vertices = {};
 
-    for (var i = 1; i < graph.number_of_vertices + 1; i++) {
-        distance[i] = Infinity;
-    }
+    graph.forEach(function (vertex) {
+        distance[vertex] = Infinity;
+    });
 
     distance[initial_vertex] = 0;
     spanning_tree[initial_vertex] = null;
     depths[initial_vertex] = 0;
-    set.push([initial_vertex, distance[initial_vertex]]);
+    heap.push([initial_vertex, distance[initial_vertex]]);
     discovered_vertices[initial_vertex] = true;
 
-    while (!set.isEmpty()) {
+    while (!heap.isEmpty()) {
 
-        var vertex = set.pop()[0];
+        var vertex = heap.pop()[0];
 
         if (callbacks.onVertexVisited) callbacks.onVertexVisited(vertex, depths[vertex], distance[vertex]);
 
@@ -89,17 +89,16 @@ function Dijkstra(graph, initial_vertex, callbacks) {
 
                     if (!discovered_vertices[neighbor]) {
                         discovered_vertices[neighbor] = true;
-                        set.push([neighbor, distance[neighbor]]);
+                        heap.push([neighbor, distance[neighbor]]);
 
                         if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], distance[neighbor]);
-                    }
-                    else {
-                        set.changeElement([neighbor, aux], [neighbor, distance[neighbor]]);
+                        
+                    } else {
+                        heap.changeElement([neighbor, aux], [neighbor, distance[neighbor]]);
                     }
                 }
             }
         });
-
     }
 
     return new SpanningTree(initial_vertex, spanning_tree, depths, graph);
