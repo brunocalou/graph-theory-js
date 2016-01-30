@@ -18,50 +18,55 @@ util.inherit(GraphBase, AdjacencyVectorGraph);
 
 AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
-        this.data[vertex] = [];
-        this.number_of_vertices += 1;
+        if (Number.isFinite(vertex)) {
+            this.data[vertex] = [];
+            this.number_of_vertices += 1;
+        }
     }
 };
 
 AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
-    var added_edge = false;
-
     if (weight === undefined) weight = 1;
 
-    this.addVertex(vertex_1);
-    this.addVertex(vertex_2);
+    if (Number.isFinite(vertex_1) && Number.isFinite(vertex_2) && Number.isFinite(weight)) {
+        var added_edge = false;
 
-    var vertex_1_is_neighbor = false;
-    var vertex_2_is_neighbor = false;
 
-    for (var i = 0, length = this.data[vertex_1].length; i < length; i += 1) {
-        if (this.data[vertex_1][i][0] === vertex_2) {
-            vertex_2_is_neighbor = true;
-            break;
-        }
-    }
+        this.addVertex(vertex_1);
+        this.addVertex(vertex_2);
 
-    if (!vertex_2_is_neighbor) {
-        this.data[vertex_1].push([vertex_2, weight]);
-        added_edge = true;
-    }
+        var vertex_1_is_neighbor = false;
+        var vertex_2_is_neighbor = false;
 
-    if (!this.directed) {
-        for (i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
-            if (this.data[vertex_2][i][0] === vertex_1) {
-                vertex_1_is_neighbor = true;
+        for (var i = 0, length = this.data[vertex_1].length; i < length; i += 1) {
+            if (this.data[vertex_1][i][0] === vertex_2) {
+                vertex_2_is_neighbor = true;
                 break;
             }
         }
 
-        if (!vertex_1_is_neighbor) {
-            this.data[vertex_2].push([vertex_1, weight]);
+        if (!vertex_2_is_neighbor) {
+            this.data[vertex_1].push([vertex_2, weight]);
             added_edge = true;
         }
-    }
 
-    if (added_edge) {
-        this.number_of_edges += 1;
+        if (!this.directed) {
+            for (i = 0, length = this.data[vertex_2].length; i < length; i += 1) {
+                if (this.data[vertex_2][i][0] === vertex_1) {
+                    vertex_1_is_neighbor = true;
+                    break;
+                }
+            }
+
+            if (!vertex_1_is_neighbor) {
+                this.data[vertex_2].push([vertex_1, weight]);
+                added_edge = true;
+            }
+        }
+
+        if (added_edge) {
+            this.number_of_edges += 1;
+        }
     }
 };
 

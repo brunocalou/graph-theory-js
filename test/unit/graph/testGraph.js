@@ -66,6 +66,14 @@ function testGraph(graph) {
                 assert.equal(g.exists(2), true);
                 assert.equal(g.number_of_vertices, 1);
             });
+
+            it('should not add an invalid vertex', function () {
+                var g = Graph(graph);
+                
+                g.addVertex('a');
+                
+                assert.equal(g.exists('a'), false);
+            });
         });
 
         describe('addEdge', function () {
@@ -152,6 +160,24 @@ function testGraph(graph) {
                 assert.equal(g.neighbors(3)[0][0], 1);
                 assert.equal(g.neighbors(3)[0][1], -4);
                 assert.equal(g.neighbors(3).length, 1);
+            });
+            
+            it('should not add an invalid edge', function () {
+                var g = Graph(graph);
+                
+                g.addEdge(1, 'a');
+                
+                assert.equal(g.exists(1), false);
+                assert.equal(g.exists('a'), false);
+            });
+            
+            it('should not add an edge with an invalid weight', function () {
+                var g = Graph(graph);
+                
+                g.addEdge(1, 2, 'a');
+                
+                assert.equal(g.exists(1), false);
+                assert.equal(g.exists(2), false);
             });
         });
 
@@ -392,6 +418,16 @@ function testGraph(graph) {
                 assert.equal(g.neighbors(2)[0][0], 1);
                 assert.equal(g.neighbors(2)[0][1], -7);
                 assert.equal(g.neighbors(3).length, 0);
+            });
+            
+            it('should not add an invalid edge', function () {
+                var g = Graph(graph);
+                
+                g.loadFromFile(getGraphFile('invalid_vertex_graph.txt'));
+                
+                assert.equal(g.exists(5), false);
+                assert.equal(g.exists('f'), false);
+                assert.equal(g.exists('a'), false);
             });
         });
 
@@ -686,13 +722,13 @@ function testGraph(graph) {
                 assert.equal(g.weight(1, 2), 3);
                 assert.equal(g.weight(2, 1), -2);
             });
-            
+
             it('should return zero for the distance between a vertex and itself', function () {
                 var g = Graph(graph);
-                
-                g.addEdge(1,2,3);
-                
-                assert.equal(g.weight(1,1), 0);
+
+                g.addEdge(1, 2, 3);
+
+                assert.equal(g.weight(1, 1), 0);
             });
         });
     };

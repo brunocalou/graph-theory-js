@@ -82,19 +82,21 @@ AdjacencyMatrixGraph.prototype.refactor = function (data_length) {
 
 AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
-        var data_length = this.data.length;
+        if (Number.isFinite(vertex)) {
+            var data_length = this.data.length;
 
-        this.number_of_vertices += 1;
+            this.number_of_vertices += 1;
 
-        if (data_length <= vertex) {
-            this.array_must_be_refactored = true;
-            data_length += vertex - data_length + 1;
-        }
+            if (data_length <= vertex) {
+                this.array_must_be_refactored = true;
+                data_length += vertex - data_length + 1;
+            }
 
-        this.data[vertex] = new this.ArrayType(data_length);
+            this.data[vertex] = new this.ArrayType(data_length);
 
-        if (this.array_must_be_refactored) {
-            this.refactor(data_length);
+            if (this.array_must_be_refactored) {
+                this.refactor(data_length);
+            }
         }
     }
 
@@ -104,109 +106,111 @@ AdjacencyMatrixGraph.prototype.addVertex = function (vertex) {
 };
 
 AdjacencyMatrixGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
-    var added_edge = false;
-
     if (weight === undefined) weight = 1;
+    if (Number.isFinite(vertex_1) && Number.isFinite(vertex_2) && Number.isFinite(weight)) {
+        var added_edge = false;
+
         
-    //Change the array type, if needed
-    if (this.array_is_integer && weight % 1 === 0) {
-        //The array holds integers
-        if (Math.abs(weight) > this.array_max_element_size || (!this.array_is_signed && weight < 0)) {
-            //The array cannot hold the weight, must change the array type
-            this.array_must_be_refactored = true;
-            if (weight < 0 || this.array_is_signed) {
-                this.array_is_signed = true;
-                //The array is signed
-                if (Math.abs(weight) > util.MaxNumberSize.INT_8) { //8 bits
-                    if (Math.abs(weight) > util.MaxNumberSize.INT_16) {// 16 bits
-                        if (Math.abs(weight) > util.MaxNumberSize.INT_32) { // 32 bits
-                            // 64 bits
-                            this.ArrayType = Float64Array;
-                            this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
-                            this.array_is_integer = false;
+        //Change the array type, if needed
+        if (this.array_is_integer && weight % 1 === 0) {
+            //The array holds integers
+            if (Math.abs(weight) > this.array_max_element_size || (!this.array_is_signed && weight < 0)) {
+                //The array cannot hold the weight, must change the array type
+                this.array_must_be_refactored = true;
+                if (weight < 0 || this.array_is_signed) {
+                    this.array_is_signed = true;
+                    //The array is signed
+                    if (Math.abs(weight) > util.MaxNumberSize.INT_8) { //8 bits
+                        if (Math.abs(weight) > util.MaxNumberSize.INT_16) {// 16 bits
+                            if (Math.abs(weight) > util.MaxNumberSize.INT_32) { // 32 bits
+                                // 64 bits
+                                this.ArrayType = Float64Array;
+                                this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
+                                this.array_is_integer = false;
+                            } else {
+                                // 32 bits
+                                this.ArrayType = Int32Array;
+                                this.array_max_element_size = util.MaxNumberSize.INT_32;
+                            }
                         } else {
-                            // 32 bits
-                            this.ArrayType = Int32Array;
-                            this.array_max_element_size = util.MaxNumberSize.INT_32;
+                            // 16 bits
+                            this.ArrayType = Int16Array;
+                            this.array_max_element_size = util.MaxNumberSize.INT_16;
                         }
                     } else {
-                        // 16 bits
-                        this.ArrayType = Int16Array;
-                        this.array_max_element_size = util.MaxNumberSize.INT_16;
+                        // 8 bits
+                        this.ArrayType = Int8Array;
+                        this.array_max_element_size = util.MaxNumberSize.INT_8;
                     }
                 } else {
-                    // 8 bits
-                    this.ArrayType = Int8Array;
-                    this.array_max_element_size = util.MaxNumberSize.INT_8;
-                }
-            } else {
-                //The array is not signed
-                if (Math.abs(weight) > util.MaxNumberSize.UINT_8) { //8 bits
-                    if (Math.abs(weight) > util.MaxNumberSize.UINT_16) {// 16 bits
-                        if (Math.abs(weight) > util.MaxNumberSize.UINT_32) { // 32 bits
-                            // 64 bits
-                            this.ArrayType = Float64Array;
-                            this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
-                            this.array_is_integer = false;
-                            this.array_is_signed = true;
+                    //The array is not signed
+                    if (Math.abs(weight) > util.MaxNumberSize.UINT_8) { //8 bits
+                        if (Math.abs(weight) > util.MaxNumberSize.UINT_16) {// 16 bits
+                            if (Math.abs(weight) > util.MaxNumberSize.UINT_32) { // 32 bits
+                                // 64 bits
+                                this.ArrayType = Float64Array;
+                                this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
+                                this.array_is_integer = false;
+                                this.array_is_signed = true;
+                            } else {
+                                // 32 bits
+                                this.ArrayType = Uint32Array;
+                                this.array_max_element_size = util.MaxNumberSize.UINT_32;
+                            }
                         } else {
-                            // 32 bits
-                            this.ArrayType = Uint32Array;
-                            this.array_max_element_size = util.MaxNumberSize.UINT_32;
+                            // 16 bits
+                            this.ArrayType = Uint16Array;
+                            this.array_max_element_size = util.MaxNumberSize.UINT_16;
                         }
                     } else {
-                        // 16 bits
-                        this.ArrayType = Uint16Array;
-                        this.array_max_element_size = util.MaxNumberSize.UINT_16;
+                        // 8 bits
+                        this.ArrayType = Uint8Array;
+                        this.array_max_element_size = util.MaxNumberSize.UINT_8;
                     }
-                } else {
-                    // 8 bits
-                    this.ArrayType = Uint8Array;
-                    this.array_max_element_size = util.MaxNumberSize.UINT_8;
                 }
             }
-        }
-    } else {
-        //The array holds float numbers
+        } else {
+            //The array holds float numbers
 
-        if (this.ArrayType !== Float32Array && this.ArrayType !== Float64Array) {
-            //If the array was holding integers, change it to hold floats
-            this.ArrayType = Float32Array;
-            this.array_max_element_size = util.MaxNumberSize.FLOAT_32;
-            this.array_is_integer = false;
-            this.array_is_signed = true;
-            this.array_must_be_refactored = true;
-        }
-
-        if (Math.abs(weight) > this.array_max_element_size) {
-            this.array_must_be_refactored = true;
-
-            if (Math.abs(weight) > util.MaxNumberSize.FLOAT_32) { // 32 bits
-                // 64 bits
-                this.ArrayType = Float64Array;
-                this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
-            } else {
-                // 32 bits
+            if (this.ArrayType !== Float32Array && this.ArrayType !== Float64Array) {
+                //If the array was holding integers, change it to hold floats
                 this.ArrayType = Float32Array;
                 this.array_max_element_size = util.MaxNumberSize.FLOAT_32;
+                this.array_is_integer = false;
+                this.array_is_signed = true;
+                this.array_must_be_refactored = true;
+            }
+
+            if (Math.abs(weight) > this.array_max_element_size) {
+                this.array_must_be_refactored = true;
+
+                if (Math.abs(weight) > util.MaxNumberSize.FLOAT_32) { // 32 bits
+                    // 64 bits
+                    this.ArrayType = Float64Array;
+                    this.array_max_element_size = util.MaxNumberSize.FLOAT_64;
+                } else {
+                    // 32 bits
+                    this.ArrayType = Float32Array;
+                    this.array_max_element_size = util.MaxNumberSize.FLOAT_32;
+                }
             }
         }
-    }
 
-    this.addVertex(vertex_1);
-    this.addVertex(vertex_2);
-    if (!this.data[vertex_1][vertex_2]) {
-        this.data[vertex_1][vertex_2] = weight;
-        added_edge = true;
-    }
+        this.addVertex(vertex_1);
+        this.addVertex(vertex_2);
+        if (!this.data[vertex_1][vertex_2]) {
+            this.data[vertex_1][vertex_2] = weight;
+            added_edge = true;
+        }
 
-    if (!this.data[vertex_2][vertex_1] && !this.directed) {
-        this.data[vertex_2][vertex_1] = weight;
-        added_edge = true;
-    }
+        if (!this.data[vertex_2][vertex_1] && !this.directed) {
+            this.data[vertex_2][vertex_1] = weight;
+            added_edge = true;
+        }
 
-    if (added_edge) {
-        this.number_of_edges += 1;
+        if (added_edge) {
+            this.number_of_edges += 1;
+        }
     }
 };
 

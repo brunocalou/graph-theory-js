@@ -19,52 +19,57 @@ util.inherit(GraphBase, AdjacencyListGraph);
 
 AdjacencyListGraph.prototype.addVertex = function (vertex) {
     if (!this.data[vertex]) {
-        this.data[vertex] = new LinkedList();
-        this.number_of_vertices += 1;
+        if (Number.isFinite(vertex)) {
+            this.data[vertex] = new LinkedList();
+            this.number_of_vertices += 1;
+        }
     }
 };
 
 AdjacencyListGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
-    var added_edge = false;
-
     if (weight === undefined) weight = 1;
+    if (Number.isFinite(vertex_1) && Number.isFinite(vertex_2) && Number.isFinite(weight)) {
 
-    this.addVertex(vertex_1);
-    this.addVertex(vertex_2);
+        var added_edge = false;
 
-    var vertex_1_is_neighbor = false;
-    var vertex_2_is_neighbor = false;
 
-    this.data[vertex_1].every(function (element) {
-        if (element[0] === vertex_2) {
-            vertex_2_is_neighbor = true;
-            return false;
-        }
-        return true;
-    });
+        this.addVertex(vertex_1);
+        this.addVertex(vertex_2);
 
-    if (!vertex_2_is_neighbor) {
-        this.data[vertex_1].addLast([vertex_2, weight]);
-        added_edge = true;
-    }
+        var vertex_1_is_neighbor = false;
+        var vertex_2_is_neighbor = false;
 
-    if (!this.directed) {
-        this.data[vertex_2].every(function (element) {
-            if (element[0] === vertex_1) {
-                vertex_1_is_neighbor = true;
+        this.data[vertex_1].every(function (element) {
+            if (element[0] === vertex_2) {
+                vertex_2_is_neighbor = true;
                 return false;
             }
             return true;
         });
 
-        if (!vertex_1_is_neighbor) {
-            this.data[vertex_2].addLast([vertex_1, weight]);
+        if (!vertex_2_is_neighbor) {
+            this.data[vertex_1].addLast([vertex_2, weight]);
             added_edge = true;
         }
-    }
 
-    if (added_edge) {
-        this.number_of_edges += 1;
+        if (!this.directed) {
+            this.data[vertex_2].every(function (element) {
+                if (element[0] === vertex_1) {
+                    vertex_1_is_neighbor = true;
+                    return false;
+                }
+                return true;
+            });
+
+            if (!vertex_1_is_neighbor) {
+                this.data[vertex_2].addLast([vertex_1, weight]);
+                added_edge = true;
+            }
+        }
+
+        if (added_edge) {
+            this.number_of_edges += 1;
+        }
     }
 };
 
