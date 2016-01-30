@@ -7,6 +7,7 @@ var
     chalk = require('chalk'),
     Dijkstra = graphtheoryjs.Algorithms.Dijkstra,
     Prim = graphtheoryjs.Algorithms.Prim,
+    FloydWarshall = graphtheoryjs.Algorithms.FloydWarshall,
     findClusters = graphtheoryjs.Algorithms.FindClusters,
     findDiameter = graphtheoryjs.Algorithms.FindDiameter,
     fs = require('fs'),
@@ -42,6 +43,10 @@ var
         .option('s', {
             alias: 'specific',
             describe: 'Run specific tests'
+        })
+        .option('w', {
+            alias: 'floyd-warshall',
+            describe: 'Run floyd warshall algorithm'
         })
         .help('h')
         .alias('h', 'help')
@@ -90,8 +95,8 @@ function createProgressBar(options) {
 function init() {
 	
     //If the options are all empty, run all of them
-    if (!argv.p && !argv.s && !argv.c && !argv.d) {
-        argv.p = argv.s = argv.c = argv.d = true;
+    if (!argv.p && !argv.s && !argv.w) {
+        argv.p = argv.s = argv.w = true;
     }
     //If the data structure was not specified, use the vector
     if (!argv.vector && !argv.list && !argv.matrix) {
@@ -184,7 +189,7 @@ function runSpecificTests() {
 
         bar.tick();
     }
-    
+
     console.log(results);
     console.log('');
 
@@ -199,12 +204,14 @@ function runPrim() {
         total: current_graph.graph.number_of_vertices
     });
     var timer = new Timer();
+
     console.log(chalk.yellow('PRIM USING ' + current_graph.name.toUpperCase()) + '\n');
     printSeparator();
 
     bar.tick(0);
 
     timer.start();
+
     var mst = Prim(current_graph.graph, current_graph.graph.getRandomVertex(), {
         onVertexFound: function (vertex) {
             bar.tick(1);
@@ -216,14 +223,37 @@ function runPrim() {
     results.time = elapsed_time;
     results['time unity'] = 's';
     results.mst = mst;
-    
+
     bar.terminate();
-    
+
     console.log(chalk.yellow(' TIME : ') + elapsed_time + ' ' + results['time unity']);
     console.log(chalk.yellow(' WEIGHT : ') + mst.getWeight());
     console.log('');
-    
+
     saveJSON(current_graph, results, 'MST', false);
+
+    printSeparator();
+}
+
+function runFloydWarshall() {
+    var current_graph = graph_list[0];
+    var timer = new Timer();
+    var results = {};
+
+    console.log(chalk.yellow('FLOYD-WARSHALL USING ' + current_graph.name.toUpperCase()) + '\n');
+    printSeparator();
+
+    timer.start();
+
+    results.fw = FloydWarshall(current_graph.graph);
+    results.time = timer.getElapsedTime();
+    results['time unity'] = 's';
+
+    console.log(chalk.yellow(' TIME : ') + results.time + ' ' + results['time unity']);
+    console.log(chalk.yellow(' MEAN DISTANCE : ') + results.fw.average_distance);
+    console.log('');
+
+    saveJSON(current_graph, results, 'FloydWarshall', false);
 
     printSeparator();
 }
@@ -248,4 +278,5 @@ init();
 runMemoryTest();
 saveGraphStatistics();
 if (argv.p) runPrim();
+if (argv.w) runFloydWarshall();
 if (argv.s) runSpecificTests();
