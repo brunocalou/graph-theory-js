@@ -71,6 +71,33 @@ function Dijkstra(graph, initial_vertex, callbacks) {
     heap.push([initial_vertex, distance[initial_vertex]]);
     discovered_vertices[initial_vertex] = true;
 
+    function applyDijkstra(neighbor, weight) {
+        if (!explored_vertices[neighbor]) {
+
+            if (weight < 0) {
+                throw ('Dijkstra algorithm cannot be used to negative weighted graphs!');
+            }
+
+            if (distance[neighbor] > distance[vertex] + weight) {
+                var aux = distance[neighbor];
+                distance[neighbor] = distance[vertex] + weight;
+
+                spanning_tree[neighbor] = vertex;
+                depths[neighbor] = depths[vertex] + 1;
+
+                if (!discovered_vertices[neighbor]) {
+                    discovered_vertices[neighbor] = true;
+                    heap.push([neighbor, distance[neighbor]]);
+
+                    if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], distance[neighbor]);
+
+                } else {
+                    heap.changeElement([neighbor, aux], [neighbor, distance[neighbor]]);
+                }
+            }
+        }
+    }
+
     while (!heap.isEmpty()) {
 
         var vertex = heap.pop()[0];
@@ -79,33 +106,7 @@ function Dijkstra(graph, initial_vertex, callbacks) {
 
         explored_vertices[vertex] = true;
 
-        graph.forEachNeighbor(vertex, function (neighbor, weight) {
-
-            if (!explored_vertices[neighbor]) {
-
-                if (weight < 0) {
-                    throw ('Dijkstra algorithm cannot be used to negative weighted graphs!');
-                }
-
-                if (distance[neighbor] > distance[vertex] + weight) {
-                    var aux = distance[neighbor];
-                    distance[neighbor] = distance[vertex] + weight;
-
-                    spanning_tree[neighbor] = vertex;
-                    depths[neighbor] = depths[vertex] + 1;
-
-                    if (!discovered_vertices[neighbor]) {
-                        discovered_vertices[neighbor] = true;
-                        heap.push([neighbor, distance[neighbor]]);
-
-                        if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], distance[neighbor]);
-
-                    } else {
-                        heap.changeElement([neighbor, aux], [neighbor, distance[neighbor]]);
-                    }
-                }
-            }
-        });
+        graph.forEachNeighbor(vertex, applyDijkstra);
     }
 
     return new SpanningTree(initial_vertex, spanning_tree, depths, graph);

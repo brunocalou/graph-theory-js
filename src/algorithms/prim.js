@@ -70,6 +70,29 @@ function Prim(graph, initial_vertex, callbacks) {
     heap.push([initial_vertex, cost[initial_vertex]]);
     discovered_vertices[initial_vertex] = true;
 
+    function applyPrim(neighbor, weight) {
+        if (!explored_vertices[neighbor]) {
+
+            if (cost[neighbor] > weight) {
+                var aux = cost[neighbor];
+                cost[neighbor] = weight;
+
+                spanning_tree[neighbor] = vertex;
+                depths[neighbor] = depths[vertex] + 1;
+
+                if (!discovered_vertices[neighbor]) {
+                    discovered_vertices[neighbor] = true;
+                    heap.push([neighbor, cost[neighbor]]);
+
+                    if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], cost[neighbor]);
+                }
+                else {
+                    heap.changeElement([neighbor, aux], [neighbor, cost[neighbor]]);
+                }
+            }
+        }
+    }
+
     while (!heap.isEmpty()) {
 
         var element = heap.pop();
@@ -80,29 +103,7 @@ function Prim(graph, initial_vertex, callbacks) {
 
         if (callbacks.onVertexVisited) callbacks.onVertexVisited(vertex, depths[vertex], cost[vertex]);
 
-        graph.forEachNeighbor(vertex, function (neighbor, weight) {
-
-            if (!explored_vertices[neighbor]) {
-
-                if (cost[neighbor] > weight) {
-                    var aux = cost[neighbor];
-                    cost[neighbor] = weight;
-
-                    spanning_tree[neighbor] = vertex;
-                    depths[neighbor] = depths[vertex] + 1;
-
-                    if (!discovered_vertices[neighbor]) {
-                        discovered_vertices[neighbor] = true;
-                        heap.push([neighbor, cost[neighbor]]);
-
-                        if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], cost[neighbor]);
-                    }
-                    else {
-                        heap.changeElement([neighbor, aux], [neighbor, cost[neighbor]]);
-                    }
-                }
-            }
-        });
+        graph.forEachNeighbor(vertex, applyPrim);
     }
 
     return new SpanningTree(initial_vertex, spanning_tree, depths, graph, total_weight);
