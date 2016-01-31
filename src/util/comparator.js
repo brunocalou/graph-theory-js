@@ -39,7 +39,30 @@ Comparator.prototype.compare = function (a, b) {
 };
 
 /**
- * Compare if the first element is equal to the second one
+ * Compare if the first element is equal to the second one.
+ * Override this method if you are comparing arrays, objects, ...
+ * @example
+ * function compare (a,b) {
+ *   return a[0] - b[0];
+ * }
+ * var a = [1,2];
+ * var b = [1,2];
+ * 
+ * var comparator = new Comparator(compare);
+ * 
+ * //Compare just the values
+ * comparator.equal(a,b);//true
+ * 
+ * comparator.equal = function(a,b) {
+ *   return a == b;
+ * }
+ * 
+ * //Compare the refecence too
+ * comparator.equal(a,b);//false
+ * 
+ * var c = a;
+ * comparator.equal(a,c);//true
+ * 
  * @param {any} a - The first element to compare
  * @param {any} b - The second element to compare
  * @returns {boolean} True if the first element is equal to
@@ -68,7 +91,7 @@ Comparator.prototype.lessThan = function (a, b) {
  * the second one, false otherwise
  */
 Comparator.prototype.lessThanOrEqual = function (a, b) {
-    return this.compare(a, b) <= 0;
+    return this.compare(a, b) < 0 || this.equal(a, b);
 };
 
 /**
@@ -90,7 +113,7 @@ Comparator.prototype.greaterThan = function (a, b) {
  * the second one, false otherwise
  */
 Comparator.prototype.greaterThanOrEqual = function (a, b) {
-    return this.compare(a, b) >= 0;
+    return this.compare(a, b) > 0 || this.equal(a, b);
 };
 
 /**

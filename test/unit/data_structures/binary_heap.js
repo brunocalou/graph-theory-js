@@ -107,6 +107,7 @@ describe('MinBinaryHeap', function () {
             assert.equal(heap.pop(), 5);
             assert.equal(heap.pop(), 8);
             assert.equal(heap.pop(), 9);
+            assert.equal(heap.pop(), undefined);
         });
 
         it('should change an element of an arbitrary type', function () {
@@ -123,6 +124,50 @@ describe('MinBinaryHeap', function () {
             assert.equal(heap.pop()[0], 2);
             assert.equal(heap.pop()[0], 4);
             assert.equal(heap.pop()[0], 5);
+            assert.equal(heap.pop(), undefined);
+        });
+
+        it('should change just one element', function () {
+            var heap = new MinBinaryHeap();
+
+            heap.insert(1);
+            heap.insert(8);
+            heap.insert(4);
+            heap.insert(2);
+            heap.insert(2);
+            heap.insert(2);
+            heap.insert(5);
+
+            heap.changeElement(2, 9);
+
+            assert.equal(heap.pop(), 1);
+            assert.equal(heap.pop(), 2);
+            assert.equal(heap.pop(), 2);
+            assert.equal(heap.pop(), 4);
+            assert.equal(heap.pop(), 5);
+            assert.equal(heap.pop(), 8);
+            assert.equal(heap.pop(), 9);
+            assert.equal(heap.pop(), undefined);
+        });
+
+        it('should change just one element for an arbitrary type', function () {
+            function comparator(a, b) {
+                return a[0] - b[0];
+            }
+
+            var heap = new MinBinaryHeap(comparator);
+
+            heap.heapify([[1, 5], [2, -4], [3, 2], [4, 0], [3, 2], [3, 4], [4, 2]]);
+            heap.changeElement([3, 2], [5, 6]);
+
+            assert.equal(heap.pop()[0], 1);
+            assert.equal(heap.pop()[0], 2);
+            assert.equal(heap.pop()[0], 3);
+            assert.equal(heap.pop()[0], 3);
+            assert.equal(heap.pop()[0], 4);
+            assert.equal(heap.pop()[0], 4);
+            assert.equal(heap.pop()[0], 5);
+            assert.equal(heap.pop(), undefined);
         });
     });
 
@@ -331,6 +376,7 @@ describe('MinBinaryHeap', function () {
 
             assert.equal(heap.pop(), undefined);
         });
+
     });
 
     describe('_shiftDown', function () {

@@ -42,17 +42,23 @@ function Prim(graph, initial_vertex, callbacks) {
 
     if (!callbacks) { callbacks = {}; }
 
-    function comparator(a, b) {
+    function comparatorFn(a, b) {
         return a[1] - b[1];
     }
 
     var cost = {};
     var spanning_tree = {};
     var depths = {};
-    var heap = new BinaryHeap.MinBinaryHeap(comparator);
+    var heap = new BinaryHeap.MinBinaryHeap(comparatorFn);
     var explored_vertices = {};
     var discovered_vertices = {};
     var total_weight = 0;
+
+    heap.comparator.equal = function (a, b) {
+        //The comparator must not assign equal to two different edges with the same weight.
+        //The comparison must be made for the vertex and the weight
+        return a[0] == b[0] && a[1] == b[1];
+    };
 
     graph.forEach(function (vertex) {
         cost[vertex] = Infinity;

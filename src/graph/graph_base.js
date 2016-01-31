@@ -247,7 +247,7 @@ GraphBase.prototype.print = function (max_width, max_height) {
 /**
  * Returns an array of vertices that are neighbors of the specified vertex
  * @param {number} vertex - The vertex to get the neighbors
- * @returns An array with the neighbors of the specified vertex
+ * @returns {array} An array with the neighbors of the specified vertex [neighbor, weight]
  */
 GraphBase.prototype.neighbors = function (vertex) {
 };

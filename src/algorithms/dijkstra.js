@@ -43,16 +43,23 @@ function Dijkstra(graph, initial_vertex, callbacks) {
     
     if (!callbacks) { callbacks = {}; }
 
-    function comparator(a, b) {
+    function comparatorFn(a, b) {
+        //Compare the weights
         return a[1] - b[1];
     }
 
     var distance = {};
     var spanning_tree = {};
-    var heap = new BinaryHeap.MinBinaryHeap(comparator);
+    var heap = new BinaryHeap.MinBinaryHeap(comparatorFn);
     var explored_vertices = {};
     var depths = {};
     var discovered_vertices = {};
+
+    heap.comparator.equal = function (a, b) {
+        //The comparator must not assign equal to two different edges with the same weight.
+        //The comparison must be made for the vertex and the weight
+        return a[0] == b[0] && a[1] == b[1];
+    };
 
     graph.forEach(function (vertex) {
         distance[vertex] = Infinity;
@@ -92,7 +99,7 @@ function Dijkstra(graph, initial_vertex, callbacks) {
                         heap.push([neighbor, distance[neighbor]]);
 
                         if (callbacks.onVertexFound) callbacks.onVertexFound(neighbor, depths[neighbor], distance[neighbor]);
-                        
+
                     } else {
                         heap.changeElement([neighbor, aux], [neighbor, distance[neighbor]]);
                     }

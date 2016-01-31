@@ -9,15 +9,16 @@ var util = require('../util/util');
  * Min Binary Heap Class
  * @constructor
  * @classdesc The MinBinaryHeap class implements a minimum binary heap data structure
+ * @param {function} comparator_fn - The comparator function
  */
-function MinBinaryHeap(comparator) {
+function MinBinaryHeap(comparator_fn) {
     /**@private
      * @type {array} */
     this._elements = [null];// will not use the first index
     
-    /**@private
+    /**@public
      * @type {Comparator} */
-    this._comparator = new Comparator(comparator);
+    this.comparator = new Comparator(comparator_fn);
     
     /**@private
      * @type {object} */
@@ -42,7 +43,7 @@ function MinBinaryHeap(comparator) {
  */
 MinBinaryHeap.prototype.changeElement = function (old_element, new_element) {
     for (var i = 1; i <= this._length; i += 1) {
-        if (this._comparator.equal(old_element, this._elements[i])) {
+        if (this.comparator.equal(old_element, this._elements[i])) {
             this._elements[i] = new_element;
             break;
         }
@@ -152,7 +153,7 @@ MinBinaryHeap.prototype.push = function (element) {
 
 /**
  * Returns the first element while removing it
- * @returns The first element while removing it
+ * @returns {any} The first element while removing it, undefined if the heap is empty
  */
 MinBinaryHeap.prototype.pop = function () {
     var removed_element = this._elements[1];
@@ -188,7 +189,7 @@ MinBinaryHeap.prototype._shiftDown = function (index) {
 
         if (right_child_index < array_length) {
             if (left_child_index < array_length) {
-                if (this._comparator.lessThan(this._elements[left_child_index], this._elements[right_child_index])) {
+                if (this.comparator.lessThan(this._elements[left_child_index], this._elements[right_child_index])) {
                     smallest_child_index = left_child_index;
                 } else {
                     smallest_child_index = right_child_index;
@@ -200,7 +201,7 @@ MinBinaryHeap.prototype._shiftDown = function (index) {
             }
         }
 
-        if (this._comparator.greaterThan(this._elements[parent_index], this._elements[smallest_child_index])) {
+        if (this.comparator.greaterThan(this._elements[parent_index], this._elements[smallest_child_index])) {
             this._swap(parent_index, smallest_child_index);
         }
 
@@ -222,7 +223,7 @@ MinBinaryHeap.prototype._shiftUp = function (index) {
     var parent_index = Math.floor(child_index / 2);
 
     while (child_index > 1 &&
-        this._comparator.greaterThan(this._elements[parent_index], this._elements[child_index])) {
+        this.comparator.greaterThan(this._elements[parent_index], this._elements[child_index])) {
         this._swap(parent_index, child_index);
         child_index = parent_index;
         parent_index = Math.floor(child_index / 2);
@@ -257,7 +258,7 @@ MinBinaryHeap.prototype._swap = function (a, b) {
  */
 MinBinaryHeap.prototype.toArray = function () {
     var array = [];
-    var min_binary_heap = new MinBinaryHeap(this._comparator.compare);
+    var min_binary_heap = new MinBinaryHeap(this.comparator.compare);
     min_binary_heap._elements = this._elements.slice();
     min_binary_heap._length = this._length;
 
@@ -275,7 +276,7 @@ MinBinaryHeap.prototype.toArray = function () {
  */
 function MaxBinaryHeap(comparator) {
     MinBinaryHeap.call(this, comparator);
-    this._comparator.invert();
+    this.comparator.invert();
 }
 
 MaxBinaryHeap.prototype.toArray = function () {
@@ -283,7 +284,7 @@ MaxBinaryHeap.prototype.toArray = function () {
     var max_binary_heap = new MaxBinaryHeap();
     max_binary_heap._elements = this._elements.slice();
     max_binary_heap._length = this._length;
-    max_binary_heap._comparator = this._comparator;
+    max_binary_heap._comparator = this.comparator;
 
     while (max_binary_heap.peek() !== undefined) {
         array.push(max_binary_heap.pop());
