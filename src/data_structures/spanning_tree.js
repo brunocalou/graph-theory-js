@@ -34,6 +34,8 @@ function SpanningTree(root, tree, depths, graph, total_weight) {
 SpanningTree.prototype.getPath = function (vertex) {
 
     if (!this.graph.exists(vertex)) return;
+    
+    if (this.tree[vertex] === undefined) return;
 
     var path = [vertex];
     var distance = 0;

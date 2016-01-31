@@ -320,12 +320,15 @@ function runCollaborationNetworkDijkstraTest() {
     }
 
     for (; i < length; i += 1) {
+        must_stop = false;
         var tree = Dijkstra(current_graph.graph, initial_vertex, {
             onVertexVisited: onVertexVisited,
             stop: stop
         });
-
-        results[final_vertices[i].name] = tree.getPath(final_vertices[i].vertex);
+        var path = tree.getPath(final_vertices[i].vertex);
+        if (path !== undefined) {
+            results[final_vertices[i].name] = path;
+        }
 
         bar.tick(1);
     }
@@ -409,7 +412,7 @@ function runCollaborationNetworkPrimTest() {
     var chosen_vertices = [];  //stores just the vertex
     var chosen_vertex = -1;
     degrees['-1'] = -1;
-    
+
     for (var i = 0; i < 3; i += 1) {
         chosen_vertex = -1;
         for (var vertex in degrees) {
