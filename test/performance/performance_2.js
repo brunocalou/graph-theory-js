@@ -231,7 +231,9 @@ function runPrim() {
     var results = {};
     results.time = elapsed_time;
     results['time unity'] = 's';
-    results.mst = mst;
+    results.mst = {};
+    results.mst.tree = mst.tree;
+    results.mst.weight = mst.getWeight();
 
     bar.terminate();
 
