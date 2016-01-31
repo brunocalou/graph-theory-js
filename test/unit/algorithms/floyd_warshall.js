@@ -18,8 +18,9 @@ describe('FloydWarshall', function () {
 
     it('should compute the correct average distance', function () {
         var average_distance = applyFloydWarshall('small_positive_weighted_graph.txt').average_distance;
-        var expected_average = 26.5 / 10;
-        assert.equal(util.nearEquals(average_distance, expected_average, 0.0001), true)
+        var expected_average = 5.29;
+
+        assert.equal(util.nearEquals(average_distance, expected_average, 0.1), true)
     });
 
     describe('Result Matrices', function () {

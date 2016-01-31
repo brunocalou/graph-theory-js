@@ -52,6 +52,10 @@ var
             alias: 'collaboration-prim',
             describe: 'Run prim test for the collaboration graph'
         })
+        .option('n', {
+            alias: 'mean',
+            describe: 'Find the mean distance of the graph'
+        })
         .option('w', {
             alias: 'floyd-warshall',
             describe: 'Run floyd warshall algorithm'
@@ -103,7 +107,7 @@ function createProgressBar(options) {
 function init() {
 	
     //If the options are all empty, run all of them
-    if (!argv.p && !argv.s && !argv.w && !argv.d && !argv.c) {
+    if (!argv.p && !argv.s && !argv.w && !argv.d && !argv.c && !argv.n) {
         argv.p = argv.s = argv.w = true;
     }
     //If the data structure was not specified, use the vector
@@ -246,6 +250,46 @@ function runPrim() {
     printSeparator();
 }
 
+function runMeanDistance() {
+    var current_graph = graph_list[0];
+    var timer = new Timer();
+    var results = {};
+    var total = 0;
+    var max_number_of_edges = current_graph.graph.number_of_vertices * (current_graph.graph.number_of_vertices - 1) / 2;
+
+    console.log(chalk.yellow('MEAN DISTANCE USING ' + current_graph.name.toUpperCase()) + '\n');
+    printSeparator();
+
+    timer.start();
+
+    current_graph.graph.forEach(function (vertex) {
+        var tree = Dijkstra(current_graph.graph, vertex);
+        current_graph.graph.forEach(function (vertex_2) {
+            if (vertex !== vertex_2) {
+                var path = tree.getPath(vertex_2);
+                if (path !== undefined) {
+                    total += path.distance;
+                }
+            }
+
+        });
+    });
+
+    var mean = total / max_number_of_edges;
+
+    results['mean distance'] = mean;
+    results.time = timer.getElapsedTime();
+    results['time unity'] = 's';
+
+    console.log(chalk.yellow(' TIME : ') + results.time + ' ' + results['time unity']);
+    console.log(chalk.yellow(' MEAN DISTANCE : ') + mean);
+    console.log('');
+
+    saveJSON(current_graph, results, 'mean_distance', false);
+
+    printSeparator();
+}
+
 function runFloydWarshall() {
     var current_graph = graph_list[0];
     var timer = new Timer();
@@ -264,7 +308,7 @@ function runFloydWarshall() {
     console.log(chalk.yellow(' MEAN DISTANCE : ') + results.fw.average_distance);
     console.log('');
 
-    saveJSON(current_graph, results, 'FloydWarshall', false);
+    saveJSON(current_graph, results, 'floyd_warshall', false);
 
     printSeparator();
 }
@@ -471,4 +515,5 @@ if (argv.p) runPrim();
 if (argv.s) runSpecificTests();
 if (argv.d) runCollaborationNetworkDijkstraTest();
 if (argv.c) runCollaborationNetworkPrimTest();
+if (argv.n) runMeanDistance();
 if (argv.w) runFloydWarshall();

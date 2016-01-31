@@ -48,7 +48,7 @@ function FloydWarshall(graph) {
     });
 
     var average_distance = 0;
-    var total = 0;
+    var max_number_of_edges = graph.number_of_vertices * (graph.number_of_vertices - 1) / 2;
 
     for (var vertex_from in distances_matrix) {
         if (distances_matrix.hasOwnProperty(vertex_from)) {
@@ -56,7 +56,6 @@ function FloydWarshall(graph) {
                 if (distances_matrix.hasOwnProperty(vertex_to)) {
                     if (vertex_from != vertex_to) {
                         if (distances_matrix[vertex_from][vertex_to] < Infinity) {
-                            total += 1;
                             average_distance += distances_matrix[vertex_from][vertex_to];
                         }
                     }
@@ -65,7 +64,7 @@ function FloydWarshall(graph) {
         }
     }
 
-    average_distance = average_distance / total;
+    average_distance = average_distance / max_number_of_edges;
 
     var FW_matrices = {
         shortest_paths: shortest_paths_matrix,
