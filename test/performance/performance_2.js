@@ -48,6 +48,10 @@ var
             alias: 'dijkstra',
             describe: 'Run dijkstra test for the collaboration graph'
         })
+        .option('c', {
+            alias: 'collaboration-prim',
+            describe: 'Run prim test for the collaboration graph'
+        })
         .option('w', {
             alias: 'floyd-warshall',
             describe: 'Run floyd warshall algorithm'
@@ -99,7 +103,7 @@ function createProgressBar(options) {
 function init() {
 	
     //If the options are all empty, run all of them
-    if (!argv.p && !argv.s && !argv.w && !argv.d) {
+    if (!argv.p && !argv.s && !argv.w && !argv.d && !argv.c) {
         argv.p = argv.s = argv.w = true;
     }
     //If the data structure was not specified, use the vector
@@ -331,7 +335,110 @@ function runCollaborationNetworkDijkstraTest() {
     console.log(results);
     console.log('');
 
-    saveJSON(current_graph, results, 'dijkstra_test', false);
+    saveJSON(current_graph, results, 'dijkstra_collaboration_network_test', false);
+
+    printSeparator();
+}
+
+function runCollaborationNetworkPrimTest() {
+    //Run the prim algorithm on the colaboration network file
+    var current_graph = graph_list[0];
+    var bar = createProgressBar({
+        total: current_graph.graph.number_of_edges,
+        width: 10
+    });
+
+    console.log(chalk.yellow('PRIM COLLABORATION NETWORK\nTEST USING ' + current_graph.name.toUpperCase()) + '\n');
+    printSeparator();
+
+    bar.tick(0);
+
+    var mst = Prim(current_graph.graph, current_graph.graph.getRandomVertex(), {
+        onVertexFound: function (vertex) {
+            bar.tick(1);
+        }
+    });
+
+    var results = {};
+
+    var neighbors = [
+        {
+            vertex: 2722,
+            name: 'Edsger W. Dijkstra',
+            neighbors: []
+        },
+        {
+            vertex: 343930,
+            name: 'Daniel R. Figueiredo',
+            neighbors: []
+        }
+    ];
+    
+    /////////////////////////////
+    //Get the 3 highest degrees//
+    /////////////////////////////
+    
+    var degrees = {}; //The degree of each vertex on the mst
+    
+    //Get all the degrees
+    for (var child in mst.tree) {
+        if (mst.tree.hasOwnProperty(child)) {
+            if (degrees[child] === undefined) {
+                degrees[child] = 0;
+            }
+            if (degrees[mst.tree[child]] === undefined) {
+                degrees[mst.tree[child]] = 0;
+            }
+            degrees[child] += 1;//Add 1 to the child
+            degrees[mst.tree[child]] += 1; //Add 1 to the parent
+            
+            //Get the neighbors
+            for (var i = 0, length = neighbors.length; i < length; i += 1) {
+                if (neighbors[i].vertex == child) {
+                    neighbors[i].neighbors.push(mst.tree[child]);
+                }
+                if (neighbors[i].vertex == mst.tree[child]) {
+                    neighbors[i].neighbors.push(child);
+                }
+            }
+        }
+    }
+    
+    //Get the 3 vertices with highest degrees
+    var chosen_vertices_obj = []; //stores the vertex and the degree
+    var chosen_vertices = [];  //stores just the vertex
+    var chosen_vertex = -1;
+    degrees['-1'] = -1;
+    
+    for (var i = 0; i < 3; i += 1) {
+        chosen_vertex = -1;
+        for (var vertex in degrees) {
+            if (degrees.hasOwnProperty(vertex)) {
+                if (degrees[chosen_vertex] < degrees[vertex]) {
+                    if (chosen_vertices.lastIndexOf(vertex) === -1) {
+                        chosen_vertex = vertex;
+                    }
+                }
+            }
+        }
+        chosen_vertices_obj.push({
+            vertex: chosen_vertex,
+            degree: degrees[chosen_vertex]
+        });
+        chosen_vertices.push(chosen_vertex);
+    }
+
+    results['highest degrees'] = chosen_vertices_obj;
+    results['neighbors'] = neighbors;
+
+    bar.terminate();
+
+    console.log(chosen_vertices_obj);
+    console.log(chosen_vertices);
+    console.log(neighbors);
+    console.log('');
+
+    saveJSON(current_graph, results, 'prim_collaboration_network_test', false);
 
     printSeparator();
 }
@@ -358,4 +465,5 @@ saveGraphStatistics();
 if (argv.p) runPrim();
 if (argv.s) runSpecificTests();
 if (argv.d) runCollaborationNetworkDijkstraTest();
+if (argv.c) runCollaborationNetworkPrimTest();
 if (argv.w) runFloydWarshall();
