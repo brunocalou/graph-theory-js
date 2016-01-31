@@ -23,6 +23,12 @@
  * @param {number} distance - The distance of the vertex to the initial vertex
  */
 
+/**
+ * Called after the onVertexVisited callback. If it returns true, the algorithm will stop running
+ * @typedef {function} stop
+ * @returns {boolean} False if the loop should no stop, true otherwise
+ */
+
 var SpanningTree = require('../data_structures/spanning_tree');
 var BinaryHeap = require('../data_structures/binary_heap');
 
@@ -38,7 +44,8 @@ function Dijkstra(graph, initial_vertex, callbacks) {
     //callbacks is an object with the following properties
     // {
     // 	onVertexVisited = function (vertex, vertex_depth, distance),
-    // 	onVertexFound = function (vertex, vertex_depth, distance)
+    // 	onVertexFound = function (vertex, vertex_depth, distance),
+    //  stop = function()
     // }
     
     if (!callbacks) { callbacks = {}; }
@@ -103,6 +110,8 @@ function Dijkstra(graph, initial_vertex, callbacks) {
         var vertex = heap.pop()[0];
 
         if (callbacks.onVertexVisited) callbacks.onVertexVisited(vertex, depths[vertex], distance[vertex]);
+
+        if (callbacks.stop) if (callbacks.stop()) break;
 
         explored_vertices[vertex] = true;
 

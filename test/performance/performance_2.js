@@ -44,6 +44,10 @@ var
             alias: 'specific',
             describe: 'Run specific tests'
         })
+        .option('d', {
+            alias: 'dijkstra',
+            describe: 'Run dijkstra test for the collaboration graph'
+        })
         .option('w', {
             alias: 'floyd-warshall',
             describe: 'Run floyd warshall algorithm'
@@ -95,7 +99,7 @@ function createProgressBar(options) {
 function init() {
 	
     //If the options are all empty, run all of them
-    if (!argv.p && !argv.s && !argv.w) {
+    if (!argv.p && !argv.s && !argv.w && !argv.d) {
         argv.p = argv.s = argv.w = true;
     }
     //If the data structure was not specified, use the vector
@@ -201,7 +205,8 @@ function runSpecificTests() {
 function runPrim() {
     var current_graph = graph_list[0];
     var bar = createProgressBar({
-        total: current_graph.graph.number_of_vertices
+        total: current_graph.graph.number_of_edges,
+        width: 10
     });
     var timer = new Timer();
 
@@ -258,6 +263,79 @@ function runFloydWarshall() {
     printSeparator();
 }
 
+function runCollaborationNetworkDijkstraTest() {
+    //Run the dijkstra algorithm on the colaboration network file
+    var current_graph = graph_list[0];
+    var initial_vertex = 2722;//Edsger W. Dijkstra
+    var final_vertices = [
+        {
+            vertex: 11365,
+            name: 'Alan M. Turing'
+        },
+        {
+            vertex: 471365,
+            name: 'J. B. Kruskal'
+        },
+        {
+            vertex: 5709,
+            name: 'Jon M. Kleinberg'
+        },
+        {
+            vertex: 11386,
+            name: 'Éva Tardos'
+        },
+        {
+            vertex: 343930,
+            name: 'Daniel R. Figueiredo'
+        }
+    ];
+    var i = 0;
+    var length = final_vertices.length
+    var results = {};
+    var must_stop = false;
+    var bar = createProgressBar({
+        total: length
+    });
+
+    console.log(chalk.yellow('DIJKSTRA COLLABORATION NETWORK\nTEST USING ' + current_graph.name.toUpperCase()) + '\n');
+    printSeparator();
+
+    bar.tick(0);
+
+    function onVertexVisited(vertex, vertex_depth, vertex_distance) {
+        if (final_vertices[i].vertex == vertex) {
+            must_stop = true;
+        }
+    };
+
+    function stop() {
+        if (must_stop) {
+            return true;
+        }
+        return false;
+    }
+
+    for (; i < length; i += 1) {
+        var tree = Dijkstra(current_graph.graph, initial_vertex, {
+            onVertexVisited: onVertexVisited,
+            stop: stop
+        });
+
+        results[final_vertices[i].name] = tree.getPath(final_vertices[i].vertex);
+
+        bar.tick(1);
+    }
+
+    bar.terminate();
+
+    console.log(results);
+    console.log('');
+
+    saveJSON(current_graph, results, 'dijkstra_test', false);
+
+    printSeparator();
+}
+
 function saveGraphStatistics() {
     //Save the graph statistics
 	
@@ -279,4 +357,5 @@ runMemoryTest();
 saveGraphStatistics();
 if (argv.p) runPrim();
 if (argv.s) runSpecificTests();
+if (argv.d) runCollaborationNetworkDijkstraTest();
 if (argv.w) runFloydWarshall();

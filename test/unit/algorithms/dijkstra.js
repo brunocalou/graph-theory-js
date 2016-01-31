@@ -187,5 +187,43 @@ describe('Dijkstra', function () {
                 assert.equal(called_the_callback, true);
             });
         });
+
+        describe('stop', function () {
+            it('should stop running', function () {
+                var root = 1;
+                var must_stop = false;
+
+                var onVertexFound = function (vertex, vertex_depth, vertex_distance) {
+                    if (must_stop) {
+                        assert(false);
+                    }
+                };
+
+                var onVertexVisited = function (vertex, vertex_depth, vertex_distance) {
+                    if (!must_stop) {
+                        if (vertex === 2) {
+                            must_stop = true;
+                        }
+                    } else {
+                        assert(false);
+                    }
+                };
+
+                var stop = function () {
+                    if (must_stop) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                applyDijkstra('small_positive_weighted_graph.txt', root, {
+                    onVertexFound: onVertexFound,
+                    onVertexVisited: onVertexVisited,
+                    stop: stop
+                });
+                
+                assert.equal(must_stop, true);
+            });
+        });
     });
 });
