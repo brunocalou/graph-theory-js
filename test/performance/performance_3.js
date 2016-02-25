@@ -5,6 +5,7 @@ var
     Memory = graphtheoryjs.Util.Memory,
     Timer = graphtheoryjs.Util.Timer,
     chalk = require('chalk'),
+    findColor = require('../../index').Algorithms.FindColor,
     fs = require('fs'),
     ProgressBar = require('progress'),
     argv = require('yargs').usage('Usage: $0 <command> [options]')
@@ -144,6 +145,20 @@ function runColorTest() {
     var current_graph = graph_list[0];
     console.log(chalk.yellow('COLOR TEST USING ' + current_graph.name.toUpperCase()) + '\n');
     
+    var timer = new Timer();
+    timer.start();
+    var color_results = findColor(current_graph.graph);
+    
+    var results = {};
+    results.color_results = color_results;
+    results.time = timer.getElapsedTime();
+    results['time unity'] = 's';
+    
+    console.log(chalk.yellow(' TIME : ') + results.time + ' ' + results['time unity']);
+    console.log(chalk.yellow(' COLORS : ') + results.color_results.number_of_colors);
+    
+    saveJSON(current_graph, results, 'colors', false);
+
     printSeparator();
 }
 

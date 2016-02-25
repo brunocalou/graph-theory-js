@@ -5,5 +5,6 @@ module.exports = {
     FindDiameter: require('./algorithms/find_diameter'),
     Dijkstra: require('./algorithms/dijkstra'),
     Prim: require('./algorithms/prim'),
-    FloydWarshall: require('./algorithms/floyd_warshall')
+    FloydWarshall: require('./algorithms/floyd_warshall'),
+    FindColor: require('./algorithms/find_color')
 };
