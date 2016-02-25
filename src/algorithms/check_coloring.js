@@ -9,7 +9,7 @@ function checkColoring(graph, colors){
 
 		graph.everyNeighbor(vertex, function (neighbor){
 			if (!visited_vertex[neighbor]) {
-				if (color[vertex] == colors[neighbor]) {
+				if (colors[vertex] == colors[neighbor]) {
 					valid_coloring = false;
 					return false;
 				}

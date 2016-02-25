@@ -6,7 +6,7 @@ var
     Timer = graphtheoryjs.Util.Timer,
     chalk = require('chalk'),
     findColor = require('../../index').Algorithms.FindColor,
-    checkColoring = require('../..index').Algorithms.CheckColoring,
+    checkColoring = require('../../index').Algorithms.CheckColoring,
     fs = require('fs'),
     ProgressBar = require('progress'),
     argv = require('yargs').usage('Usage: $0 <command> [options]')
@@ -154,7 +154,7 @@ function runColorTest() {
     results.color_results = color_results;
     results.time = timer.getElapsedTime();
     results['time unity'] = 's';
-    results.color_results.valid_coloring = checkColoring(current_graph.graph, color_results.colors)
+    results.color_results.valid_coloring = checkColoring(current_graph.graph, color_results.colors);
     
     console.log(chalk.yellow(' TIME : ') + results.time + ' ' + results['time unity']);
     console.log(chalk.yellow(' COLORS : ') + results.color_results.number_of_colors);
@@ -162,7 +162,7 @@ function runColorTest() {
         console.log(chalk.yellow(' Coloring is VALID'));
     }
     else {
-        console.log(chalk.yellow(' Coloring is INVALID')
+        console.log(chalk.yellow(' Coloring is INVALID'));
     }
     
     saveJSON(current_graph, results, 'colors', false);
