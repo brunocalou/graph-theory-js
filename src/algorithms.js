@@ -6,5 +6,6 @@ module.exports = {
     Dijkstra: require('./algorithms/dijkstra'),
     Prim: require('./algorithms/prim'),
     FloydWarshall: require('./algorithms/floyd_warshall'),
-    FindColor: require('./algorithms/find_color')
+    FindColor: require('./algorithms/find_color'),
+    CheckColoring: require('./algorithms/check_coloring')
 };
