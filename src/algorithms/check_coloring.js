@@ -1,5 +1,3 @@
-
-
 function checkColoring(graph, colors){
 	var visited_vertex = new Array(graph.number_of_vertices);
 	var valid_coloring = true;
@@ -16,11 +14,8 @@ function checkColoring(graph, colors){
 			}
 			return true;
 		});
-
-		if (!valid_coloring){
-			return false;
-		}
-		return true;
+        
+        return !valid_coloring;
 	});
 
 	return valid_coloring;
