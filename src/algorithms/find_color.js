@@ -9,11 +9,10 @@ function findColor(graph) {
     var total_number_of_vertices = graph.number_of_vertices;
 
     function onVertexVisited(vertex) {
-        number_of_vertices_counter += 1;
         if (!colors[vertex]) {
             var can_paint_vertex = true;
             graph.everyNeighbor(vertex, function (neighbor) {
-                if (colors[neighbor] == current_color) {
+                if (colors[neighbor] === current_color) {
                     can_paint_vertex = false;
                     return false;
                 }
@@ -26,13 +25,10 @@ function findColor(graph) {
         }
     }
 
-    var number_of_vertices_counter = 1;
-
     while (colored_vertices !== total_number_of_vertices) {
         BFS(graph, initial_vertex, {
             onVertexVisited: onVertexVisited
         });
-        number_of_vertices_counter = 1;
         current_color += 1;
     }
     return {

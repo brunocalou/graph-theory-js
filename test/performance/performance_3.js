@@ -162,7 +162,7 @@ function runColorTest() {
         console.log(chalk.yellow(' Coloring is VALID'));
     }
     else {
-        console.log(chalk.yellow(' Coloring is INVALID'));
+        console.log(chalk.red(' Coloring is INVALID'));
     }
     
     saveJSON(current_graph, results, 'colors', false);
