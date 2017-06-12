@@ -1,5 +1,7 @@
 /**@module dataStructures */
 
+var AdjacencyVectorGraph = require('../graph/adjacency_vector_graph.js');
+
 /**
  * SpanningTree class
  * @constructor
@@ -78,6 +80,28 @@ SpanningTree.prototype.getWeight = function () {
         this._total_weight = weight;
         return weight;
     }
+};
+
+/**
+ * @return A new graph based on the spanning tree
+ */
+SpanningTree.prototype.toGraph = function () {
+    var sp_graph = new AdjacencyVectorGraph(false);  
+
+  // Create a graph from the spanning_tree
+  for (var vertex1 in this.tree) {
+    if (this.tree.hasOwnProperty(vertex1)) {
+      var vertex2 = this.tree[vertex1];
+
+      if (vertex2 !== null) {
+        var weight = this.graph.weight(vertex1, vertex2);
+
+        sp_graph.addEdge(Number(vertex1), Number(vertex2), Number(weight));
+      }
+    }
+  }
+
+  return sp_graph;
 };
 
 module.exports = SpanningTree;

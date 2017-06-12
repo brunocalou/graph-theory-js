@@ -7,5 +7,6 @@ module.exports = {
     Prim: require('./algorithms/prim'),
     FloydWarshall: require('./algorithms/floyd_warshall'),
     FindColor: require('./algorithms/find_color'),
-    CheckColoring: require('./algorithms/check_coloring')
+    CheckColoring: require('./algorithms/check_coloring'),
+    SteinerTreeHeuristic: require('./algorithms/steiner_tree_heuristic')
 };

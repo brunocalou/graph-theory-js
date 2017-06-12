@@ -22,7 +22,7 @@ function GraphBase(directed) {
      * Stores the graph
      * @type {array}
      */
-    this.data = {};
+    this.data = [];
 
     /**
      * Stores the path to the graph file
@@ -61,7 +61,7 @@ function GraphBase(directed) {
  * @param {number} number_of_vertices - Set the size of the graph
  */
 GraphBase.prototype.createDataStructure = function (number_of_vertices) {
-    this.data = {};
+    this.data = [];
 };
 
 /**
@@ -69,6 +69,21 @@ GraphBase.prototype.createDataStructure = function (number_of_vertices) {
  * @param {number} vertex - The vertex to be added
  */
 GraphBase.prototype.addVertex = function (vertex) {
+};
+
+/**
+ * Removes the vertex from the graph
+ * @param {number} vertex - The vertex to be removed
+ */
+GraphBase.prototype.removeVertex = function (vertex) {
+};
+
+/**
+ * Removes an edge from the graph
+ * @param {number} vertex_1 - The first vertex
+ * @param {number} vertex_2 - The second vertex
+ */
+GraphBase.prototype.removeEdge = function (vertex_1, vertex_2) {
 };
 
 /**
@@ -290,7 +305,7 @@ GraphBase.prototype.forEachNeighbor = function (vertex, fn) {
 GraphBase.prototype.forEach = function (fn, this_arg) {
     for (var vertex in this.data) {
         if (this.data.hasOwnProperty(vertex)) {
-            fn.call(this_arg, vertex);
+            fn.call(this_arg, Number(vertex));
         }
     }
 };
@@ -310,7 +325,7 @@ GraphBase.prototype.degree = function (vertex) {
  */
 GraphBase.prototype.getRandomVertex = function () {
     var vertices = Object.keys(this.data);
-    return vertices[vertices.length * Math.random() << 0];;
+    return vertices[vertices.length * Math.random() << 0];
 };
 
 /**
@@ -336,7 +351,7 @@ GraphBase.prototype.exists = function (vertex) {
 GraphBase.prototype.every = function (fn, this_arg) {
     for (var vertex in this.data) {
         if (this.data.hasOwnProperty(vertex)) {
-            if (!fn.call(this_arg, vertex)) {
+            if (!fn.call(this_arg, Number(vertex))) {
                 break;
             }
         }

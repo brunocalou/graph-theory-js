@@ -25,12 +25,57 @@ AdjacencyVectorGraph.prototype.addVertex = function (vertex) {
     }
 };
 
+AdjacencyVectorGraph.prototype.removeVertex = function (vertex) {
+    if (this.data[vertex]) {
+        if (Number.isFinite(vertex)) {
+            for (var i = 0; i < this.data[vertex].length; i += 1) {
+                if (this.removeEdge(vertex, this.data[vertex][i][0])) {
+                    i -= 1;
+                }
+            }
+            this.data[vertex] = undefined;
+            this.number_of_vertices -= 1;
+        }
+    }
+};
+
+AdjacencyVectorGraph.prototype.removeEdge = function (vertex_1, vertex_2) {
+    var edges_removed = 0;
+
+    if (this.exists(vertex_1)) {
+        for (var i = 0, neighbors_length = this.data[vertex_1].length; i < neighbors_length; i += 1) {
+            if (this.data[vertex_1][i][0] === vertex_2) {
+                this.data[vertex_1].splice(i, 1);
+                edges_removed += 1;
+                break;
+            }
+        }
+
+        for (var i = 0, neighbors_length = this.data[vertex_2].length; i < neighbors_length; i += 1) {
+            if (this.data[vertex_2][i][0] === vertex_1) {
+                this.data[vertex_2].splice(i, 1);
+                edges_removed += 1;
+                break;
+            }
+        }
+
+        if (edges_removed) {
+            if (this.directed) {
+                this.number_of_edges -= edges_removed;
+            } else {
+                this.number_of_edges -= edges_removed / 2;
+            }
+        }
+    }
+
+    return edges_removed;
+};
+
 AdjacencyVectorGraph.prototype.addEdge = function (vertex_1, vertex_2, weight) {
     if (weight === undefined) weight = 1;
 
     if (Number.isFinite(vertex_1) && Number.isFinite(vertex_2) && Number.isFinite(weight)) {
         var added_edge = false;
-
 
         this.addVertex(vertex_1);
         this.addVertex(vertex_2);
