@@ -8,5 +8,6 @@ module.exports = {
     FloydWarshall: require('./algorithms/floyd_warshall'),
     FindColor: require('./algorithms/find_color'),
     CheckColoring: require('./algorithms/check_coloring'),
-    SteinerTreeHeuristic: require('./algorithms/steiner_tree_heuristic')
+    SteinerTreeHeuristic: require('./algorithms/steiner_tree_heuristic'),
+    SteinerTreeBranchAndBound: require('./algorithms/steiner_tree_branch_and_bound')
 };

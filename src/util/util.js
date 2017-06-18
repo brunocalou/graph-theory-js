@@ -99,11 +99,22 @@ function nearEquals(x1, x2, error) {
     return Math.abs(Math.abs(x1) - Math.abs(x2)) < error;
 }
 
+/**
+ * Gets a random property from an object.
+ * See https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
+ * @param {object} obj - The object to use
+ */
+function randomProperty(obj) {
+    var keys = Object.keys(obj)
+    return obj[keys[ keys.length * Math.random() << 0]];
+}
+
 module.exports = {
     inherit: inherit,
     printObject: printObject,
     printMemory: printMemory,
     MemorySize: MemorySize,
     MaxNumberSize: MaxNumberSize,
-    nearEquals: nearEquals
+    nearEquals: nearEquals,
+    randomProperty: randomProperty
 };

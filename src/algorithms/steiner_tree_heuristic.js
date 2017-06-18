@@ -5,21 +5,21 @@
  * @property {onVertexFound} onVertexFound
  */
 
-/**
- * Called when a vertex was visited
- * @typedef {function} onVertexVisited
- * @param {number} vertex - The visited vertex
- * @param {number} vertex_depth - The depth of the vertex on the generated spanning tree
- * @param {number} cost - The current cost to vertex
- */
+// /**
+//  * Called when a vertex was visited
+//  * @typedef {function} onVertexVisited
+//  * @param {number} vertex - The visited vertex
+//  * @param {number} vertex_depth - The depth of the vertex on the generated spanning tree
+//  * @param {number} cost - The current cost to vertex
+//  */
 
-/**
- * Called when a vertex was found
- * @typedef {function} onVertexFound
- * @param {number} vertex - The vertex that was found / discovered
- * @param {number} vertex_depth - The depth of the vertex on the generated spanning tree
- * @param {number} cost - The current cost to vertex
- */
+// /**
+//  * Called when a vertex was found
+//  * @typedef {function} onVertexFound
+//  * @param {number} vertex - The vertex that was found / discovered
+//  * @param {number} vertex_depth - The depth of the vertex on the generated spanning tree
+//  * @param {number} cost - The current cost to vertex
+//  */
 
 var Prim = require('./prim.js');
 
@@ -32,7 +32,7 @@ var Prim = require('./prim.js');
  * @param  {steiner_tree_callbacks} callbacks - The callback object
  */
 function SteinerTreeHeuristic (graph, initial_vertex, steiner_vertices, callbacks) {
-  // Covnert the steiner vertices from array to object to O(1) search
+  // Convert the steiner vertices from array to object to O(1) search
   var removable_vertices = {};
   
   for (var i = 0; i < steiner_vertices.length; i += 1) {
@@ -41,7 +41,7 @@ function SteinerTreeHeuristic (graph, initial_vertex, steiner_vertices, callback
   
   // Apply the prim algorithm
   var spanning_tree = Prim(graph, initial_vertex);
-  console.log(spanning_tree.tree);
+  // console.log(spanning_tree.tree);
   var steiner_graph = spanning_tree.toGraph();
   
 
@@ -54,7 +54,7 @@ function SteinerTreeHeuristic (graph, initial_vertex, steiner_vertices, callback
    */
   function applyHeuristic () {
     var steiner_vertex = remaining_steiner_vertices.pop();
-    console.log(`Calculating heuristic to ${steiner_vertex}`);
+    // console.log(`Calculating heuristic to ${steiner_vertex}`);
     // Remove leaves from the original and the steiner graphs
     var removed_leaves = {};
     var removed_leaves_num = 0;
@@ -72,7 +72,7 @@ function SteinerTreeHeuristic (graph, initial_vertex, steiner_vertices, callback
           if (idx > -1) {
             remaining_steiner_vertices.splice(idx, 1);
           }
-          console.log(`Removed vertex ${vertex} as a leaf`);
+          // console.log(`Removed vertex ${vertex} as a leaf`);
         }
       });
 
@@ -94,7 +94,7 @@ function SteinerTreeHeuristic (graph, initial_vertex, steiner_vertices, callback
     var initial_vertex = steiner_vertex_neighbors[steiner_vertex_neighbors.length * Math.random() << 0][0];
     var temp_spanning_tree = Prim(graph, initial_vertex);
 
-    if (temp_spanning_tree.length !== graph.number_of_vertices || spanning_tree._total_weight < temp_spanning_tree._total_weight) {
+    if (temp_spanning_tree.length !== graph.number_of_vertices || spanning_tree.getWeight() < temp_spanning_tree.getWeight()) {
       // The graph became disjoint OR the new weight is worst than the previous one. Add the removed vertex to the graph
       for (var i = 0; i < steiner_vertex_neighbors.length; i += 1) {
         steiner_graph.addEdge(steiner_vertex, steiner_vertex_neighbors[i][0], steiner_vertex_neighbors[i][1]);
@@ -102,21 +102,22 @@ function SteinerTreeHeuristic (graph, initial_vertex, steiner_vertices, callback
       }
     } else {
       // The temp spanning tree is a better solution than the current one. Update it
-      console.log(`Removed vertex ${steiner_vertex}`)
+      // console.log(`Removed vertex ${steiner_vertex}`)
       spanning_tree = temp_spanning_tree;
       steiner_graph = temp_spanning_tree.toGraph();
     }
   }
 
   do {
-    console.log(remaining_steiner_vertices);
+    // console.log(remaining_steiner_vertices);
     applyHeuristic();
 
   } while (remaining_steiner_vertices.length > 0)
 
 
-  console.log("Steiner tree");
-  steiner_graph.print();
+  // console.log("Steiner tree");
+  // steiner_graph.print();
+  return spanning_tree;
 }
 
 module.exports = SteinerTreeHeuristic;

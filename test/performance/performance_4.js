@@ -6,6 +6,7 @@ var
     Timer = graphtheoryjs.Util.Timer,
     chalk = require('chalk'),
     steinerTreeHeuristic = require('../../index').Algorithms.SteinerTreeHeuristic,
+    steinerTreeBranchAndBound = require('../../index').Algorithms.SteinerTreeBranchAndBound,
     checkColoring = require('../../index').Algorithms.CheckColoring,
     fs = require('fs'),
     ProgressBar = require('progress'),
@@ -146,14 +147,27 @@ function runSteinerTreeTest() {
     var current_graph = graph_list[0];
     console.log(chalk.yellow('STEINER TREE TEST USING ' + current_graph.name.toUpperCase()) + '\n');
     
+    // Copy the graph
+    var graph = new graphtheoryjs.Graph.AdjacencyVectorGraph();
+    current_graph.graph.forEach( vertex => {
+        graph.addVertex(vertex);
+        current_graph.graph.forEachNeighbor(vertex, (neighbor, weight) => {
+            graph.addEdge(vertex, neighbor, weight);
+        })
+    });
+    
     var timer = new Timer();
     timer.start();
-    var steiner_tree = steinerTreeHeuristic(current_graph.graph, 1, [1, 6, 8, 9]);
+    // var steiner_tree = steinerTreeHeuristic(graph, 1, [1, 6, 8, 9]);
     // var steiner_tree = steinerTreeHeuristic(current_graph.graph, 1, [2]);
-    // var steiner_tree = steinerTreeHeuristic(current_graph.graph, 1, [2, 4, 5, 6, 8, 10]);
+    var steiner_tree = steinerTreeHeuristic(current_graph.graph, 1, [2, 4, 5, 6, 8, 10]);
 
-    console.log("Current graph");
-    current_graph.graph.print();
+    // console.log("Current graph");
+    // current_graph.graph.print();
+    console.log("Steiner tree");
+    console.log(steiner_tree.tree);
+    console.log("Weight: " + steiner_tree.getWeight());
+
     var results = {};
     results.steiner_tree = steiner_tree;
     results.time = timer.getElapsedTime();
@@ -162,6 +176,42 @@ function runSteinerTreeTest() {
     console.log(chalk.yellow(' TIME : ') + results.time + ' ' + results['time unity']);
     
     saveJSON(current_graph, results, 'steiner_tree_heuristic', false);
+
+    printSeparator();
+}
+
+function runSteinerTreeBranchAndBoundTest() {
+    var current_graph = graph_list[0];
+    console.log(chalk.yellow('STEINER TREE BRANCH AND BOUND TEST USING ' + current_graph.name.toUpperCase()) + '\n');
+
+    // Copy the graph
+    var graph = new graphtheoryjs.Graph.AdjacencyVectorGraph();
+    current_graph.graph.forEach( vertex => {
+        graph.addVertex(vertex);
+        current_graph.graph.forEachNeighbor(vertex, (neighbor, weight) => {
+            graph.addEdge(vertex, neighbor, weight);
+        })
+    });
+    
+    var timer = new Timer();
+    timer.start();
+    // var steiner_tree = steinerTreeBranchAndBound(graph, 1, [1, 6, 8, 9]);
+    // var steiner_tree = steinerTreeBranchAndBound(graph, 1, [2]);
+    var steiner_tree = steinerTreeBranchAndBound(graph, 1, [2, 4, 5, 6, 8, 10]);
+
+    // console.log("Current graph");
+    // current_graph.graph.print();
+    console.log("Steiner tree");
+    console.log(steiner_tree.tree);
+    console.log("Weight: " + steiner_tree.getWeight());
+    var results = {};
+    results.steiner_tree = steiner_tree;
+    results.time = timer.getElapsedTime();
+    results['time unity'] = 's';
+    
+    console.log(chalk.yellow(' TIME : ') + results.time + ' ' + results['time unity']);
+    
+    saveJSON(current_graph, results, 'steiner_tree_branch_and_bound', false);
 
     printSeparator();
 }
@@ -186,3 +236,4 @@ init();
 runMemoryTest();
 saveGraphStatistics();
 runSteinerTreeTest();
+runSteinerTreeBranchAndBoundTest();
