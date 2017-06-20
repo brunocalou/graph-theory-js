@@ -1,21 +1,14 @@
-/**
- * Callbacks used by the SteinerTree algorithm
- * @typedef {object} steiner_tree_callbacks
- * @property {onVertexVisited} onVertexVisited
- * @property {onVertexFound} onVertexFound
- */
-
 var Prim = require('./prim.js');
 var Graph = require('../graph.js').AdjacencyVectorGraph;
 var Util = require('../util.js').Util;
+var SpanningTree = require('../data_structures.js').SpanningTree;
 
 /**
  * SteinerTreeBranchAndBound - Calculate the steiner tree of a graph using the following a branch and bound algorithm
  * @param  {Graph} graph - The graph to use
  * @param  {Array} steiner_vertices - The steiner vertices (the vertices that may or may not be part of the solution)
- * @param  {steiner_tree_callbacks} callbacks - The callback object
  */
-function SteinerTreeBranchAndBound (graph, initial_vertex, steiner_vertices, callbacks) {
+function SteinerTreeBranchAndBound (graph, steiner_vertices) {
   // Convert the steiner vertices from array to object to O(1) search
   var removable_vertices = {};
   var non_removable_vertices = {};
@@ -46,46 +39,26 @@ function SteinerTreeBranchAndBound (graph, initial_vertex, steiner_vertices, cal
       }
   })
 
-  // Apply the prim algorithm for the essential vertices
-  var spanning_tree = Prim(steiner_graph, initial_vertex);
-  // console.log(spanning_tree.tree);
-  
   // Do the branch and bound
+  var spanning_tree = Prim(steiner_graph);
   var best_weight = Infinity;
   function branchAndBound (steiner_vertex_index) {
     var vertex = steiner_vertices[steiner_vertex_index];
 
-    if (steiner_vertex_index === steiner_vertices.length) {
-      var print_vertices = '';
-      // steiner_graph.forEach( v => {
-      //   if (steiner_graph.exists(v)) print_vertices += (v + ' ')
-      // });
-      // console.log(print_vertices);
-
-      // console.log("\nvertex index = " + steiner_vertex_index);
-      // console.log("vertex = " + vertex);
-
-      var tree = Prim(steiner_graph, initial_vertex);
+    if (steiner_vertex_index >= steiner_vertices.length - 1) {
+      var tree = Prim(steiner_graph, Util.randomKey(non_removable_vertices));
 
       // Check if the tree is valid
       var is_tree_valid = (tree.length === steiner_graph.number_of_vertices);
-
+      
       if (is_tree_valid && tree.getWeight() < best_weight) {
-        // console.log("Found a better weight (old = " + best_weight + " new = " + tree.getWeight() + ")");
         spanning_tree = tree;
-        // console.log(spanning_tree[0]);
         best_weight = tree.getWeight();
       }
 
-      // console.log("best weight = " + best_weight);
-      // console.log("\ncurrent graph");
-      // steiner_graph.print();
-      // console.log("\nresult tree");
-      // console.log(spanning_tree.tree);
     } else if (steiner_vertex_index < steiner_vertices.length) {
 
       // Find a solution without the vertex
-      // console.log("Find a solution without vertex " + vertex);
       branchAndBound(steiner_vertex_index + 1);
       
       if (vertex !== undefined) {
@@ -97,7 +70,6 @@ function SteinerTreeBranchAndBound (graph, initial_vertex, steiner_vertices, cal
           }
         });
 
-        // console.log("Find a solution with vertex " + vertex);
         // Find a solution with the vertex
         branchAndBound(steiner_vertex_index + 1);
 
@@ -107,10 +79,7 @@ function SteinerTreeBranchAndBound (graph, initial_vertex, steiner_vertices, cal
     }
   }
 
-  // console.log("Start of branch and bound");
   branchAndBound(0);
-  // console.log("End of branch and bound");
-  // console.log(result);
   return spanning_tree;
 }
 

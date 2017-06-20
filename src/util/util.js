@@ -106,7 +106,17 @@ function nearEquals(x1, x2, error) {
  */
 function randomProperty(obj) {
     var keys = Object.keys(obj)
-    return obj[keys[ keys.length * Math.random() << 0]];
+    return obj[keys[keys.length * Math.random() << 0]];
+}
+
+/**
+ * Gets a random key from an object.
+ * See https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
+ * @param {object} obj - The object to use
+ */
+function randomKey(obj) {
+    var keys = Object.keys(obj)
+    return keys[keys.length * Math.random() << 0];
 }
 
 module.exports = {
@@ -116,5 +126,6 @@ module.exports = {
     MemorySize: MemorySize,
     MaxNumberSize: MaxNumberSize,
     nearEquals: nearEquals,
-    randomProperty: randomProperty
+    randomProperty: randomProperty,
+    randomKey: randomKey
 };

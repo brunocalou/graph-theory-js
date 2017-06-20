@@ -47,7 +47,13 @@ var
     vector_graph = graphtheoryjs.Graph.Graph(graphtheoryjs.Graph.DataStructure.ADJACENCY_VECTOR),
     matrix_graph = graphtheoryjs.Graph.Graph(graphtheoryjs.Graph.DataStructure.ADJACENCY_MATRIX),
     graph_list = [],
-    graph_file = argv.file;
+    graph_file = argv.file,
+    steiner_vertices = [];
+    // steiner_vertices = [2, 4, 5, 6, 8, 10];
+    // steiner_vertices = [1, 3, 5, 6, 7];
+    // steiner_vertices = [1, 4, 5, 6];
+    // steiner_vertices = [1, 3, 4, 6, 8];
+    // steiner_vertices = [1, 6, 8, 9];
 
 function printSeparator(color) {
     if (!color) color = 'yellow';
@@ -158,14 +164,7 @@ function runSteinerTreeTest() {
     
     var timer = new Timer();
     timer.start();
-    // var steiner_tree = steinerTreeHeuristic(graph, 1, [1, 6, 8, 9]);
-    // var steiner_tree = steinerTreeHeuristic(current_graph.graph, 1, [2]);
-    var steiner_tree = steinerTreeHeuristic(current_graph.graph, 1, [2, 4, 5, 6, 8, 10]);
-
-    // console.log("Current graph");
-    // current_graph.graph.print();
-    console.log("Steiner tree");
-    console.log(steiner_tree.tree);
+    var steiner_tree = steinerTreeHeuristic(graph, 1, steiner_vertices);
     console.log("Weight: " + steiner_tree.getWeight());
 
     var results = {};
@@ -195,15 +194,9 @@ function runSteinerTreeBranchAndBoundTest() {
     
     var timer = new Timer();
     timer.start();
-    // var steiner_tree = steinerTreeBranchAndBound(graph, 1, [1, 6, 8, 9]);
-    // var steiner_tree = steinerTreeBranchAndBound(graph, 1, [2]);
-    var steiner_tree = steinerTreeBranchAndBound(graph, 1, [2, 4, 5, 6, 8, 10]);
-
-    // console.log("Current graph");
-    // current_graph.graph.print();
-    console.log("Steiner tree");
-    console.log(steiner_tree.tree);
+    var steiner_tree = steinerTreeBranchAndBound(graph, steiner_vertices);
     console.log("Weight: " + steiner_tree.getWeight());
+
     var results = {};
     results.steiner_tree = steiner_tree;
     results.time = timer.getElapsedTime();
@@ -231,9 +224,30 @@ function saveGraphStatistics() {
     printSeparator();
 }
 
+function initSteinerVertices() {
+    var current_graph = graph_list[0];
+    var max_number_of_steiner_vertices = current_graph.graph.number_of_vertices * Math.random() << 0;
+    // console.log('max number of steiner vertices = ' + max_number_of_steiner_vertices);
+    var vertices = {};
+    for (var i = 0; i < max_number_of_steiner_vertices; i += 1) {
+        vertices[1 + (current_graph.graph.number_of_vertices - 1) * Math.random() << 0] = true;
+    }
+    
+    var total = 0;
+    for (var key in vertices) {
+        if (vertices.hasOwnProperty(key)) {
+            steiner_vertices.push(Number(key));
+            total += 1;
+        }
+    }
+    console.log("Number of steiner vertices = " + total);
+    console.log('\n');
+}
+
 //Init and run
 init();
 runMemoryTest();
 saveGraphStatistics();
+initSteinerVertices();
 runSteinerTreeTest();
 runSteinerTreeBranchAndBoundTest();
