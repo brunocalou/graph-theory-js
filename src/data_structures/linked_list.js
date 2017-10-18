@@ -318,7 +318,7 @@ LinkedList.prototype.push = function (element) {
  * @returns {any} The removed element
  */
 LinkedList.prototype.remove = function (index) {
-    if (index > this._length - 1 || index < 0 || this.length === 0) {
+    if (index > this._length - 1 || index < 0 || this._length === 0) {
         throw new Error('Index out of bounds');
     } else {
 
@@ -462,7 +462,7 @@ LinkedList.prototype.removeNode = function (node) {
  * @returns {any} The element previously at the specified position
  */
 LinkedList.prototype.set = function (element, index) {
-    if (index > this._length - 1 || index < 0 || this.length === 0) {
+    if (index > this._length - 1 || index < 0 || this._length === 0) {
         throw new Error("Index out of bounds");
     } else {
         var node = this._front;
