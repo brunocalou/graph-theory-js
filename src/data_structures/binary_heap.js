@@ -21,10 +21,6 @@ function MinBinaryHeap(comparator_fn) {
     this.comparator = new Comparator(comparator_fn);
     
     /**@private
-     * @type {object} */
-    this._self = this;
-    
-    /**@private
      * @type {number}
      */
     this._length = 0;
@@ -80,7 +76,7 @@ MinBinaryHeap.prototype.every = function (fn, this_arg) {
     var index = 0;
 
     while (ordered_array[0] !== undefined) {
-        if (!fn.call(this_arg, ordered_array.shift(), index, this._self)) {
+        if (!fn.call(this_arg, ordered_array.shift(), index, this)) {
             break;
         }
 
@@ -98,7 +94,7 @@ MinBinaryHeap.prototype.forEach = function (fn, this_arg) {
     var index = 0;
 
     while (ordered_array[0] !== undefined) {
-        fn.call(this_arg, ordered_array.shift(), index, this._self);
+        fn.call(this_arg, ordered_array.shift(), index, this);
         index += 1;
     }
 };
