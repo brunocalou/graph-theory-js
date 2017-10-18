@@ -390,7 +390,7 @@ describe('Linked List', function () {
     });
 
     describe('indexOf', function () {
-        it('should index of the element', function () {
+        it('should find the index of the element', function () {
             var ll = new LinkedList();
             var front_value = 123;
             var middle_value = 456;
