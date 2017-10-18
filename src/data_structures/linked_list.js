@@ -10,11 +10,6 @@ var Node = require('./node');
  */
 function LinkedList() {
     /**@private
-     * @type {object}
-     */
-    this._self = this;
-    
-    /**@private
      * @type {node}
      */
     this._front = null;
@@ -175,7 +170,7 @@ LinkedList.prototype.every = function (fn, this_arg) {
     var index = 0;
 
     while (current_node) {
-        if (!fn.call(this_arg, current_node.value, index, this._self)) {
+        if (!fn.call(this_arg, current_node.value, index, this)) {
             break;
         }
         current_node = current_node.next;
@@ -193,7 +188,7 @@ LinkedList.prototype.forEach = function (fn, this_arg) {
     var index = 0;
 
     while (current_node) {
-        fn.call(this_arg, current_node.value, index, this._self);
+        fn.call(this_arg, current_node.value, index, this);
         current_node = current_node.next;
         index += 1;
     }
